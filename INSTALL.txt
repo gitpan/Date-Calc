@@ -1,5 +1,5 @@
                      ====================================
-                       Package "Date::Calc" Version 4.3
+                       Package "Date::Calc" Version 5.0
                      ====================================
 
 
@@ -11,9 +11,9 @@ Contents:
 ---------
 
     +   Prerequisites
+    +   Preliminary steps for use with Perl prior to version 5.005
     +   Preliminary steps for use with Perl prior to version 5.002
-    +   Preliminary steps for use with ActiveState's port of Perl 5.005
-    +   Preliminary steps for console users
+    +   Preliminary steps for use with ActiveState's port of Perl 5
     +   How to install additional languages
     +   Installation
 
@@ -21,8 +21,46 @@ Contents:
 Prerequisites:
 --------------
 
-Perl version 5.000 or higher, and an ANSI C compiler (!)
+Perl version 5.000 or higher, and an ANSI C compiler. (!)
                                      ^^^^^^
+If you plan to use the modules "Date::Calendar" or
+"Date::Calendar::Year" from this package, you will
+also need the module "Bit::Vector" version 5.7 or
+newer (which also needs an ANSI C compiler!).
+
+Otherwise you may safely ignore the warning message
+"Warning: prerequisite Bit::Vector 5.7 not found at ..."
+when running "perl Makefile.PL".
+
+And you can always install "Bit::Vector" later if you
+change your mind.
+
+If you compile under Windows, note that you will need
+exactly the same compiler that your Perl itself was
+compiled with!
+
+Moreover, you usually cannot build any modules under
+Windows 95/98, the Win 95/98 command shell is too dumb.
+You will need the Windows NT command shell ("cmd.com")
+or the "4DOS" shell.
+
+Note that ActiveState provides precompiled binaries of
+both modules (Date::Calc and Bit::Vector) for their
+Win32 port of Perl ("ActivePerl") on their web site at
+http://www.activestate.com/.
+
+Note also that a "plain Perl" version of "Date::Calc" called
+"Date::Pcalc" exists (written by J. David Eisenberg); you
+should be able to download it from the same place where
+you found this package, or from David's web site at
+http://catcode.com/date/pcalc.html.
+
+
+Preliminary steps for use with Perl prior to version 5.005:
+-----------------------------------------------------------
+
+Edit the file "Calc.xs" and change all occurrences (just one)
+of "PL_na" into "na".
 
 
 Preliminary steps for use with Perl prior to version 5.002:
@@ -32,7 +70,7 @@ Edit the file "Makefile.PL" and change the line
 
     'VERSION_FROM'      => 'Calc.pm',
 to
-    'VERSION'           => '4.3',
+    'VERSION'           => '5.0',
 
 Then edit the file "Calc.pm" and change the line
 
@@ -40,10 +78,12 @@ Then edit the file "Calc.pm" and change the line
 to
     bootstrap Date::Calc;
 
-Also edit the file "t/f000.t" and change the line
+Also edit the file "t/f000.t" and change all lines of the kind
 
-    use Date::Calc 4.3;
-to
+    use Date::Calc 5.0;
+
+into just
+
     use Date::Calc;
 
 Finally, edit the file "Calc.xs" and delete the line
@@ -51,46 +91,14 @@ Finally, edit the file "Calc.xs" and delete the line
     PROTOTYPES: DISABLE
 
 
-Preliminary steps for use with ActiveState's port of Perl 5.005:
-----------------------------------------------------------------
+Preliminary steps for use with ActiveState's port of Perl 5:
+------------------------------------------------------------
 
 (For the Win32 platform)
 
 Edit the file "Makefile.PL" and remove all of the "#" characters
-which currently comment out the attributes "ABSTRACT", "AUTHOR"
-and "CAPI".
-
-
-Preliminary steps for console users:
-------------------------------------
-
-In case you will be running this package in a MS-DOS command shell
-environment PREDOMINANTLY (and never under Perl/Tk, for instance),
-or if you will be running this package PREDOMINANTLY on the console
-of a PC UNIX system (like FreeBSD or GNU/Linux, for example) and
-never under X-windows, you might want to convert the special characters
-embedded in this package from the "ISO-Latin-1" character set (this
-is the same as "ISO-8859-1") to the character set used by the MS-DOS
-command shell or the PC UNIX console.
-
-To do so, simply change directory to the "tools" subdirectory in this
-distribution ("cd tools") and issue the following command:
-
-    > perl convert.pl
-
-Plain C developers (in case Perl is not available on your system) can
-also use
-
-    > ./convert.sh
-
-under UNIX (assumes 'gcc' to be your C compiler!) or simply
-
-    > convert
-
-under Windows NT/95 (assumes 'cl' to be your C compiler!) instead.
-
-Then proceed with the installation of this package as described in
-the section "Installation" further below.
+which currently comment out the lines involved with the setting
+of the attributes "ABSTRACT", "AUTHOR" and "CAPI".
 
 
 How to install additional languages:
@@ -111,7 +119,7 @@ and do the following:
 
 1) Increment the number in the line
 
-    #define DateCalc_LANGUAGES 7
+    #define DateCalc_LANGUAGES 11
 
    as necessary.
 
@@ -141,7 +149,7 @@ and do the following:
    "DateCalc_Day_of_Week_Abbreviation_" of the following form:
 
     {
-        "", "", "", "", "", "", "", ""    /* 8 */
+        "", "", "", "", "", "", "", ""    /* 12 */
     }
 
    Don't forget to add a comma after the closing brace of the immediately
@@ -160,7 +168,7 @@ and do the following:
 5) Add a new entry to the bottom of the array "DateCalc_Date_Long_Format_"
    of the following form:
 
-    "%s, %d %s %d"                      /* 8  Language    */
+    "%s, %d %s %d"                      /* 12  Language    */
 
    Don't forget to add a comma after the closing double quote of
    the immediately preceding entry above.
@@ -191,7 +199,7 @@ and do the following:
 
 7) Now edit the file "DateCalc.h" and set the number in the line
 
-    #define DateCalc_LANGUAGES 7
+    #define DateCalc_LANGUAGES 11
 
    to the same value as in the file "DateCalc.c".
 
@@ -226,16 +234,16 @@ Quick installation guide for experienced users:
     UNIX:                 Win32/Borland C++:      Win32/MS Visual C++:
     =====                 ==================      ====================
 
-    > perl Makefile.PL    > perl Makefile.PL      > perl Makefile.PL
-    > make                > dmake                 > nmake
-    > make test           > dmake test            > nmake test
-    > make install        > dmake install         > nmake install
+    % perl Makefile.PL    % perl Makefile.PL      % perl Makefile.PL
+    % make                % dmake                 % nmake
+    % make test           % dmake test            % nmake test
+    % make install        % dmake install         % nmake install
 
 Detailed installation guide:
 ----------------------------
 
  1) Change directory to the directory that has been created by unpacking this
-    package ("cd Date-Calc-4.3").
+    package ("cd Date-Calc-5.0").
 
  2) Type "perl Makefile.PL" (or whatever the name and path of your Perl 5
     binary is).
@@ -336,9 +344,10 @@ Detailed installation guide:
     t/f031..............ok
     t/f032..............ok
     t/f033..............ok
+    t/f034..............ok
     All tests successful.
-    Files=34,  Tests=1836, 12 wallclock secs
-    ( 8.82 cusr +  1.23 csys = 10.05 CPU)
+    Files=35, Tests=1963, 12 wallclock secs
+    ( 3.09 cusr +  0.57 csys =  3.66 CPU)
 
  5) At last, type "make install" (or "dmake install", "nmake install").
 

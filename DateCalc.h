@@ -8,14 +8,21 @@
 /*****************************************************************************/
 /*  MODULE IMPORTS:                                                          */
 /*****************************************************************************/
+#include <stdio.h>                                  /*  MODULE TYPE:  (sys)  */
 #include <stdlib.h>                                 /*  MODULE TYPE:  (sys)  */
 #include <string.h>                                 /*  MODULE TYPE:  (sys)  */
-#include <ctype.h>                                  /*  MODULE TYPE:  (sys)  */
 #include <time.h>                                   /*  MODULE TYPE:  (sys)  */
 #include "ToolBox.h"                                /*  MODULE TYPE:  (dat)  */
 /*****************************************************************************/
 /*  MODULE INTERFACE:                                                        */
 /*****************************************************************************/
+
+/* Make the VMS linker happy: */
+
+#ifdef VMS
+#define DateCalc_Day_of_Week_Abbreviation_ DateCalc_DoW_Abbrev_
+#define DateCalc_nth_weekday_of_month_year DateCalc_nth_weekday
+#endif
 
 boolean
 DateCalc_leap_year                     (Z_int   year);
@@ -24,6 +31,11 @@ boolean
 DateCalc_check_date                    (Z_int   year,
                                         Z_int   month,
                                         Z_int   day);
+
+boolean
+DateCalc_check_time                    (Z_int   hour,
+                                        Z_int   min,
+                                        Z_int   sec);
 
 boolean
 DateCalc_check_business_date           (Z_int   year,
@@ -94,6 +106,18 @@ DateCalc_Delta_Days                    (Z_int   year1,
                                         Z_int   month2,
                                         Z_int   day2);
 
+boolean /* PRIVATE */
+DateCalc_delta_hms                     (Z_long *Dd,         /*  I/O  */
+                                        Z_int  *Dh,         /*   O   */
+                                        Z_int  *Dm,         /*   O   */
+                                        Z_int  *Ds,         /*   O   */
+                                        Z_int   hour1,      /*   I   */
+                                        Z_int   min1,       /*   I   */
+                                        Z_int   sec1,       /*   I   */
+                                        Z_int   hour2,      /*   I   */
+                                        Z_int   min2,       /*   I   */
+                                        Z_int   sec2);      /*   I   */
+
 boolean
 DateCalc_delta_dhms                    (Z_long *Dd,         /*   O   */
                                         Z_int  *Dh,         /*   O   */
@@ -113,6 +137,40 @@ DateCalc_delta_dhms                    (Z_long *Dd,         /*   O   */
                                         Z_int   sec2);      /*   I   */
 
 boolean
+DateCalc_delta_ymd                     (Z_int  *year1,      /*  I/O  */
+                                        Z_int  *month1,     /*  I/O  */
+                                        Z_int  *day1,       /*  I/O  */
+                                        Z_int   year2,      /*   I   */
+                                        Z_int   month2,     /*   I   */
+                                        Z_int   day2);      /*   I   */
+
+boolean
+DateCalc_delta_ymdhms                  (Z_int  *D_y,        /*   O   */
+                                        Z_int  *D_m,        /*   O   */
+                                        Z_int  *D_d,        /*   O   */
+                                        Z_int  *Dh,         /*   O   */
+                                        Z_int  *Dm,         /*   O   */
+                                        Z_int  *Ds,         /*   O   */
+                                        Z_int   year1,      /*   I   */
+                                        Z_int   month1,     /*   I   */
+                                        Z_int   day1,       /*   I   */
+                                        Z_int   hour1,      /*   I   */
+                                        Z_int   min1,       /*   I   */
+                                        Z_int   sec1,       /*   I   */
+                                        Z_int   year2,      /*   I   */
+                                        Z_int   month2,     /*   I   */
+                                        Z_int   day2,       /*   I   */
+                                        Z_int   hour2,      /*   I   */
+                                        Z_int   min2,       /*   I   */
+                                        Z_int   sec2);      /*   I   */
+
+void
+DateCalc_Normalize_DHMS                (Z_long *Dd,         /*  I/O  */
+                                        Z_long *Dh,         /*  I/O  */
+                                        Z_long *Dm,         /*  I/O  */
+                                        Z_long *Ds);        /*  I/O  */
+
+boolean
 DateCalc_add_delta_days                (Z_int  *year,       /*  I/O  */
                                         Z_int  *month,      /*  I/O  */
                                         Z_int  *day,        /*  I/O  */
@@ -130,6 +188,19 @@ DateCalc_add_delta_dhms                (Z_int  *year,       /*  I/O  */
                                         Z_long  Dm,         /*   I   */
                                         Z_long  Ds);        /*   I   */
 
+boolean /* PRIVATE */
+DateCalc_add_year_month                (Z_int  *year,       /*  I/O  */
+                                        Z_int  *month,      /*  I/O  */
+                                        Z_long  Dy,         /*   I   */
+                                        Z_long  Dm);        /*   I   */
+
+boolean
+DateCalc_add_delta_ym                  (Z_int  *year,       /*  I/O  */
+                                        Z_int  *month,      /*  I/O  */
+                                        Z_int  *day,        /*  I/O  */
+                                        Z_long  Dy,         /*   I   */
+                                        Z_long  Dm);        /*   I   */
+
 boolean
 DateCalc_add_delta_ymd                 (Z_int  *year,       /*  I/O  */
                                         Z_int  *month,      /*  I/O  */
@@ -137,6 +208,20 @@ DateCalc_add_delta_ymd                 (Z_int  *year,       /*  I/O  */
                                         Z_long  Dy,         /*   I   */
                                         Z_long  Dm,         /*   I   */
                                         Z_long  Dd);        /*   I   */
+
+boolean
+DateCalc_add_delta_ymdhms              (Z_int  *year,       /*  I/O  */
+                                        Z_int  *month,      /*  I/O  */
+                                        Z_int  *day,        /*  I/O  */
+                                        Z_int  *hour,       /*  I/O  */
+                                        Z_int  *min,        /*  I/O  */
+                                        Z_int  *sec,        /*  I/O  */
+                                        Z_long  D_y,        /*   I   */
+                                        Z_long  D_m,        /*   I   */
+                                        Z_long  D_d,        /*   I   */
+                                        Z_long  Dh,         /*   I   */
+                                        Z_long  Dm,         /*   I   */
+                                        Z_long  Ds);        /*   I   */
 
 boolean
 DateCalc_system_clock                  (Z_int  *year,       /*   O   */
@@ -212,10 +297,17 @@ DateCalc_English_Ordinal               (charptr result,     /*   O   */
 
 charptr
 DateCalc_Calendar                      (Z_int   year,
-                                        Z_int   month);
+                                        Z_int   month,
+                                        boolean orthodox);
 
 void
 DateCalc_Dispose                       (charptr string);
+
+N_char
+DateCalc_ISO_LC                        (N_char c);
+
+N_char
+DateCalc_ISO_UC                        (N_char c);
 
 charptr
 DateCalc_Version                       (void);
@@ -244,7 +336,7 @@ extern const Z_int DateCalc_Days_in_Month_[2][13];
 };
 */
 
-#define DateCalc_LANGUAGES 7
+#define DateCalc_LANGUAGES 11
 
 extern Z_int  DateCalc_Language; /* Default = 1 (English) */
 
@@ -260,28 +352,45 @@ extern const N_char DateCalc_Month_to_Text_[DateCalc_LANGUAGES+1][13][32];
         "July", "August", "September", "October", "November", "December"
     },
     {
-        "???", "Janvier", "Février", "Mars", "Avril", "Mai", "Juin",
-        "Juillet", "Août", "Septembre", "Octobre", "Novembre", "Décembre"
+        "???", "janvier", "février", "mars", "avril", "mai", "juin",
+        "juillet", "août", "septembre", "octobre", "novembre", "décembre"
     },
     {
         "???", "Januar", "Februar", "März", "April", "Mai", "Juni",
         "Juli", "August", "September", "Oktober", "November", "Dezember"
     },
     {
-        "???", "Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio",
-        "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"
+        "???", "enero", "febrero", "marzo", "abril", "mayo", "junio",
+        "julio", "agosto", "septiembre", "octubre", "noviembre", "diciembre"
     },
     {
-        "???", "Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho",
-        "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"
+        "???", "janeiro", "fevereiro", "março", "abril", "maio", "junho",
+        "julho", "agosto", "setembro", "outubro", "novembro", "dezembro"
     },
     {
-        "???", "Januari", "Februari", "Maart", "April", "Mei", "Juni",
-        "Juli", "Augustus", "September", "October", "November", "December"
+        "???", "januari", "februari", "maart", "april", "mei", "juni",
+        "juli", "augustus", "september", "october", "november", "december"
     },
     {
         "???", "Gennaio", "Febbraio", "Marzo", "Aprile", "Maggio", "Giugno",
         "Luglio", "Agosto", "Settembre", "Ottobre", "Novembre", "Dicembre"
+    },
+    {
+        "???", "januar", "februar", "mars", "april", "mai", "juni",
+        "juli", "august", "september", "oktober", "november", "desember"
+    },
+    {
+        "???", "januari", "februari", "mars", "april", "maj", "juni",
+        "juli", "augusti", "september", "oktober", "november", "december"
+    },
+    {
+        "???", "januar", "februar", "marts", "april", "maj", "juni",
+        "juli", "august", "september", "oktober", "november", "december"
+    },
+    {
+        "???", "tammikuu", "helmikuu", "maaliskuu", "huhtikuu",
+        "toukokuu", "kesäkuu", "heinäkuu", "elokuu",
+        "syyskuu", "lokakuu", "marraskuu", "joulukuu"
     }
 };
 */
@@ -320,6 +429,22 @@ extern const N_char DateCalc_Day_of_Week_to_Text_[DateCalc_LANGUAGES+1][8][32];
     {
         "???", "Lunedì", "Martedì", "Mercoledì",
         "Giovedì", "Venerdì", "Sabato", "Domenica"
+    },
+    {
+        "???", "mandag", "tirsdag", "onsdag",
+        "torsdag", "fredag", "lørdag", "søndag"
+    },
+    {
+        "???", "måndag", "tisdag", "onsdag",
+        "torsdag", "fredag", "lördag", "söndag"
+    },
+    {
+        "???", "mandag", "tirsdag", "onsdag",
+        "torsdag", "fredag", "lørdag", "søndag"
+    },
+    {
+        "???", "maanantai", "tiistai", "keskiviikko",
+        "torstai", "perjantai", "lauantai", "sunnuntai"
     }
 };
 */
@@ -353,6 +478,18 @@ extern const N_char DateCalc_Day_of_Week_Abbreviation_[DateCalc_LANGUAGES+1][8][
     },
     {
         "", "", "", "", "", "", "", ""
+    },
+    {
+        "", "", "", "", "", "", "", ""
+    },
+    {
+        "", "", "", "", "", "", "", ""
+    },
+    {
+        "", "", "", "", "", "", "", ""
+    },
+    {
+        "", "", "", "", "", "", "", ""
     }
 };
 */
@@ -376,8 +513,12 @@ extern const N_char DateCalc_Date_Long_Format_[DateCalc_LANGUAGES+1][64];
     "%s, den %d. %s %d",
     "%s, %d de %s de %d",
     "%s, dia %d de %s de %d",
+    "%s, %d %s %d",
+    "%s, %d %s %d",
     "%s, %d. %s %d",
-    "%s, %d %s %d"
+    "%s, %d %s %d",
+    "%s, %d. %s %d",
+    "%s, %d. %sta %d"
 };
 */
 
@@ -385,7 +526,8 @@ extern const N_char DateCalc_Language_to_Text_[DateCalc_LANGUAGES+1][32];
 /*
 {
     "???", "English", "Français", "Deutsch", "Español",
-    "Português", "Nederlands", "Italiano"
+    "Português", "Nederlands", "Italiano", "Norsk", "Svenska",
+    "Dansk", "suomi"
 };
 */
 
@@ -394,11 +536,12 @@ extern const N_char DateCalc_Language_to_Text_[DateCalc_LANGUAGES+1][32];
 /*****************************************************************************/
 
 /*****************************************************************************/
-/*  VERSION:  4.3                                                            */
+/*  VERSION:  5.0                                                            */
 /*****************************************************************************/
 /*  VERSION HISTORY:                                                         */
 /*****************************************************************************/
 /*                                                                           */
+/*    Version 5.0   08.10.00  New YMD/HMS functions, replaced <ctype.h>.     */
 /*    Version 4.3   08.01.00  decode_date_??: (yy < 70 ? 20yy : 19yy)        */
 /*    Version 4.2   07.09.98  No changes.                                    */
 /*    Version 4.1   08.06.98  Fixed bug in "add_delta_ymd()".                */

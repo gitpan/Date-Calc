@@ -2,18 +2,17 @@
 	
 
 
-# (1) Copy the Date-Calc-4.3 folder from the expanded Date-Calc-4.3.tar.gz archive into the 
+# (1) Copy the Date-Calc-5.0 folder from the expanded Date-Calc-5.0.tar.gz archive into the 
 #     :MacPerl_Src:perl:ext folder of the MacPerl source distribution.
 #  
 #     and then
 #
-#     Set the current directory to the Date-Calc-4.3 folder (via Directory menu).
+#     Set the current directory to the Date-Calc-5.0 folder (via Directory menu).
 
 
 # (2) Build the DateCalc.o object file 
 
 MrC DateCalc.c -o :DateCalc.o  -sym off -w off -t
-
 
 
 
@@ -53,6 +52,7 @@ MrC -inclpath ignoresys -sym off -d __STD_C -d MULTIPLICITY  -w off -opt size -t
 
 
 
+
 # (7) Open the file which contains a list of the shared library's exported entry points (symbols).
 #     Delete every line except the last, which is:
 #      
@@ -61,6 +61,7 @@ MrC -inclpath ignoresys -sym off -d __STD_C -d MULTIPLICITY  -w off -opt size -t
 #     Be sure to save your changes.
 
 open Calc.exp
+
 
 
 

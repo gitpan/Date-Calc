@@ -16,6 +16,7 @@ use Config;
 WriteMakefile(
     'NAME'              => 'Date::Calc',
     'VERSION_FROM'      => 'Calc.pm',
+    'PREREQ_PM'         => { 'Bit::Vector' => 5.7 },
     'OBJECT'            => '$(O_FILES)',
     'LIBS'              => [''],   # e.g., '-lm'
     'DEFINE'            => '',     # e.g., '-DHAVE_SOMETHING'

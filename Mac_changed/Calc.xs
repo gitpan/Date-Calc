@@ -11,38 +11,12 @@
 /*****************************************************************************/
 
 
-#include <ConditionalMacros.h>
-#if PRAGMA_IMPORT
-#pragma import on
-#endif
-    
 #include "EXTERN.h"
 #include "perl.h"
 #include "XSUB.h"
 
-#if PRAGMA_IMPORT
-#pragma import off
-#endif
-
-
 
 #include "DateCalc.h"
-
-// ###TOM added
-// The following is required for (Mac-) Perl 5.004:
-// With version 5.0 of this module, the author has replaced the global 
-// variable 'na' with 'PL_na'(see perlguts.pod), to make the module 
-// ready for Perl 5.6.0 (see INSTALL.txt). Perl versions < 5.005 
-// don't know about the 'PL_na' variable. I use the following 
-// conditional #define for Perl versions with PATCHLEVEL < 5.
-
-#include "patchlevel.h"
-
-#if (PATCHLEVEL < 5)
-#define PL_na na
-#endif
-
-// end ###TOM added
 
 
 #define DATECALC_ERROR(name,error) \

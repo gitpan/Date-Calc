@@ -1,5 +1,5 @@
                      ====================================
-                       Package "Date::Calc" Version 4.3
+                       Package "Date::Calc" Version 5.0
                      ====================================
 
 
@@ -109,7 +109,7 @@ to build this package first, however.
 Then change directory to the main directory of this distribution,
 if you haven't done so already.
 
-Finally, if you have Perl available on your system (no matter wether
+Finally, if you have Perl available on your system (no matter whether
 UNIX or Win32), you can compile this program with the following command:
 
             % perl tools/compile.pl cal.c DateCalc.c
@@ -137,9 +137,10 @@ Now start the program with the command "./cal" (UNIX) or simply "cal"
 (Note that this program is not confined to Win32 systems, it also compiles
 and runs perfectly well on pure MS-DOS or other Windows systems!)
 
-The first parameter is the desired language (currently 1..7 or "English",
-"Français", "Deutsch", "Español", "Português", "Nederlands" and
-"Italiano"), the second the month and the third the year.
+The first parameter is the desired language (currently 1..11 or "English",
+"Français", "Deutsch", "Español", "Português", "Nederlands",
+"Italiano", "Norsk", "Svenska", "Dansk" and "suomi"), the second the month
+and the third the year.
 
 Example:
                         % cal en apr 1998

@@ -1,5 +1,5 @@
                      ====================================
-                       Package "Date::Calc" Version 4.3
+                       Package "Date::Calc" Version 5.0
                      ====================================
 
 
@@ -9,6 +9,45 @@
 
 Version history:
 ----------------
+
+Version 5.0   08.10.2000
+
+ +  Added the functions "check_time()", "Delta_YMD()", "Delta_YMDHMS()"
+    "Add_Delta_YM()", "Add_Delta_YMDHMS()", "Normalize_DHMS()",
+    "ISO_LC()" and "ISO_UC()" to Date::Calc.
+ +  Added the module Date::Calc::Object, an object-oriented add-on
+    to Date::Calc with overloaded operators.
+ +  Added the modules Date::Calendar, Date::Calendar::Year and
+    Date::Calendar::Profiles, for calculations which need to
+    take holidays into account.
+ +  Added the module Carp::Clan (used by all Date::* modules).
+ +  Added support for Norwegian.
+ +  Added support for Swedish.
+ +  Added support for Danish.
+ +  Added support for Finnish.
+ +  Fixed the broken parsing of special ISO-Latin-1 characters
+    in Date::Calc (replaced <ctype.h> with better solution).
+ -  Locales wouldn't help here, because "Decode_Language()" must
+    work with any locale setting. Moreover, setting a language in
+    Date::Calc would also require to set the proper corresponding
+    locale in the current environment, which may not be available
+    on the current system. The new solution works independently
+    of any locale and with ALL languages.
+ +  Fixed the misspelled word "whether" in the documentation.
+ +  Added a missing "#include <stdio.h>" statement in DateCalc.c
+    (apparently only relevant to very few platforms).
+ +  Added a patch which should ensure compatibility with VMS
+    (this should resolve the problem of too long identifiers).
+ +  Changed the function "Add_Delta_YMD()" to have a more consistent
+    (and reversible) behaviour. This might break existing code, though.
+    (To get the old behaviour, use the new function "Add_Delta_YM()"
+    plus "Add_Delta_Days()" instead.)
+ +  Changed the corresponding test script (t/f029.t) accordingly.
+ +  Changed the month names of some languages to lower case.
+ +  Changed the corresponding test script (t/f012.t) accordingly.
+ +  Added a new test script (t/f034.t) for Date::Calendar::Profiles.
+ +  Added an optional boolean parameter "orthodox" to "Calendar()"
+    for calendars starting with Sunday instead of Monday.
 
 Version 4.3   08.01.2000
 
@@ -49,7 +88,7 @@ Version 4.0   12.05.1998
  +  Added a new Perl function "Week_of_Year()" (replacing "week_number()").
  +  Changed the Perl function "Week_Number()" to call the C function
     "Week_Number()".
- +  Added new functions System_Clock()", "Today()", "Now()" and
+ +  Added new functions "System_Clock()", "Today()", "Now()" and
     "Today_and_Now()".
  +  Added "check_business_date()", "Standard_to_Business()" and
     "Business_to_Standard()".

@@ -95,6 +95,7 @@ typedef enum { false = FALSE , true = TRUE } boolean;
 //typedef enum { false = FALSE , true = TRUE } boolean;
 // END ###TOM changed
 
+
 #define and         &&      /* logical (boolean) operators: lower case */
 #define or          ||
 #define not         !

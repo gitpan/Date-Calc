@@ -18,6 +18,22 @@
 
 #include "DateCalc.h"
 
+// ###TOM added
+// The following is required for (Mac-) Perl 5.004:
+// With version 5.0 of this module, the author has replaced the global 
+// variable 'na' with 'PL_na'(see perlguts.pod), to make the module 
+// ready for Perl 5.6.0 (see INSTALL.txt). Perl versions < 5.005 
+// don't know about the 'PL_na' variable. I use the following 
+// conditional #define for Perl versions with PATCHLEVEL < 5.
+
+#include "patchlevel.h"
+
+#if (PATCHLEVEL < 5)
+#define PL_na na
+#endif
+
+// end ###TOM added
+
 
 #define DATECALC_ERROR(name,error) \
     croak("Date::Calc::" name "(): " error)
@@ -51,6 +67,14 @@
 
 #define DATECALC_MEMORY_ERROR(name) \
     DATECALC_ERROR(name,"unable to allocate memory")
+
+#define DATECALC_STRING_ERROR(name) \
+    DATECALC_ERROR(name,"argument is not a string")
+
+#define DATECALC_STRING(ref,var,len) \
+    ( ref && !(SvROK(ref)) && SvPOK(ref) && \
+    (var = (charptr)SvPV(ref,PL_na)) && \
+    ((len = (N_int)SvCUR(ref)) | 1) )
 
 
 MODULE = Date::Calc		PACKAGE = Date::Calc		PREFIX = DateCalc_
@@ -132,6 +156,13 @@ DateCalc_check_date(year,month,day)
     Z_int	year
     Z_int	month
     Z_int	day
+
+
+boolean
+DateCalc_check_time(hour,min,sec)
+    Z_int	hour
+    Z_int	min
+    Z_int	sec
 
 
 boolean
@@ -349,18 +380,18 @@ RETVAL
 
 void
 DateCalc_Delta_DHMS(year1,month1,day1, hour1,min1,sec1, year2,month2,day2, hour2,min2,sec2)
-    Z_int	year1;
-    Z_int	month1;
-    Z_int	day1;
-    Z_int	hour1;
-    Z_int	min1;
-    Z_int	sec1;
-    Z_int	year2;
-    Z_int	month2;
-    Z_int	day2;
-    Z_int	hour2;
-    Z_int	min2;
-    Z_int	sec2;
+    Z_int	year1
+    Z_int	month1
+    Z_int	day1
+    Z_int	hour1
+    Z_int	min1
+    Z_int	sec1
+    Z_int	year2
+    Z_int	month2
+    Z_int	day2
+    Z_int	hour2
+    Z_int	min2
+    Z_int	sec2
 PPCODE:
 {
     Z_long Dd;
@@ -371,10 +402,8 @@ PPCODE:
     if (DateCalc_check_date(year1,month1,day1) and
         DateCalc_check_date(year2,month2,day2))
     {
-        if ((hour1 >= 0) and (min1 >= 0) and (sec1 >= 0) and
-            (hour2 >= 0) and (min2 >= 0) and (sec2 >= 0) and
-            (hour1 < 24) and (min1 < 60) and (sec1 < 60) and
-            (hour2 < 24) and (min2 < 60) and (sec2 < 60))
+        if (DateCalc_check_time(hour1,min1,sec1) and
+            DateCalc_check_time(hour2,min2,sec2))
         {
             if (DateCalc_delta_dhms(&Dd,&Dh,&Dm,&Ds,
                                     year1,month1,day1, hour1,min1,sec1,
@@ -391,6 +420,93 @@ PPCODE:
         else DATECALC_TIME_ERROR("Delta_DHMS");
     }
     else DATECALC_DATE_ERROR("Delta_DHMS");
+}
+
+
+void
+DateCalc_Delta_YMD(year1,month1,day1, year2,month2,day2)
+    Z_int	year1
+    Z_int	month1
+    Z_int	day1
+    Z_int	year2
+    Z_int	month2
+    Z_int	day2
+PPCODE:
+{
+    if (DateCalc_delta_ymd(&year1,&month1,&day1, year2,month2,day2))
+    {
+        EXTEND(sp,3);
+        PUSHs(sv_2mortal(newSViv((IV)year1)));
+        PUSHs(sv_2mortal(newSViv((IV)month1)));
+        PUSHs(sv_2mortal(newSViv((IV)day1)));
+    }
+    else DATECALC_DATE_ERROR("Delta_YMD");
+}
+
+
+void
+DateCalc_Delta_YMDHMS(year1,month1,day1, hour1,min1,sec1, year2,month2,day2, hour2,min2,sec2)
+    Z_int	year1
+    Z_int	month1
+    Z_int	day1
+    Z_int	hour1
+    Z_int	min1
+    Z_int	sec1
+    Z_int	year2
+    Z_int	month2
+    Z_int	day2
+    Z_int	hour2
+    Z_int	min2
+    Z_int	sec2
+PPCODE:
+{
+    Z_int  D_y;
+    Z_int  D_m;
+    Z_int  D_d;
+    Z_int  Dh;
+    Z_int  Dm;
+    Z_int  Ds;
+
+    if (DateCalc_check_date(year1,month1,day1) and
+        DateCalc_check_date(year2,month2,day2))
+    {
+        if (DateCalc_check_time(hour1,min1,sec1) and
+            DateCalc_check_time(hour2,min2,sec2))
+        {
+            if (DateCalc_delta_ymdhms(&D_y,&D_m,&D_d,    &Dh,&Dm,&Ds,
+                                      year1,month1,day1, hour1,min1,sec1,
+                                      year2,month2,day2, hour2,min2,sec2))
+            {
+                EXTEND(sp,6);
+                PUSHs(sv_2mortal(newSViv((IV)D_y)));
+                PUSHs(sv_2mortal(newSViv((IV)D_m)));
+                PUSHs(sv_2mortal(newSViv((IV)D_d)));
+                PUSHs(sv_2mortal(newSViv((IV)Dh)));
+                PUSHs(sv_2mortal(newSViv((IV)Dm)));
+                PUSHs(sv_2mortal(newSViv((IV)Ds)));
+            }
+            else DATECALC_DATE_ERROR("Delta_YMDHMS");
+        }
+        else DATECALC_TIME_ERROR("Delta_YMDHMS");
+    }
+    else DATECALC_DATE_ERROR("Delta_YMDHMS");
+}
+
+
+void
+DateCalc_Normalize_DHMS(Dd,Dh,Dm,Ds)
+    Z_long	Dd
+    Z_long	Dh
+    Z_long	Dm
+    Z_long	Ds
+PPCODE:
+{
+    DateCalc_Normalize_DHMS(&Dd,&Dh,&Dm,&Ds);
+    EXTEND(sp,4);
+    PUSHs(sv_2mortal(newSViv((IV)Dd)));
+    PUSHs(sv_2mortal(newSViv((IV)Dh)));
+    PUSHs(sv_2mortal(newSViv((IV)Dm)));
+    PUSHs(sv_2mortal(newSViv((IV)Ds)));
 }
 
 
@@ -415,22 +531,21 @@ PPCODE:
 
 void
 DateCalc_Add_Delta_DHMS(year,month,day, hour,min,sec, Dd,Dh,Dm,Ds)
-    Z_int	year;
-    Z_int	month;
-    Z_int	day;
-    Z_int	hour;
-    Z_int	min;
-    Z_int	sec;
-    Z_long	Dd;
-    Z_long	Dh;
-    Z_long	Dm;
-    Z_long	Ds;
+    Z_int	year
+    Z_int	month
+    Z_int	day
+    Z_int	hour
+    Z_int	min
+    Z_int	sec
+    Z_long	Dd
+    Z_long	Dh
+    Z_long	Dm
+    Z_long	Ds
 PPCODE:
 {
     if (DateCalc_check_date(year,month,day))
     {
-        if ((hour >= 0) and (min >= 0) and (sec >= 0) and
-            (hour < 24) and (min < 60) and (sec < 60))
+        if (DateCalc_check_time(hour,min,sec))
         {
             if (DateCalc_add_delta_dhms(&year,&month,&day,
                                         &hour,&min,&sec,
@@ -453,13 +568,33 @@ PPCODE:
 
 
 void
+DateCalc_Add_Delta_YM(year,month,day, Dy,Dm)
+    Z_int	year
+    Z_int	month
+    Z_int	day
+    Z_long	Dy
+    Z_long	Dm
+PPCODE:
+{
+    if (DateCalc_add_delta_ym(&year,&month,&day, Dy,Dm))
+    {
+        EXTEND(sp,3);
+        PUSHs(sv_2mortal(newSViv((IV)year)));
+        PUSHs(sv_2mortal(newSViv((IV)month)));
+        PUSHs(sv_2mortal(newSViv((IV)day)));
+    }
+    else DATECALC_DATE_ERROR("Add_Delta_YM");
+}
+
+
+void
 DateCalc_Add_Delta_YMD(year,month,day, Dy,Dm,Dd)
     Z_int	year
     Z_int	month
     Z_int	day
-    Z_int	Dy
-    Z_int	Dm
-    Z_int	Dd
+    Z_long	Dy
+    Z_long	Dm
+    Z_long	Dd
 PPCODE:
 {
     if (DateCalc_add_delta_ymd(&year,&month,&day, Dy,Dm,Dd))
@@ -470,6 +605,47 @@ PPCODE:
         PUSHs(sv_2mortal(newSViv((IV)day)));
     }
     else DATECALC_DATE_ERROR("Add_Delta_YMD");
+}
+
+
+void
+DateCalc_Add_Delta_YMDHMS(year,month,day, hour,min,sec, D_y,D_m,D_d, Dh,Dm,Ds)
+    Z_int	year
+    Z_int	month
+    Z_int	day
+    Z_int	hour
+    Z_int	min
+    Z_int	sec
+    Z_long	D_y
+    Z_long	D_m
+    Z_long	D_d
+    Z_long	Dh
+    Z_long	Dm
+    Z_long	Ds
+PPCODE:
+{
+    if (DateCalc_check_date(year,month,day))
+    {
+        if (DateCalc_check_time(hour,min,sec))
+        {
+            if (DateCalc_add_delta_ymdhms(&year,&month,&day,
+                                          &hour,&min,&sec,
+                                          D_y,D_m,D_d,
+                                          Dh,Dm,Ds))
+            {
+                EXTEND(sp,6);
+                PUSHs(sv_2mortal(newSViv((IV)year)));
+                PUSHs(sv_2mortal(newSViv((IV)month)));
+                PUSHs(sv_2mortal(newSViv((IV)day)));
+                PUSHs(sv_2mortal(newSViv((IV)hour)));
+                PUSHs(sv_2mortal(newSViv((IV)min)));
+                PUSHs(sv_2mortal(newSViv((IV)sec)));
+            }
+            else DATECALC_DATE_ERROR("Add_Delta_YMDHMS");
+        }
+        else DATECALC_TIME_ERROR("Add_Delta_YMDHMS");
+    }
+    else DATECALC_DATE_ERROR("Add_Delta_YMDHMS");
 }
 
 
@@ -797,29 +973,38 @@ PPCODE:
 
 
 void
-DateCalc_Calendar(year,month)
-    Z_int	year
-    Z_int	month
+DateCalc_Calendar(...)
 PPCODE:
 {
+    Z_int   year;
+    Z_int   month;
+    boolean orthodox;
     charptr string;
 
-    if (year > 0)
+    if ((items >= 2) and (items <= 3))
     {
-        if ((month >= 1) and (month <= 12))
+        year  = (Z_int) SvIV( ST(0) );
+        month = (Z_int) SvIV( ST(1) );
+        if (items == 3) orthodox = (boolean) SvIV( ST(2) );
+        else            orthodox = false;
+        if (year > 0)
         {
-            string = DateCalc_Calendar(year,month);
-            if (string != NULL)
+            if ((month >= 1) and (month <= 12))
             {
-                EXTEND(sp,1);
-                PUSHs(sv_2mortal(newSVpv((char *)string,0)));
-                DateCalc_Dispose(string);
+                string = DateCalc_Calendar(year,month,orthodox);
+                if (string != NULL)
+                {
+                    EXTEND(sp,1);
+                    PUSHs(sv_2mortal(newSVpv((char *)string,0)));
+                    DateCalc_Dispose(string);
+                }
+                else DATECALC_MEMORY_ERROR("Calendar");
             }
-            else DATECALC_MEMORY_ERROR("Calendar");
+            else DATECALC_MONTH_ERROR("Calendar");
         }
-        else DATECALC_MONTH_ERROR("Calendar");
+        else DATECALC_YEAR_ERROR("Calendar");
     }
-    else DATECALC_YEAR_ERROR("Calendar");
+    else croak("Usage: Date::Calc::Calendar(year,month[,orthodox])");
 }
 
 
@@ -909,7 +1094,7 @@ CODE:
             else DATECALC_LANGUAGE_ERROR("Language");
         }
     }
-    else croak("Usage: [$lang = ] Date::Calc::Language( [$lang] );");
+    else croak("Usage: Date::Calc::Language([lang])");
 }
 OUTPUT:
 RETVAL
@@ -923,6 +1108,62 @@ CODE:
 }
 OUTPUT:
 RETVAL
+
+
+void
+DateCalc_ISO_LC(scalar)
+    SV *	scalar
+PPCODE:
+{
+    charptr string;
+    charptr buffer;
+    N_int length;
+    N_int index;
+
+    if ( DATECALC_STRING(scalar,string,length) )
+    {
+        buffer = (charptr) malloc(length+1);
+        if (buffer != NULL)
+        {
+            for ( index = 0; index < length; index++ )
+                buffer[index] = DateCalc_ISO_LC(string[index]);
+            buffer[length] = '\0';
+            EXTEND(sp,1);
+            PUSHs(sv_2mortal(newSVpv((char *)buffer,length)));
+            free(buffer);
+        }
+        else DATECALC_MEMORY_ERROR("ISO_LC");
+    }
+    else DATECALC_STRING_ERROR("ISO_LC");
+}
+
+
+void
+DateCalc_ISO_UC(scalar)
+    SV *	scalar
+PPCODE:
+{
+    charptr string;
+    charptr buffer;
+    N_int length;
+    N_int index;
+
+    if ( DATECALC_STRING(scalar,string,length) )
+    {
+        buffer = (charptr) malloc(length+1);
+        if (buffer != NULL)
+        {
+            for ( index = 0; index < length; index++ )
+                buffer[index] = DateCalc_ISO_UC(string[index]);
+            buffer[length] = '\0';
+            EXTEND(sp,1);
+            PUSHs(sv_2mortal(newSVpv((char *)buffer,length)));
+            free(buffer);
+        }
+        else DATECALC_MEMORY_ERROR("ISO_UC");
+    }
+    else DATECALC_STRING_ERROR("ISO_UC");
+}
 
 
 void

@@ -1,0 +1,64 @@
+
+=head1 NAME
+
+Date::Calendar::Profiles - Some sample profiles for Date::Calendar
+
+=head1 SYNOPSIS
+
+  use Date::Calendar;
+  use Date::Calendar::Profiles qw( $Profiles );
+
+  $cal_US_AZ = Date::Calendar->new( ${$Profiles}{'US-AZ'} );
+  $cal_DE_BY = Date::Calendar->new( ${$Profiles}{'DE-BY'} );
+
+=head1 DESCRIPTION
+
+This module provides some sample profiles (i.e., holiday schemes)
+for use with the Date::Calendar(3) module (and hence the
+Date::Calendar::Year(3) module).
+
+You are not required to use these, you can always roll your own
+(this should be easy!). See L<Date::Calendar::Year(3)> for more
+instructions on how to do this, and take the profiles from this
+module as examples.
+
+Please let me know of any errors in these profiles, and please
+send me your own profiles if you'd like to see them included in
+the next release of this module! Thank you!
+
+=head1 SEE ALSO
+
+Date::Calendar(3), Date::Calendar::Year(3),
+Date::Calc::Object(3), Date::Calc(3).
+
+=head1 VERSION
+
+This man page documents "Date::Calendar::Profiles" version 5.0.
+
+=head1 AUTHOR
+
+  Steffen Beyer
+  mailto:sb@engelschall.com
+  http://www.engelschall.com/u/sb/download/
+
+=head1 COPYRIGHT
+
+Copyright (c) 2000 by Steffen Beyer. All rights reserved.
+
+=head1 LICENSE
+
+This package is free software; you can redistribute it and/or
+modify it under the same terms as Perl itself, i.e., under the
+terms of the "Artistic License" or the "GNU General Public License".
+
+Please refer to the files "Artistic.txt" and "GNU_GPL.txt"
+in this distribution for details!
+
+=head1 DISCLAIMER
+
+This package is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+
+See the "GNU General Public License" for more details.
+

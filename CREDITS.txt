@@ -1,5 +1,5 @@
                      ====================================
-                       Package "Date::Calc" Version 4.3
+                       Package "Date::Calc" Version 5.0
                      ====================================
 
 
@@ -82,7 +82,135 @@ Thanks to the several people who notified me about two compiler warnings
 concerning incompatible character types in Calc.xs line 857 (added two
 casts in version 4.2 to fix this flaw).
 
-Many thanks to Alessio Bragadini <alessio@albourne.com> for the patch he
+Many thanks to Alessio Bragadini <alessio@sevenseas.org> for the patch he
 sent in to add Italian as one of the supported languages (version 4.3).
+
+Many thanks to Roland Titze <Roland.Titze@ks.sel.alcatel.de> and
+to Andrew Brown <alloneword@dial.pipex.com> for pointing out the
+misspelling of "whether" (was: wether) throughout my documentation,
+corrected in version 5.0.
+
+Special thanks go to Tim Mueller-Seydlitz <Tim.MuellerSeydlitz@blb.de>
+for notifying me about the inability of all string decoding routines
+to parse special ISO-Latin-1 characters correctly.
+
+Many thanks to Gisle Aas <gisle@aas.no> for many good suggestions
+and his patch for adding support for Norwegian.
+
+Many thanks to Jerker Nilsson <jnn@annons.dn.se> for his patch for
+adding Swedish.
+
+Also many thanks to Masanao Izumo <mo@goice.co.jp> for raising the
+question of a "Delta_YMD()" function and for sending in patches.
+
+And last but not least many thanks to Slaven Rezic <eserte@cs.tu-berlin.de>,
+Tobias Brox <tobiasb@odin.funcom.com> and Matthew Persico <persicom@acedsl.com>
+for suggesting date objects with overloaded operators, which were added in
+version 5.0.
+
+Many thanks to Tobias Brox <tobiasb@odin.funcom.com> again for the idea
+of supplying one set of comparison operators which compare only the date
+part, and another set of operators which compare date and time (or fall
+back to comparing only the date if both operands lack the time part).
+
+Many thanks to Jens Coldewey <jens_coldewey@acm.org>, Michael Niebler
+<mniebler@generali.de> and Charles Lane <lane@duphy4.physics.drexel.edu>
+for notifying me about the missing "#include <stdio.h>" statement in
+DateCalc.c.
+
+Also many thanks to Frank Dabelstein <frankd@imf.au.dk> for his patch for
+adding Danish.
+
+Thanks also go to Steve Tolkin <steve.tolkin@fmr.com> for suggesting that
+I should emphasize in the README.txt file that the reading of the INSTALL.txt
+file is important, especially if running Perl under Windows. :-)
+
+Many thanks to Martin Vorlaender <martin@radiogaga.harz.de> for notifying
+me about the problem with the linker on VMS with identifiers longer than
+30 characters, and to Charles Lane <lane@duphy4.physics.drexel.edu> for
+sending me a patch!
+
+Many thanks to Jarkko Hietaniemi <jhi@iki.fi> for providing me with the
+necessary information to add Finnish (suomi).
+
+Many thanks to Graham Barr <gbarr@pobox.com> for his many good suggestions
+regarding how to generalize my original, very limited module (based on
+Carp.pm) which skips all packages belonging to the "Date::*" hierarchy
+(in order to generate an error message from the perspective of the caller),
+into a module that can be given a pattern (i.e., a regular expression) of
+package names to be skipped. Also many thanks for his suggestions of a
+name for this module and for lots of great code he sent!
+
+Also many many thanks to the innumerable contributors of the lists of
+American states and abbreviations and many countries' national holidays:
+
+List of U.S. American states and abbreviations courtesy of:
+
+    Jack Applin <neutron@fc.hp.com>
+    Troy Arnold <fryman@sonic.net>
+    Larry Rosler <lr@hpl.hp.com>
+    Mark-Jason Dominus <mjd@plover.com>
+    Charles Ford <cford@eudoramail.com>
+
+URLs concerning U.S. American states and abbreviations
+thereof sent by:
+
+    Edward Cerruti <ecerruti@teknowledge.com>
+    Mark Badolato <mbadolato@cybernox.com>
+
+List of Canadian states and abbreviations courtesy of:
+
+    Larry Rosler <lr@hpl.hp.com>
+    Geoff Baskwill <glb@nortel.ca>
+
+List of U.S. American holidays courtesy of:
+
+    David Cassell <cassell@mercury.cor.epa.gov>
+    Larry Rosler <lr@hpl.hp.com>
+    Anthony Argyriou <anthony@alphageo.com>
+
+List of Canadian holidays courtesy of:
+
+    M Lyons <lyonsm@bob.globalmediacorp.com>
+
+List of Norwegian holidays courtesy of:
+
+    Gisle Aas <gisle@aas.no>
+
+(From his module "No::Dato" on CPAN)
+
+List of Swedish holidays courtesy of:
+
+    Erland Sommarskog <sommar@algonet.se>
+
+List of British holidays courtesy of:
+
+    Jonathan Stowe <gellyfish@gellyfish.com>
+
+Lists, hints, suggestions and URLs concerning different countries'
+holidays were sent to me by:
+
+    Jihad Battikha <jbattikha@highsynth.com> <jihad.battikha@sharewire.com>
+    Tim Rueger <rueger@io.com>
+    Mark-Jason Dominus <mjd@plover.com>
+    Abe Timmerman <abe@ztreet.demon.nl>
+    Troy Arnold <fryman@sonic.net>
+    Mattias Engdegård <f91-men@nada.kth.se>
+    Lincoln Yeoh <lyeoh@pop.jaring.my>
+    Bart Lateur <bart.lateur@skynet.be>
+    David Chapman <david@dapc.globalnet.co.uk>
+    Russ Allbery <rra@stanford.edu>
+    Ben Coleman <oloryn@mindspring.com>
+    Wolfgang Franzki <franzki@sdm.de>
+    Rainer Gratias <rainer.gratias@sdm.de>
+
+Thanks to Nelson Ferrari <nferrari@ccsc.com> for suggesting an alternative
+"Calendar()" function which starts on Sunday instead of Monday.
+
+Many thanks again to Martin Vorlaender <martin@radiogaga.harz.de> for
+testing my modifications in order to satisfy the VMS linker (which was
+complaining about identifiers which were longer than 30 characters) and
+for his confirmation that now everything works (not counting some
+innocuous warnings from xsubpp)!
 
 

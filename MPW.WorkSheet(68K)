@@ -2,17 +2,18 @@
 	
 
 
-# (1) Copy the Date-Calc-4.3 folder from the expanded Date-Calc-4.3.tar.gz archive into the 
+# (1) Copy the Date-Calc-5.0 folder from the expanded Date-Calc-5.0.tar.gz archive into the 
 #     :MacPerl_Src:perl:ext folder of the MacPerl source distribution.
 #  
 #     and then
 #
-#     Set the current directory to the Date-Calc-4.3 folder (via Directory menu).
+#     Set the current directory to the Date-Calc-5.0 folder (via Directory menu).
 
 
 # (2) Build the DateCalc.o object file (with support for shared library model): 
 
 SC DateCalc.c -o DateCalc.o  -sym off -w off  -model cfmflat -d CFM68K
+
 
 
 
@@ -28,7 +29,6 @@ Set MPSrc "MacintoshHD:MacPerl_Src"     # (change the path accordingly)
 # (4) Run the XSUBpp compiler for Calc_68K.xs
 
 perl :::lib:ExtUtils:xsubpp -typemap :::lib:ExtUtils:typemap -typemap :typemap  Calc_68K.xs >Calc.tc && Rename -y Calc.tc Calc.c
-
 
 
 
@@ -69,7 +69,7 @@ ILink ¶
 	"{SharedLibraries}InterfaceLib" ¶
 	"{CFM68KLibraries}NuMacRuntime.o" ¶
 	"{CFM68KLibraries}NuToolLibs.o" ¶
-	MacintoshHD:MacPerl_Src:perl:PerlStub ¶
+	{MPSrc}:perl:PerlStub ¶
 	-sym off ¶
 	-mf -d ¶
 	-model cfmflat ¶

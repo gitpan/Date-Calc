@@ -80,9 +80,9 @@ typedef  Z_longword         *Z_longwordptr;
 #define TRUE        (0==0)
 
 #ifdef MACOS_TRADITIONAL
-  #define boolean Boolean
+    #define boolean Boolean
 #else
-  typedef enum { false = FALSE , true = TRUE } boolean;
+    typedef enum { false = FALSE, true = TRUE } boolean;
 #endif
 
 #define and         &&      /* logical (boolean) operators: lower case */
@@ -108,11 +108,12 @@ typedef  Z_longword         *Z_longwordptr;
 /*****************************************************************************/
 
 /*****************************************************************************/
-/*  VERSION:  5.3                                                            */
+/*  VERSION:  5.4                                                            */
 /*****************************************************************************/
 /*  VERSION HISTORY:                                                         */
 /*****************************************************************************/
 /*                                                                           */
+/*    Version 5.4   08.09.02  Added conditional changes for MacOS/MacPerl.   */
 /*    Version 5.3   12.05.98  Completed history.                             */
 /*    Version 5.0   01.03.98  "Definitions.h" -> "ToolBox.h".                */
 /*    Version 4.0   24.03.97  "lib_defs.h" -> "Definitions.h".               */
@@ -129,10 +130,6 @@ typedef  Z_longword         *Z_longwordptr;
 /*****************************************************************************/
 /*                                                                           */
 /*    Steffen Beyer                                                          */
-/*    Ainmillerstr. 5 / App. 513                                             */
-/*    D-80801 Munich                                                         */
-/*    Germany                                                                */
-/*                                                                           */
 /*    mailto:sb@engelschall.com                                              */
 /*    http://www.engelschall.com/u/sb/download/                              */
 /*                                                                           */
@@ -140,7 +137,7 @@ typedef  Z_longword         *Z_longwordptr;
 /*  COPYRIGHT:                                                               */
 /*****************************************************************************/
 /*                                                                           */
-/*    Copyright (c) 1995 - 2000 by Steffen Beyer.                            */
+/*    Copyright (c) 1995 - 2002 by Steffen Beyer.                            */
 /*    All rights reserved.                                                   */
 /*                                                                           */
 /*****************************************************************************/

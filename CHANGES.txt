@@ -1,14 +1,109 @@
                      ====================================
-                       Package "Date::Calc" Version 4.3
+                       Package "Date::Calc" Version 5.1
                      ====================================
 
 
-                  Copyright (c) 1995 - 2000 by Steffen Beyer.
+                  Copyright (c) 1995 - 2002 by Steffen Beyer.
                              All rights reserved.
 
 
 Version history:
 ----------------
+
+Version 5.1   08.09.2002
+
+ +  Integrated modifications needed for MacOS / MacPerl
+ +  Added new method "normalize()" (Date::Calc::Object)
+ +  Added a new test script "t/m011.t" for "normalize()"
+ +  Added a calendar profile for Mexico (Date::Calendar::Profiles)
+ +  Little additions to and corrections of the documentation (Date::Calc)
+ +  Added Polish (Date::Calc) and a calendar profile for Poland
+ +  Added Hungarian (Date::Calc)
+ +  Added some more commemorative days to the profile of Brazil
+
+Version 5.0   10.10.2001
+
+Module "Date::Calc":
+
+ +  Added the following new functions:
+     *  check_time()
+     *  Delta_YMD()
+     *  Delta_YMDHMS()
+     *  Add_Delta_YM()
+     *  Add_Delta_YMDHMS()
+     *  Normalize_DHMS()
+     *  This_Year()
+     *  Gmtime()
+     *  Localtime()
+     *  Mktime()
+     *  Timezone()
+     *  Date_to_Time()
+     *  Time_to_Date()
+     *  Fixed_Window()
+     *  Moving_Window()
+     *  ISO_LC()
+     *  ISO_UC()
+ +  Added support for Norwegian.
+ +  Added support for Swedish.
+ +  Added support for Danish.
+ +  Added support for Finnish.
+ +  Changed the month names of some languages to lower case.
+ +  Changed the french "long" date format to a more popular form.
+ +  Changed the corresponding test script (t/f012.t) accordingly.
+ +  Corrected the spanish texts in ./examples/age_in_days_*.
+ +  Fixed the broken parsing of special ISO-Latin-1 characters
+    in Date::Calc (replaced <ctype.h> with better solution).
+ -  Locales wouldn't help here, because "Decode_Language()" must
+    work with any locale setting. Moreover, setting a language in
+    Date::Calc would also require to set the proper corresponding
+    locale in the current environment, which may not be available
+    on the current system. The new solution works independently
+    of any locale and with ALL languages (in ISO-Latin-1).
+ +  Added a patch which should ensure compatibility with VMS
+    (this should resolve the problem of too long identifiers).
+ +  Added a missing "#include <stdio.h>" statement in DateCalc.c
+    (apparently only relevant to very few platforms).
+ +  Now automatically detects Perl's "PL_na" macro or switches to its
+    older incarnation (in Calc.xs). Same goes for the "GIMME_V" macro.
+ +  Changed the function "Add_Delta_YMD()" to have a more intuitive,
+    consistent and reversible behaviour. This might break existing
+    code, though. (To get the old behaviour, use the new function
+    "Add_Delta_YM()" plus "Add_Delta_Days()" thereafter instead.)
+ +  Changed the corresponding test script (t/f029.t) accordingly.
+ +  Added an optional boolean parameter "orthodox" to "Calendar()"
+    for calendars starting with Sunday instead of Monday.
+ +  Changed the behaviour of the "Decode_Date_*()" set of functions:
+    if the current year is available on the system, then a "moving
+    window" strategy is applied to year numbers < 100; otherwise
+    it defaults to the previous behaviour (see version 4.3 below).
+ +  Also changed the test scripts t/f016.t, t/f027.t and t/f028.t
+    accordingly.
+ +  Changed the "Week_of_Year()" function: In scalar context, it
+    now returns just the week number. BEWARE, this is a DANGEROUS
+    feature - see the manual page for why this is so!
+ +  Fixed the misspelled word "whether" in the documentation.
+
+Module "Date::Calc::Object":
+
+ +  Added the module Date::Calc::Object, an object-oriented add-on
+    to Date::Calc with overloaded operators.
+
+Modules "Date::Calendar[::(Year|Profiles)]":
+
+ +  Added the modules Date::Calendar, Date::Calendar::Year and
+    Date::Calendar::Profiles, for calculations which need to
+    take holidays into account (and for generating calendars).
+
+Module "Carp::Clan":
+
+ +  Added the module Carp::Clan (used by all new Date::* modules).
+
+All modules:
+
+ +  Now test scripts for Date::Calc and Carp::Clan ("functions") are
+    in files ./t/f*.t, whereas test scripts of other, object-oriented
+    modules ("methods") are in files ./t/m*.t.
+ +  Added new test scripts for all new modules.
 
 Version 4.3   08.01.2000
 
@@ -49,7 +144,7 @@ Version 4.0   12.05.1998
  +  Added a new Perl function "Week_of_Year()" (replacing "week_number()").
  +  Changed the Perl function "Week_Number()" to call the C function
     "Week_Number()".
- +  Added new functions System_Clock()", "Today()", "Now()" and
+ +  Added new functions "System_Clock()", "Today()", "Now()" and
     "Today_and_Now()".
  +  Added "check_business_date()", "Standard_to_Business()" and
     "Business_to_Standard()".
@@ -66,7 +161,7 @@ Version 3.2   15.06.1997
  +  Added the function "week_of_year()" in the C core because the C function
     "week_number()" returns the last week of the previous year or the first
     week of the next year in a rather hidden way.
-    The Perl function "week_number()" was not affected by this change.
+ +  The Perl function "week_number()" was not affected by this change.
 
 Version 3.1   12.06.1997
 
@@ -99,7 +194,7 @@ Version 2.2   26.05.1996
         ($year,$mm,$dd) = first_in_week(week_number($year,$mm,$dd));
     to break in the previous version, because "week_number()" passes
     an array to "first_in_week()".
-    Therefore, disabled prototypes.
+ +  Therefore, disabled prototypes.
 
 Version 2.1   26.05.1996
 

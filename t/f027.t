@@ -40,47 +40,47 @@ if ((($year,$mm,$dd) = Decode_Date_US2("_00134_")) &&
 $n++;
 
 if ((($year,$mm,$dd) = Decode_Date_US2("_1364_")) &&
-($year==2064) && ($mm==1) && ($dd==3))
+($year==1964) && ($mm==1) && ($dd==3))
 {print "ok $n\n";} else {print "not ok $n\n";}
 $n++;
 
 if ((($year,$mm,$dd) = Decode_Date_US2("_01364_")) &&
-($year==2064) && ($mm==1) && ($dd==3))
+($year==1964) && ($mm==1) && ($dd==3))
 {print "ok $n\n";} else {print "not ok $n\n";}
 $n++;
 
 if ((($year,$mm,$dd) = Decode_Date_US2("_001364_")) &&
-($year==2064) && ($mm==1) && ($dd==3))
+($year==1964) && ($mm==1) && ($dd==3))
 {print "ok $n\n";} else {print "not ok $n\n";}
 $n++;
 
 if ((($year,$mm,$dd) = Decode_Date_US2("_10364_")) &&
-($year==2064) && ($mm==1) && ($dd==3))
+($year==1964) && ($mm==1) && ($dd==3))
 {print "ok $n\n";} else {print "not ok $n\n";}
 $n++;
 
 if ((($year,$mm,$dd) = Decode_Date_US2("_010364_")) &&
-($year==2064) && ($mm==1) && ($dd==3))
+($year==1964) && ($mm==1) && ($dd==3))
 {print "ok $n\n";} else {print "not ok $n\n";}
 $n++;
 
 if ((($year,$mm,$dd) = Decode_Date_US2("_0010364_")) &&
-($year==2064) && ($mm==1) && ($dd==3))
+($year==1964) && ($mm==1) && ($dd==3))
 {print "ok $n\n";} else {print "not ok $n\n";}
 $n++;
 
 if ((($year,$mm,$dd) = Decode_Date_US2("_110364_")) &&
-($year==2064) && ($mm==11) && ($dd==3))
+($year==1964) && ($mm==11) && ($dd==3))
 {print "ok $n\n";} else {print "not ok $n\n";}
 $n++;
 
 if ((($year,$mm,$dd) = Decode_Date_US2("_0110364_")) &&
-($year==2064) && ($mm==11) && ($dd==3))
+($year==1964) && ($mm==11) && ($dd==3))
 {print "ok $n\n";} else {print "not ok $n\n";}
 $n++;
 
 if ((($year,$mm,$dd) = Decode_Date_US2("_00110364_")) &&
-($year==2064) && ($mm==11) && ($dd==3))
+($year==1964) && ($mm==11) && ($dd==3))
 {print "ok $n\n";} else {print "not ok $n\n";}
 $n++;
 
@@ -115,7 +115,7 @@ if ((($year,$mm,$dd) = Decode_Date_US2("_0011031964_")) &&
 $n++;
 
 if ((($year,$mm,$dd) = Decode_Date_US2("_1_3_64_")) &&
-($year==2064) && ($mm==1) && ($dd==3))
+($year==1964) && ($mm==1) && ($dd==3))
 {print "ok $n\n";} else {print "not ok $n\n";}
 $n++;
 
@@ -125,22 +125,22 @@ if ((($year,$mm,$dd) = Decode_Date_US2("_1_3_1964_")) &&
 $n++;
 
 if ((($year,$mm,$dd) = Decode_Date_US2("_jan_3_64_")) &&
-($year==2064) && ($mm==1) && ($dd==3))
+($year==1964) && ($mm==1) && ($dd==3))
 {print "ok $n\n";} else {print "not ok $n\n";}
 $n++;
 
 if ((($year,$mm,$dd) = Decode_Date_US2("_Jan_3_64_")) &&
-($year==2064) && ($mm==1) && ($dd==3))
+($year==1964) && ($mm==1) && ($dd==3))
 {print "ok $n\n";} else {print "not ok $n\n";}
 $n++;
 
 if ((($year,$mm,$dd) = Decode_Date_US2("_jAN_3_64_")) &&
-($year==2064) && ($mm==1) && ($dd==3))
+($year==1964) && ($mm==1) && ($dd==3))
 {print "ok $n\n";} else {print "not ok $n\n";}
 $n++;
 
 if ((($year,$mm,$dd) = Decode_Date_US2("_January_3_64_")) &&
-($year==2064) && ($mm==1) && ($dd==3))
+($year==1964) && ($mm==1) && ($dd==3))
 {print "ok $n\n";} else {print "not ok $n\n";}
 $n++;
 
@@ -154,32 +154,32 @@ if ((($year,$mm,$dd) = Decode_Date_US2(" January 3rd, 1964 ")) &&
 $n++;
 
 if ((($year,$mm,$dd) = Decode_Date_US2("_Jan364_")) &&
-($year==2064) && ($mm==1) && ($dd==3))
+($year==1964) && ($mm==1) && ($dd==3))
 {print "ok $n\n";} else {print "not ok $n\n";}
 $n++;
 
 if ((($year,$mm,$dd) = Decode_Date_US2("_Jan0364_")) &&
-($year==2064) && ($mm==1) && ($dd==3))
+($year==1964) && ($mm==1) && ($dd==3))
 {print "ok $n\n";} else {print "not ok $n\n";}
 $n++;
 
 if ((($year,$mm,$dd) = Decode_Date_US2("_Jan00364_")) &&
-($year==2064) && ($mm==1) && ($dd==3))
+($year==1964) && ($mm==1) && ($dd==3))
 {print "ok $n\n";} else {print "not ok $n\n";}
 $n++;
 
 if ((($year,$mm,$dd) = Decode_Date_US2("_Jan2264_")) &&
-($year==2064) && ($mm==1) && ($dd==22))
+($year==1964) && ($mm==1) && ($dd==22))
 {print "ok $n\n";} else {print "not ok $n\n";}
 $n++;
 
 if ((($year,$mm,$dd) = Decode_Date_US2("_Jan02264_")) &&
-($year==2064) && ($mm==1) && ($dd==22))
+($year==1964) && ($mm==1) && ($dd==22))
 {print "ok $n\n";} else {print "not ok $n\n";}
 $n++;
 
 if ((($year,$mm,$dd) = Decode_Date_US2("_Jan002264_")) &&
-($year==2064) && ($mm==1) && ($dd==22))
+($year==1964) && ($mm==1) && ($dd==22))
 {print "ok $n\n";} else {print "not ok $n\n";}
 $n++;
 
@@ -222,12 +222,12 @@ unless (($year,$mm,$dd) = Decode_Date_US2("_ja331964_"))
 $n++;
 
 if ((($year,$mm,$dd) = Decode_Date_US2("x000001x000003x000064x")) &&
-($year==2064) && ($mm==1) && ($dd==3))
+($year==1964) && ($mm==1) && ($dd==3))
 {print "ok $n\n";} else {print "not ok $n\n";}
 $n++;
 
 if ((($year,$mm,$dd) = Decode_Date_US2("_ja_000003x000064x")) &&
-($year==2064) && ($mm==1) && ($dd==3))
+($year==1964) && ($mm==1) && ($dd==3))
 {print "ok $n\n";} else {print "not ok $n\n";}
 $n++;
 

@@ -38,15 +38,15 @@ $n++;
 
 Language(Decode_Language("FR"));
 
-if (Date_to_Text_Long(1964,1,3) eq "Vendredi, le 3 Janvier 1964") {print "ok $n\n";} else {print "not ok $n\n";}
+if (Date_to_Text_Long(1964,1,3) eq "Vendredi 3 janvier 1964") {print "ok $n\n";} else {print "not ok $n\n";}
 $n++;
-if (Date_to_Text_Long(1995,11,18) eq "Samedi, le 18 Novembre 1995") {print "ok $n\n";} else {print "not ok $n\n";}
+if (Date_to_Text_Long(1995,11,18) eq "Samedi 18 novembre 1995") {print "ok $n\n";} else {print "not ok $n\n";}
 $n++;
-if (Date_to_Text_Long(1999,12,31) eq "Vendredi, le 31 Décembre 1999") {print "ok $n\n";} else {print "not ok $n\n";}
+if (Date_to_Text_Long(1999,12,31) eq "Vendredi 31 décembre 1999") {print "ok $n\n";} else {print "not ok $n\n";}
 $n++;
-if (Date_to_Text_Long(2000,1,1) eq "Samedi, le 1 Janvier 2000") {print "ok $n\n";} else {print "not ok $n\n";}
+if (Date_to_Text_Long(2000,1,1) eq "Samedi 1 janvier 2000") {print "ok $n\n";} else {print "not ok $n\n";}
 $n++;
-if (Date_to_Text_Long(2000,1,2) eq "Dimanche, le 2 Janvier 2000") {print "ok $n\n";} else {print "not ok $n\n";}
+if (Date_to_Text_Long(2000,1,2) eq "Dimanche 2 janvier 2000") {print "ok $n\n";} else {print "not ok $n\n";}
 
 __END__
 

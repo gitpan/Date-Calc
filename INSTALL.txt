@@ -11,7 +11,7 @@ Prerequisites:
 --------------
 
 Perl version 5.000 or higher, and an ANSI C compiler (!)
-                              ^^^^^^^^^^^^^^^^^^^^^^^^^^
+                                     ^^^^^^
 
 
 Preliminary steps for use with Perl prior to version 5.002:
@@ -40,6 +40,37 @@ Finally, edit the file "Calc.xs" and delete the line
     PROTOTYPES: DISABLE
 
 
+Preliminary steps for console users:
+------------------------------------
+
+In case you will be running this package in a MS-DOS command shell
+environment *EXCLUSIVELY* (and never under Perl/Tk, for instance),
+or if you will be running this package *EXCLUSIVELY* on the console
+of a PC UNIX system (like FreeBSD or GNU/Linux, for example) and
+never under X-windows, you might want to convert the special characters
+embedded in this package from the "ISO-Latin-1" character set (this
+is the same as "ISO-8859-1") to the character set used by the MS-DOS
+command shell or the PC UNIX console.
+
+To do so, simply change directory to the "tools" subdirectory in this
+distribution ("cd tools") and issue the following command:
+
+    > perl convert.pl
+
+Plain C developers (in case Perl is not available on your system) can
+also use
+
+    > ./convert.sh
+
+under UNIX (assumes 'gcc' to be your C compiler!) or
+
+    > .\convert.bat
+
+under Windows NT/95 (assumes 'cl' to be your C compiler!) instead.
+
+Then proceed with the installation of this package as described below.
+
+
 Installation:
 -------------
 
@@ -54,6 +85,7 @@ Note that installation under Windows NT/95 is easiest with the "native"
                 http://www.perl.com/CPAN/authors/id/GSAR/
 
 Quick installation guide for experienced users:
+-----------------------------------------------
 
     UNIX:                 Win32/Borland C++:      Win32/MS Visual C++:
     =====                 ==================      ====================
@@ -64,9 +96,10 @@ Quick installation guide for experienced users:
     % make install        > dmake install         > nmake install
 
 Detailed installation guide:
+----------------------------
 
  1) Change directory to the directory that has been created by unpacking this
-    package ("cd Date-Calc-4.0/").
+    package ("cd Date-Calc-4.0").
 
  2) Type "perl Makefile.PL" (or whatever the name and path of your Perl 5
     binary is).
@@ -129,10 +162,10 @@ Detailed installation guide:
 
  5) At last, type "make install" (or "dmake install", "nmake install").
 
- 6) Now you can run the example applications from the "examples/"
+ 6) Now you can run the example applications from the "examples"
     subdirectory in this distribution.
 
-    Please refer to the file "EXAMPLES" in this distribution for
+    Please refer to the file "EXAMPLES.txt" in this distribution for
     more details!
 
  7) Share and enjoy!

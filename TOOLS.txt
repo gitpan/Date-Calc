@@ -10,11 +10,15 @@
 Tools:
 ------
 
-You will find various tools in the "tools/" subdirectory of this
+You will find various tools in the "tools" subdirectory of this
 distribution:
 
+                            tools/compile.bat
                             tools/compile.pl
                             tools/compile.sh
+                            tools/convert.bat
+                            tools/convert.pl
+                            tools/convert.sh
                             tools/iso2pc.c
                             tools/pc2iso.c
                             tools/upgrade_DC40.pl

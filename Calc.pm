@@ -269,15 +269,391 @@ __END__
 
 =head1 NAME
 
-Date::Calc - Gregorian Calendar Date Calculations
+Date::Calc - Gregorian calendar date calculations
 
-in compliance with ISO/R 2015-1971 and DIN 1355 standards
+in compliance with ISO/R 2015-1971 and DIN 1355 standards.
 
 =head1 SYNOPSIS
 
+  Days_in_Year
+      $days = Days_in_Year($year,$mm);
+
+  Days_in_Month
+      $days = Days_in_Month($year,$mm);
+
+  Weeks_in_Year
+      $weeks = Weeks_in_Year($year);
+
+  leap_year
+      if (leap_year($year))
+
+  check_date
+      if (check_date($year,$mm,$dd))
+
+  Day_of_Year
+      $doy = Day_of_Year($year,$mm,$dd);
+
+  Date_to_Days
+      $days = Date_to_Days($year,$mm,$dd);
+
+  Day_of_Week
+      $dow = Day_of_Week($year,$mm,$dd);
+
+  Week_Number
+      $week = Week_Number($year,$mm,$dd);
+
+  Week_of_Year
+      ($week,$year) = Week_of_Year($year,$mm,$dd);
+
+  Monday_of_Week
+      ($year,$mm,$dd) = Monday_of_Week($week,$year);
+
+  Nth_Weekday_of_Month_Year
+      if (($year,$mm,$dd) = Nth_Weekday_of_Month_Year($year,$mm,$dow,$n))
+
+  Delta_Days
+      $Dd = Delta_Days($year1,$mm1,$dd1, $year2,$mm2,$dd2);
+
+  Delta_DHMS
+      ($Dd,$Dh,$Dm,$Ds) = Delta_DHMS($year1,$mm1,$dd1, $h1,$m1,$s1,
+                                     $year2,$mm2,$dd2, $h2,$m2,$s2);
+
+  Add_Delta_Days
+      ($year,$mm,$dd) = Add_Delta_Days($year,$mm,$dd, $Dd);
+
+  Add_Delta_DHMS
+      ($year,$mm,$dd, $h,$m,$s) = Add_Delta_DHMS($year,$mm,$dd,
+                                      $h,$m,$s, $Dd,$Dh,$Dm,$Ds);
+
+  Add_Delta_YMD
+      ($year,$mm,$dd) = Add_Delta_YMD($year,$mm,$dd, $Dy,$Dm,$Dd);
+
+  System_Clock
+      ($year,$mm,$dd, $h,$m,$s, $doy,$dow,$dst) = System_Clock();
+
+  Today
+      ($year,$mm,$dd) = Today();
+
+  Now
+      ($h,$m,$s) = Now();
+
+  Today_and_Now
+      ($year,$mm,$dd, $h,$m,$s) = Today_and_Now();
+
+  Easter_Sunday
+      ($year,$mm,$dd) = Easter_Sunday($year);
+
+  Decode_Month
+      $mm = Decode_Month($string);
+
+  Decode_Day_of_Week
+      $dow = Decode_Day_of_Week($string);
+
+  Decode_Language
+      $lang = Decode_Language($string);
+
+  Decode_Date_EU
+      ($year,$mm,$dd) = Decode_Date_EU($string);
+
+  Decode_Date_US
+      ($year,$mm,$dd) = Decode_Date_US($string);
+
+  Compress
+      $date = Compress($yy,$mm,$dd);
+
+  Uncompress
+      ($cc,$yy,$mm,$dd) = Uncompress($date);
+
+  check_compressed
+      if (check_compressed($date))
+
+  Compressed_to_Text
+      $string = Compressed_to_Text($date);
+
+  Date_to_Text
+      $string = Date_to_Text($year,$mm,$dd);
+
+  Date_to_Text_Long
+      $string = Date_to_Text_Long($year,$mm,$dd);
+
+  Calendar
+      $string = Calendar($year,$mm);
+
+  Month_to_Text
+      $string = Month_to_Text($mm);
+
+  Day_of_Week_to_Text
+      $string = Day_of_Week_to_Text($dow);
+
+  Day_of_Week_Abbreviation
+      $string = Day_of_Week_Abbreviation($dow);
+
+  Language_to_Text
+      $string = Language_to_Text($lang);
+
+  Language
+      $lang = Language();
+      Language($lang);
+      $oldlang = Language($newlang);
+
+  Languages
+      $max_lang = Languages();
+
+  Decode_Date_EU2
+      ($year,$mm,$dd) = Decode_Date_EU2($string);
+
+  Decode_Date_US2
+      ($year,$mm,$dd) = Decode_Date_US2($string);
+
+  Parse_Date
+      ($year,$mm,$dd) = Parse_Date($string);
+
+  Version
+      $string = Date::Calc::Version();
+
+=head1 IMPORTANT NOTES
+
+=over 2
+
+=item *
+
+"Year 2000" (Y2K) compliance
+
+The upper limit for any year number in this module is only given
+by the size of the largest positive integer that can be represented
+in a variable of the C type "int" on your system, which is at least
+32767, according to the ANSI C standard (exceptions see below).
+
+In order to simplify calculations, this module B<EXTRAPOLATES>
+the gregorian calendar B<BACK> until the year 1 A.D. - i.e.,
+back B<BEYOND> the year 1582 when this calendar was first decreed
+by the catholic pope S<Gregor I>!
+
+Therefore, B<BE SURE TO ALWAYS SPECIFY "1998" WHEN YOU MEAN "1998">,
+for instance, and B<DO NOT WRITE "98" INSTEAD>, because this will
+in fact perform a calculation based on the year "98" A.D. and
+B<NOT> "1998"!
+
+The only exceptions from this rule are the functions which contain
+the word "compress" in their names (which only handle years between
+1970 and 2069 and also accept the abbreviations "00" to "99"), and
+the functions with the words "decode_date" in their names (which
+add "1900" to the year if the year is less than 100).
+
+=item *
+
+First index
+
+B<ALL> indices in this module start with "C<1>", B<NOT> "C<0>"!
+
+I.e., the day of month, day of week, day of year, month of year,
+week of year, first valid year number and language B<ALL> start
+counting at one, B<NOT> zero!
+
+The only exception is the function "C<Week_Number()>", which may
+in fact return "C<0>" when the given date actually lies in the
+last week of the B<PREVIOUS> year.
+
+=item *
+
+Function naming conventions
+
+Function names completely in lower case indicate a boolean return value.
+
+=item *
+
+Boolean values
+
+Boolean values in this module are always a numeric zero ("C<0>") for
+"false" and a numeric one ("C<1>") for "true".
+
+=back
 
 =head1 DESCRIPTION
 
+=over 2
+
+=item *
+
+C<$days = Days_in_Year($year,$mm);>
+
+=item *
+
+C<$days = Days_in_Month($year,$mm);>
+
+=item *
+
+C<$weeks = Weeks_in_Year($year);>
+
+=item *
+
+C<if (leap_year($year))>
+
+=item *
+
+C<if (check_date($year,$mm,$dd))>
+
+=item *
+
+C<$doy = Day_of_Year($year,$mm,$dd);>
+
+=item *
+
+C<$days = Date_to_Days($year,$mm,$dd);>
+
+=item *
+
+C<$dow = Day_of_Week($year,$mm,$dd);>
+
+=item *
+
+C<$week = Week_Number($year,$mm,$dd);>
+
+=item *
+
+C<($week,$year) = Week_of_Year($year,$mm,$dd);>
+
+=item *
+
+C<($year,$mm,$dd) = Monday_of_Week($week,$year);>
+
+=item *
+
+C<if (($year,$mm,$dd) = Nth_Weekday_of_Month_Year($year,$mm,$dow,$n))>
+
+=item *
+
+C<$Dd = Delta_Days($year1,$mm1,$dd1, $year2,$mm2,$dd2);>
+
+=item *
+
+C<($Dd,$Dh,$Dm,$Ds) = Delta_DHMS($year1,$mm1,$dd1, $h1,$m1,$s1, $year2,$mm2,$dd2, $h2,$m2,$s2);>
+
+=item *
+
+C<($year,$mm,$dd) = Add_Delta_Days($year,$mm,$dd, $Dd);>
+
+=item *
+
+C<($year,$mm,$dd, $h,$m,$s) = Add_Delta_DHMS($year,$mm,$dd, $h,$m,$s, $Dd,$Dh,$Dm,$Ds);>
+
+=item *
+
+C<($year,$mm,$dd) = Add_Delta_YMD($year,$mm,$dd, $Dy,$Dm,$Dd);>
+
+=item *
+
+C<($year,$mm,$dd, $h,$m,$s, $doy,$dow,$dst) = System_Clock();>
+
+=item *
+
+C<($year,$mm,$dd) = Today();>
+
+=item *
+
+C<($h,$m,$s) = Now();>
+
+=item *
+
+C<($year,$mm,$dd, $h,$m,$s) = Today_and_Now();>
+
+=item *
+
+C<($year,$mm,$dd) = Easter_Sunday($year);>
+
+=item *
+
+C<$mm = Decode_Month($string);>
+
+=item *
+
+C<$dow = Decode_Day_of_Week($string);>
+
+=item *
+
+C<$lang = Decode_Language($string);>
+
+=item *
+
+C<($year,$mm,$dd) = Decode_Date_EU($string);>
+
+=item *
+
+C<($year,$mm,$dd) = Decode_Date_US($string);>
+
+=item *
+
+C<$date = Compress($yy,$mm,$dd);>
+
+=item *
+
+C<($cc,$yy,$mm,$dd) = Uncompress($date);>
+
+=item *
+
+C<if (check_compressed($date))>
+
+=item *
+
+C<$string = Compressed_to_Text($date);>
+
+=item *
+
+C<$string = Date_to_Text($year,$mm,$dd);>
+
+=item *
+
+C<$string = Date_to_Text_Long($year,$mm,$dd);>
+
+=item *
+
+C<$string = Calendar($year,$mm);>
+
+=item *
+
+C<$string = Month_to_Text($mm);>
+
+=item *
+
+C<$string = Day_of_Week_to_Text($dow);>
+
+=item *
+
+C<$string = Day_of_Week_Abbreviation($dow);>
+
+=item *
+
+C<$string = Language_to_Text($lang);>
+
+=item *
+
+C<$lang = Language();>
+
+C<Language($lang);>
+
+C<$oldlang = Language($newlang);>
+
+=item *
+
+C<$max_lang = Languages();>
+
+=item *
+
+C<($year,$mm,$dd) = Decode_Date_EU2($string);>
+
+=item *
+
+C<($year,$mm,$dd) = Decode_Date_US2($string);>
+
+=item *
+
+C<($year,$mm,$dd) = Parse_Date($string);>
+
+=item *
+
+C<$string = Date::Calc::Version();>
+
+=back
 
 =head1 EXAMPLES
 
@@ -285,11 +661,52 @@ in compliance with ISO/R 2015-1971 and DIN 1355 standards
 
 =item 1)
 
+How do I compare two dates?
+
+  use Date::Calc qw( Date_to_Days );
+
+  if (Date_to_Days($year1,$mm1,$dd1)  <
+      Date_to_Days($year2,$mm2,$dd2))
+
+  if (Date_to_Days($year1,$mm1,$dd1)  <=
+      Date_to_Days($year2,$mm2,$dd2))
+
+  if (Date_to_Days($year1,$mm1,$dd1)  >
+      Date_to_Days($year2,$mm2,$dd2))
+
+  if (Date_to_Days($year1,$mm1,$dd1)  >=
+      Date_to_Days($year2,$mm2,$dd2))
+
+  $cmp = (Date_to_Days($year1,$mm1,$dd1)  <=>
+          Date_to_Days($year2,$mm2,$dd2));
+
+=item 2)
+
+How do I check wether a given date lies within a certain range of dates?
+
+  use Date::Calc qw( Date_to_Days );
+
+  $lower = Date_to_Days($year1,$mm1,$dd1);
+  $upper = Date_to_Days($year2,$mm2,$dd2);
+
+  $date = Date_to_Days($year,$mm,$dd);
+
+  if (($date >= $lower) && ($date <= $upper))
+  {
+      # ok
+  }
+  else
+  {
+      # not ok
+  }
+
+=item 3)
+
 How do I verify wether someone has a certain age?
 
   use Date::Calc qw( Decode_Date_EU Today leap_year Delta_Days );
 
-  $date = <STDIN>; # birthday
+  $date = <STDIN>; # get birthday
 
   ($yy1,$mm1,$dd1) = Decode_Date_EU($date);
 
@@ -300,7 +717,7 @@ How do I verify wether someone has a certain age?
 
   if ( (($yy2 - $yy1) >  18) ||
      ( (($yy2 - $yy1) == 18) &&
-      (Delta_Days($yy2,$mm1,$dd1,$yy2,$mm2,$dd2) >= 0) ) )
+      (Delta_Days($yy2,$mm1,$dd1, $yy2,$mm2,$dd2) >= 0) ) )
   {
       print "Ok - you are over 18.\n";
   }
@@ -309,7 +726,7 @@ How do I verify wether someone has a certain age?
       print "Sorry - you aren't 18 yet!\n";
   }
 
-=item 2)
+=item 4)
 
 How do I calculate the number of the week of month
 the current date lies in?
@@ -328,11 +745,57 @@ Solution:
 
   use Date::Calc qw( Today Day_of_Week );
 
-  ($year,$month,$day) = Today();
+  ($year,$mm,$dd) = Today();
 
-  $week = int(($day + Day_of_Week($year,$month,1) - 2) / 7) + 1;
+  $week = int(($dd + Day_of_Week($year,$mm,1) - 2) / 7) + 1;
 
-=item 3)
+=item 5)
+
+How do I calculate wether a given date is the 1st, 2nd, 3rd, 4th or 5th
+of that day of week in the given month?
+
+For example:
+
+           October 2000
+    Mon Tue Wed Thu Fri Sat Sun
+                              1
+      2   3   4   5   6   7   8
+      9  10  11  12  13  14  15
+     16  17  18  19  20  21  22
+     23  24  25  26  27  28  29
+     30  31
+
+Is Sunday, the 15th of October 2000, the 1st, 2nd, 3rd, 4th or 5th
+Sunday of that month?
+
+Solution:
+
+  use Date::Calc qw( Day_of_Week Delta_Days Nth_Weekday_of_Month_Year
+                     Date_to_Text_Long Day_of_Week_to_Text Month_to_Text );
+
+  %ordinal = ( 1 => 'st', 2 => 'nd', 3 => 'rd' );
+
+  ($year,$mm,$dd) = (2000,10,15);
+
+  $dow = Day_of_Week($year,$mm,$dd);
+
+  $n = int( Delta_Days(
+            Nth_Weekday_of_Month_Year($year,$mm,$dow,1),
+            $year,$mm,$dd)
+            / 7) + 1;
+
+  printf("%s is the %s %s in %s %d.\n",
+      Date_to_Text_Long($year,$mm,$dd),
+      $n . ($ordinal{$n} || 'th'),
+      Day_of_Week_to_Text($dow),
+      Month_to_Text($mm),
+      $year);
+
+This prints:
+
+  Sunday, 15 October 2000 is the 3rd Sunday in October 2000.
+
+=item 6)
 
 How do I calculate the date of the Wednesday of the same week as
 the current date?
@@ -361,7 +824,7 @@ Solution #2:
   @date = Add_Delta_Days( Monday_of_Week( Week_of_Year(@today) ),
                           $searching_dow - 1 );
 
-=item 4)
+=item 7)
 
 How do I calculate the last and the next Saturday for any
 given date?
@@ -409,7 +872,7 @@ This will print something like:
   Last Saturday was:     Sat 11-Apr-1998
   Next Saturday will be: Sat 18-Apr-1998
 
-=item 5)
+=item 8)
 
 How do I convert a MS Visual Basic "DATETIME" value into its date
 and time constituents?
@@ -418,24 +881,61 @@ and time constituents?
 
   $datetime = "35883.121653";
 
-  ($days,$hours,$minutes,$seconds) =
-      ($datetime =~ /^(\d+)\.(\d\d)(\d\d)(\d\d)$/);
+  ($Dd,$Dh,$Dm,$Ds) = ($datetime =~ /^(\d+)\.(\d\d)(\d\d)(\d\d)$/);
 
-  ($year,$month,$day,$h,$m,$s) =
-      Add_Delta_DHMS(1900,1,1,0,0,0,$days,$hours,$minutes,$seconds);
+  ($year,$mm,$dd, $h,$m,$s) =
+      Add_Delta_DHMS(1900,1,1, 0,0,0, $Dd,$Dh,$Dm,$Ds);
 
   printf("The given date is %s %02d:%02d:%02d\n",
-      Date_to_Text($year,$month,$day), $h, $m, $s);
+      Date_to_Text($year,$mm,$dd), $h, $m, $s);
 
 This prints:
 
   The given date is Tue 31-Mar-1998 12:16:53
 
+=item 9)
+
+How can I print a date in a different format than provided by
+the functions "C<Date_to_Text()>", "C<Date_to_Text_Long()>" or
+"C<Compressed_to_Text()>"?
+
+  use Date::Calc qw( Day_of_Week Day_of_Week_to_Text
+                     Month_to_Text Today );
+
+  ($year,$mm,$dd) = Today();
+
+For example with leading zeros for the day: "S<Fri 03-Jan-1964>"
+
+  printf("%.3s %02d-%.3s-%d\n",
+      Day_of_Week_to_Text(Day_of_Week($year,$mm,$dd)),
+      $dd,
+      Month_to_Text($mm),
+      $year);
+
+For example in U.S. american format: "S<April 12th, 1998>"
+
+  %ordinal = ( 1 => 'st', 2 => 'nd', 3 => 'rd' );
+
+  sub ordinal
+  {
+      return( $_[0] .
+          ( (substr($_[0],-2,1) ne '1') &&
+            $ordinal{substr($_[0],-1)} ||
+            'th' ) );
+  }
+
+  $string = sprintf("%s %s, %d",
+                Month_to_Text($mm),
+                ordinal($dd),
+                $year);
+
+(See also L<perlfunc/printf> and/or L<perlfunc/sprintf>!)
+
 =back
 
 =head1 SEE ALSO
 
-perl(1), perlsub(1), perlmod(1),
+perl(1), perlfunc(1), perlsub(1), perlmod(1),
 perlxs(1), perlxstut(1), perlguts(1).
 
 =head1 VERSION
@@ -464,11 +964,11 @@ modify it under the same terms as Perl itself, i.e., under the
 terms of the "Artistic License" or the "GNU General Public License".
 
 The C library at the core of this Perl module can additionally
-be redistributed and/or modified under the terms of the "GNU
-Library General Public License".
+be redistributed and/or modified under the terms of the
+"GNU Library General Public License".
 
-Please refer to the files "Artistic", "GNU_GPL" and "GNU_LGPL"
-in this distribution for details!
+Please refer to the files "Artistic.txt", "GNU_GPL.txt" and
+"GNU_LGPL.txt" in this distribution for details!
 
 =head1 DISCLAIMER
 

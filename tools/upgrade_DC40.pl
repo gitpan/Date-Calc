@@ -74,7 +74,7 @@ foreach $file (@ARGV)
         s!\bdecode_day\b!Decode_Day_of_Week!g;
         s!\bdecode_month\b!Decode_Month!g;
         s!\bdays_in_month\b!Days_in_Month!g;
-        s!\bnth_wday_of_month_year\s*\(([^,]+?),([^,]+?),([^,]+?),([^)]+?)\)!Nth_Weekday_of_Month_Year($4,$3,$2,$1)!g;
+        s!\bnth_wday_of_month_year\s*\(\s*([^,]+?)\s*,(\s*)([^,]+?)\s*,(\s*)([^,]+?)\s*,(\s*)([^)]+?)\s*\)!Nth_Weekday_of_Month_Year($7,$2$5,$4$3,$6$1)!g;
         s!\bnth_wday_of_month_year\b!Nth_Weekday_of_Month_Year!g;
         s!\bdecode_date\b!Decode_Date_EU!g;
         s!\bdecode_date_us\b!Decode_Date_US2!g;

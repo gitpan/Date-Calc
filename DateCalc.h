@@ -38,38 +38,38 @@ boolean DateCalc_monday_of_week     (Z_int week,
 
 boolean DateCalc_nth_weekday_of_month_year
                                     (Z_int *year, Z_int *mm, Z_int *dd,
-                                     Z_int wd,    Z_int n);
+                                     Z_int dow,   Z_int n);
 
 Z_long  DateCalc_Delta_Days         (Z_int year1, Z_int mm1, Z_int dd1,
                                      Z_int year2, Z_int mm2, Z_int dd2);
 
 boolean DateCalc_delta_dhms
 (
-    Z_long *d,
-    Z_int  *h,    Z_int *m,   Z_int *s,
+    Z_long *Dd,
+    Z_int  *Dh,   Z_int *Dm,  Z_int *Ds,
     Z_int  year1, Z_int mm1,  Z_int dd1,
-    Z_int  hour1, Z_int min1, Z_int sec1,
+    Z_int  h1,    Z_int m1,   Z_int s1,
     Z_int  year2, Z_int mm2,  Z_int dd2,
-    Z_int  hour2, Z_int min2, Z_int sec2
+    Z_int  h2,    Z_int m2,   Z_int s2
 );
 
 boolean DateCalc_add_delta_days     (Z_int *year, Z_int *mm, Z_int *dd,
-                                     Z_long d);
+                                     Z_long Dd);
 
 boolean DateCalc_add_delta_dhms
 (
     Z_int *year, Z_int *mm,  Z_int *dd,
-    Z_int *hour, Z_int *min, Z_int *sec,
-    Z_long d,
-    Z_long h,    Z_long m,   Z_long s
+    Z_int *h,    Z_int *m,   Z_int *s,
+    Z_long Dd,
+    Z_long Dh,   Z_long Dm,  Z_long Ds
 );
 
 boolean DateCalc_add_delta_ymd      (Z_int *year, Z_int *mm, Z_int *dd,
-                                     Z_long y,    Z_long m,  Z_long d);
+                                     Z_long Dy,   Z_long Dm, Z_long Dd);
 
 boolean DateCalc_system_clock       (Z_int *year, Z_int *mm, Z_int *dd,
                                      Z_int *h,    Z_int *m,  Z_int *s,
-                                     Z_int *yd,   Z_int *wd, Z_int *dst);
+                                     Z_int *doy,  Z_int *dow,Z_int *dst);
 
 boolean DateCalc_easter_sunday      (Z_int *year, Z_int *mm, Z_int *dd);
 
@@ -202,8 +202,8 @@ extern N_char DateCalc_Day_of_Week_to_Text_[DateCalc_LANGUAGES+1][8][32];
 
 extern N_char DateCalc_Day_of_Week_Abbreviation_[DateCalc_LANGUAGES+1][8][4];
 
-    /* Fill the fields below _only_ if special abbreviations are needed!  */
-    /* (Note that the first field serves as a flag and must be non-'\0'!) */
+    /* Fill the fields below _only_ if special abbreviations are needed! */
+    /* Note that the first field serves as a flag and must be non-empty! */
 /*
 {
     {
@@ -247,7 +247,7 @@ extern N_char DateCalc_Language_to_Text_[DateCalc_LANGUAGES+1][32];
 /*  VERSION HISTORY:                                                         */
 /*****************************************************************************/
 /*                                                                           */
-/*    11.04.98    Version 4.0                                                */
+/*    18.04.98    Version 4.0                                                */
 /*    15.06.97    Version 3.2                                                */
 /*    16.02.97    Version 3.0                                                */
 /*    ??.??.??    ???                                                        */

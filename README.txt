@@ -11,6 +11,7 @@ or from any CPAN (= "Comprehensive Perl Archive Network") mirror server:
 
                   http://www.perl.com/CPAN/authors/id/STBEY/
 
+
 The package consists of a C library (useful for C developers) which is the
 core of a Perl (wrapper) module (for easy access to the library from Perl).
 
@@ -31,30 +32,31 @@ modify it under the same terms as Perl itself, i.e., under the
 terms of the "Artistic License" or the "GNU General Public License".
 
 The C library at the core of this Perl module can additionally
-be redistributed and/or modified under the terms of the "GNU
-Library General Public License".
+be redistributed and/or modified under the terms of the
+"GNU Library General Public License".
 
-Please refer to the files "Artistic", "GNU_GPL" and "GNU_LGPL"
-in this distribution for details!
+Please refer to the files "Artistic.txt", "GNU_GPL.txt" and
+"GNU_LGPL.txt" in this distribution for details!
 
 
 Prerequisites:
 --------------
 
 Perl version 5.000 or higher, and an ANSI C compiler (!)
-                                     ======
+                                     ^^^^^^
+
 
 Installation:
 -------------
 
-Please see the file "INSTALL" in this distribution for instructions on
-how to install this package.
+Please see the file "INSTALL.txt" in this distribution for instructions
+on how to install this package.
 
 
 Changes over previous versions:
 -------------------------------
 
-Please refer to the file "CHANGES" in this distribution for a detailed
+Please refer to the file "CHANGES.txt" in this distribution for a detailed
 version history and instructions on how to upgrade existing applications.
 
 
@@ -81,22 +83,22 @@ which in turn should include "ToolBox.h" and "DateCalc.h" (in this order).
 Example applications:
 ---------------------
 
-Please refer to the file "EXAMPLES" in this distribution for details
-about the example applications in the "examples/" subdirectory.
+Please refer to the file "EXAMPLES.txt" in this distribution for details
+about the example applications in the "examples" subdirectory.
 
 
 Tools:
 ------
 
-Please refer to the file "TOOLS" in this distribution for details
-about the various tools to be found in the "tools/" subdirectory.
+Please refer to the file "TOOLS.txt" in this distribution for details
+about the various tools to be found in the "tools" subdirectory.
 
 
 Credits:
 --------
 
-Please refer to the file "CREDITS" in this distribution for a list of
-contributors.
+Please refer to the file "CREDITS.txt" in this distribution for a list
+of contributors.
 
 
 Author's note:
@@ -105,7 +107,7 @@ Author's note:
 If you have any questions, suggestions or need any assistance, please
 let me know!
 
-I would be glad to receive any kind of feedback from you!
+I would in fact be glad to receive any kind of feedback from you!
 
 I hope you will find this module beneficial.
 

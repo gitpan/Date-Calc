@@ -10,8 +10,8 @@
 Example applications:
 ---------------------
 
-Perl and C programmers alike will find some example applications in the
-"examples/" subdirectory in this distribution:
+Perl and C programmers alike can find example applications in the
+"examples" subdirectory in this distribution:
 
                         examples/age_in_days_eu.pl
                         examples/age_in_days_us.pl
@@ -19,7 +19,7 @@ Perl and C programmers alike will find some example applications in the
                         examples/nth_weekday.pl
 
 "age_in_days_eu.pl" and "age_in_days_us.pl" are a demonstration of the
-multi-lingual capabilities of this package, as well as of its scanning
+multi-language capabilities of this package, as well as of its scanning
 capabilities for dates.
 
 They first ask you to choose a language; any uniquely identifying abbre-
@@ -39,7 +39,7 @@ number, or any uniquely identifying abbreviation of the month's name
 
 Moreover, virtually any format for writing a date is supported:
 
-Examples include "03/01/64", "3.1.1964", "January 3rd 1964", "030164",
+Examples include "03/01/64", "3.1.1964", "January 3rd, 1964", "030164",
 and so on.
 
 Note that the scanning itself is actually performed by two powerful
@@ -54,15 +54,15 @@ If you have the GNU C compiler ("gcc") available on your system, you
 can also do this using the command "./tools/compile.sh cal.c DateCalc.c",
 or use "perl tools/compile.pl cal.c DateCalc.c".
 
-If you are running this program on a PC (e.g., Linux or FreeBSD) on
-the console (as opposed to the X windows system), then it might be
+If you are running this program on a PC (e.g., GNU/Linux or FreeBSD)
+on the console (as opposed to the X windows system), then it might be
 useful to pipe its output through the "iso2pc" utility from the
-"tools/" subdirectory (compile it with "./compile.sh iso2pc.c" first,
+"tools" subdirectory (compile it with "./compile.sh iso2pc.c" first,
 for example), as follows:
 
     % cal Port Mar 1998 | iso2pc
 
-(See the file "TOOLS" in this distribution for more details about
-the programs in the "tools/" subdirectory!)
+(See the file "TOOLS.txt" in this distribution for more details about
+the programs in the "tools" subdirectory!)
 
 

@@ -1,5 +1,5 @@
                      ====================================
-                       Package "Date::Calc" Version 5.2
+                       Package "Date::Calc" Version 5.3
                      ====================================
 
 
@@ -35,12 +35,10 @@ interface) with overloaded operators, and a set of modules for calculations
 which take local holidays into account (both additions in Perl only, however).
 
 
-What's new in version 5.2:
+What's new in version 5.3:
 --------------------------
 
- +  Changed the Polish profiles from ISO-Latin-2 to ISO-Latin-1.
- +  Fixed the broken tests in "t/f034.t" and "t/m006.t".
- +  Synchronized "Carp::Clan" and "ToolBox.h" with "Bit::Vector" 6.2.
+ +  Simplified the error message handlers in "Calc.xs".
 
 
 New features in version 5.0:
@@ -149,7 +147,7 @@ http://catcode.com/date/pcalc.html.
 Note to CPAN Testers:
 ---------------------
 
-After completion, version 5.2 of this module has already
+After completion, version 5.3 of this module has already
 been tested successfully with the following configurations:
 
   Perl 5.005_03  -  FreeBSD 4.1.1-RELEASE (with "dlopen() relative paths" patch)

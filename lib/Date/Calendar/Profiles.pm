@@ -34,7 +34,7 @@ require Exporter;
     &Advent
 );
 
-$VERSION = '5.2';
+$VERSION = '5.3';
 
 use Date::Calc qw(:all);
 use Carp::Clan qw(^Date::);

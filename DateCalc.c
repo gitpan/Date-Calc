@@ -2219,15 +2219,16 @@ void DateCalc_Dispose(charptr string)
 
 charptr DateCalc_Version(void)
 {
-    return( (charptr) "5.2" );
+    return( (charptr) "5.3" );
 }
 
 /*****************************************************************************/
-/*  VERSION:  5.2                                                            */
+/*  VERSION:  5.3                                                            */
 /*****************************************************************************/
 /*  VERSION HISTORY:                                                         */
 /*****************************************************************************/
 /*                                                                           */
+/*    Version 5.3   29.09.02  No changes.                                    */
 /*    Version 5.2   18.09.02  No changes.                                    */
 /*    Version 5.1   08.09.02  Added conditional changes for MacOS/MacPerl.   */
 /*    Version 5.0   10.10.01  New YMD/HMS functions, replaced <ctype.h>, ... */

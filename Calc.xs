@@ -34,52 +34,69 @@
 #include "DateCalc.h"
 
 
-#define DATECALC_ERROR(name,error) \
-    croak("Date::Calc::" name "(): " error)
+const char *_DateCalc_DATE_ERROR       = "not a valid date";
+const char *_DateCalc_TIME_ERROR       = "not a valid time";
+const char *_DateCalc_YEAR_ERROR       = "year out of range";
+const char *_DateCalc_MONTH_ERROR      = "month out of range";
+const char *_DateCalc_WEEK_ERROR       = "week out of range";
+const char *_DateCalc_DAYOFWEEK_ERROR  = "day of week out of range";
+const char *_DateCalc_DATE_RANGE_ERROR = "date out of range";
+const char *_DateCalc_TIME_RANGE_ERROR = "time out of range";
+const char *_DateCalc_FACTOR_ERROR     = "factor out of range";
+const char *_DateCalc_LANGUAGE_ERROR   = "language not available";
+const char *_DateCalc_SYSTEM_ERROR     = "not available on this system";
+const char *_DateCalc_MEMORY_ERROR     = "unable to allocate memory";
+const char *_DateCalc_STRING_ERROR     = "argument is not a string";
 
-#define DATECALC_DATE_ERROR(name) \
-    DATECALC_ERROR(name,"not a valid date")
-
-#define DATECALC_TIME_ERROR(name) \
-    DATECALC_ERROR(name,"not a valid time")
-
-#define DATECALC_YEAR_ERROR(name) \
-    DATECALC_ERROR(name,"year out of range")
-
-#define DATECALC_MONTH_ERROR(name) \
-    DATECALC_ERROR(name,"month out of range")
-
-#define DATECALC_WEEK_ERROR(name) \
-    DATECALC_ERROR(name,"week out of range")
-
-#define DATECALC_DAYOFWEEK_ERROR(name) \
-    DATECALC_ERROR(name,"day of week out of range")
-
-#define DATECALC_DATE_RANGE_ERROR(name) \
-    DATECALC_ERROR(name,"date out of range")
-
-#define DATECALC_TIME_RANGE_ERROR(name) \
-    DATECALC_ERROR(name,"time out of range")
-
-#define DATECALC_FACTOR_ERROR(name) \
-    DATECALC_ERROR(name,"factor out of range")
-
-#define DATECALC_LANGUAGE_ERROR(name) \
-    DATECALC_ERROR(name,"language not available")
-
-#define DATECALC_SYSTEM_ERROR(name) \
-    DATECALC_ERROR(name,"not available on this system")
-
-#define DATECALC_MEMORY_ERROR(name) \
-    DATECALC_ERROR(name,"unable to allocate memory")
-
-#define DATECALC_STRING_ERROR(name) \
-    DATECALC_ERROR(name,"argument is not a string")
 
 #define DATECALC_STRING(ref,var,len) \
     ( ref && !(SvROK(ref)) && SvPOK(ref) && \
     (var = (charptr)SvPV(ref,PL_na)) && \
     ((len = (N_int)SvCUR(ref)) | 1) )
+
+
+#define DATECALC_ERROR(message) \
+    croak("Date::Calc::%s(): %s", GvNAME(CvGV(cv)), message)
+
+
+#define DATECALC_DATE_ERROR \
+    DATECALC_ERROR( _DateCalc_DATE_ERROR )
+
+#define DATECALC_TIME_ERROR \
+    DATECALC_ERROR( _DateCalc_TIME_ERROR )
+
+#define DATECALC_YEAR_ERROR \
+    DATECALC_ERROR( _DateCalc_YEAR_ERROR )
+
+#define DATECALC_MONTH_ERROR \
+    DATECALC_ERROR( _DateCalc_MONTH_ERROR )
+
+#define DATECALC_WEEK_ERROR \
+    DATECALC_ERROR( _DateCalc_WEEK_ERROR )
+
+#define DATECALC_DAYOFWEEK_ERROR \
+    DATECALC_ERROR( _DateCalc_DAYOFWEEK_ERROR )
+
+#define DATECALC_DATE_RANGE_ERROR \
+    DATECALC_ERROR( _DateCalc_DATE_RANGE_ERROR )
+
+#define DATECALC_TIME_RANGE_ERROR \
+    DATECALC_ERROR( _DateCalc_TIME_RANGE_ERROR )
+
+#define DATECALC_FACTOR_ERROR \
+    DATECALC_ERROR( _DateCalc_FACTOR_ERROR )
+
+#define DATECALC_LANGUAGE_ERROR \
+    DATECALC_ERROR( _DateCalc_LANGUAGE_ERROR )
+
+#define DATECALC_SYSTEM_ERROR \
+    DATECALC_ERROR( _DateCalc_SYSTEM_ERROR )
+
+#define DATECALC_MEMORY_ERROR \
+    DATECALC_ERROR( _DateCalc_MEMORY_ERROR )
+
+#define DATECALC_STRING_ERROR \
+    DATECALC_ERROR( _DateCalc_STRING_ERROR )
 
 
 MODULE = Date::Calc		PACKAGE = Date::Calc		PREFIX = DateCalc_
@@ -101,9 +118,9 @@ PPCODE:
             EXTEND(sp,1);
             PUSHs(sv_2mortal(newSViv((IV)DateCalc_Days_in_Year_[DateCalc_leap_year(year)][month+1])));
         }
-        else DATECALC_MONTH_ERROR("Days_in_Year");
+        else DATECALC_MONTH_ERROR;
     }
-    else DATECALC_YEAR_ERROR("Days_in_Year");
+    else DATECALC_YEAR_ERROR;
 }
 
 
@@ -120,9 +137,9 @@ PPCODE:
             EXTEND(sp,1);
             PUSHs(sv_2mortal(newSViv((IV)DateCalc_Days_in_Month_[DateCalc_leap_year(year)][month])));
         }
-        else DATECALC_MONTH_ERROR("Days_in_Month");
+        else DATECALC_MONTH_ERROR;
     }
-    else DATECALC_YEAR_ERROR("Days_in_Month");
+    else DATECALC_YEAR_ERROR;
 }
 
 
@@ -135,7 +152,7 @@ CODE:
     {
         RETVAL = DateCalc_Weeks_in_Year(year);
     }
-    else DATECALC_YEAR_ERROR("Weeks_in_Year");
+    else DATECALC_YEAR_ERROR;
 }
 OUTPUT:
 RETVAL
@@ -150,7 +167,7 @@ CODE:
     {
         RETVAL = DateCalc_leap_year(year);
     }
-    else DATECALC_YEAR_ERROR("leap_year");
+    else DATECALC_YEAR_ERROR;
 }
 OUTPUT:
 RETVAL
@@ -185,7 +202,7 @@ DateCalc_Day_of_Year(year,month,day)
 CODE:
 {
     RETVAL = DateCalc_Day_of_Year(year,month,day);
-    if (RETVAL == 0) DATECALC_DATE_ERROR("Day_of_Year");
+    if (RETVAL == 0) DATECALC_DATE_ERROR;
 }
 OUTPUT:
 RETVAL
@@ -199,7 +216,7 @@ DateCalc_Date_to_Days(year,month,day)
 CODE:
 {
     RETVAL = DateCalc_Date_to_Days(year,month,day);
-    if (RETVAL == 0) DATECALC_DATE_ERROR("Date_to_Days");
+    if (RETVAL == 0) DATECALC_DATE_ERROR;
 }
 OUTPUT:
 RETVAL
@@ -213,7 +230,7 @@ DateCalc_Day_of_Week(year,month,day)
 CODE:
 {
     RETVAL = DateCalc_Day_of_Week(year,month,day);
-    if (RETVAL == 0) DATECALC_DATE_ERROR("Day_of_Week");
+    if (RETVAL == 0) DATECALC_DATE_ERROR;
 }
 OUTPUT:
 RETVAL
@@ -230,7 +247,7 @@ CODE:
     {
         RETVAL = DateCalc_Week_Number(year,month,day);
     }
-    else DATECALC_DATE_ERROR("Week_Number");
+    else DATECALC_DATE_ERROR;
 }
 OUTPUT:
 RETVAL
@@ -259,7 +276,7 @@ PPCODE:
             PUSHs(sv_2mortal(newSViv((IV)week)));
         }
     }
-    else DATECALC_DATE_ERROR("Week_of_Year");
+    else DATECALC_DATE_ERROR;
 }
 
 
@@ -283,11 +300,11 @@ PPCODE:
                 PUSHs(sv_2mortal(newSViv((IV)month)));
                 PUSHs(sv_2mortal(newSViv((IV)day)));
             }
-            else DATECALC_DATE_ERROR("Monday_of_Week");
+            else DATECALC_DATE_ERROR;
         }
-        else DATECALC_WEEK_ERROR("Monday_of_Week");
+        else DATECALC_WEEK_ERROR;
     }
-    else DATECALC_YEAR_ERROR("Monday_of_Week");
+    else DATECALC_YEAR_ERROR;
 }
 
 
@@ -318,13 +335,13 @@ PPCODE:
                     }
                     /* else return empty list */
                 }
-                else DATECALC_FACTOR_ERROR("Nth_Weekday_of_Month_Year");
+                else DATECALC_FACTOR_ERROR;
             }
-            else DATECALC_DAYOFWEEK_ERROR("Nth_Weekday_of_Month_Year");
+            else DATECALC_DAYOFWEEK_ERROR;
         }
-        else DATECALC_MONTH_ERROR("Nth_Weekday_of_Month_Year");
+        else DATECALC_MONTH_ERROR;
     }
-    else DATECALC_YEAR_ERROR("Nth_Weekday_of_Month_Year");
+    else DATECALC_YEAR_ERROR;
 }
 
 
@@ -345,7 +362,7 @@ PPCODE:
         PUSHs(sv_2mortal(newSViv((IV)week)));
         PUSHs(sv_2mortal(newSViv((IV)dow)));
     }
-    else DATECALC_DATE_ERROR("Standard_to_Business");
+    else DATECALC_DATE_ERROR;
 }
 
 
@@ -366,7 +383,7 @@ PPCODE:
         PUSHs(sv_2mortal(newSViv((IV)month)));
         PUSHs(sv_2mortal(newSViv((IV)day)));
     }
-    else DATECALC_DATE_ERROR("Business_to_Standard");
+    else DATECALC_DATE_ERROR;
 }
 
 
@@ -385,7 +402,7 @@ CODE:
     {
         RETVAL = DateCalc_Delta_Days(year1,month1,day1, year2,month2,day2);
     }
-    else DATECALC_DATE_ERROR("Delta_Days");
+    else DATECALC_DATE_ERROR;
 }
 OUTPUT:
 RETVAL
@@ -428,11 +445,11 @@ PPCODE:
                 PUSHs(sv_2mortal(newSViv((IV)Dm)));
                 PUSHs(sv_2mortal(newSViv((IV)Ds)));
             }
-            else DATECALC_DATE_ERROR("Delta_DHMS");
+            else DATECALC_DATE_ERROR;
         }
-        else DATECALC_TIME_ERROR("Delta_DHMS");
+        else DATECALC_TIME_ERROR;
     }
-    else DATECALC_DATE_ERROR("Delta_DHMS");
+    else DATECALC_DATE_ERROR;
 }
 
 
@@ -453,7 +470,7 @@ PPCODE:
         PUSHs(sv_2mortal(newSViv((IV)month1)));
         PUSHs(sv_2mortal(newSViv((IV)day1)));
     }
-    else DATECALC_DATE_ERROR("Delta_YMD");
+    else DATECALC_DATE_ERROR;
 }
 
 
@@ -498,11 +515,11 @@ PPCODE:
                 PUSHs(sv_2mortal(newSViv((IV)Dm)));
                 PUSHs(sv_2mortal(newSViv((IV)Ds)));
             }
-            else DATECALC_DATE_ERROR("Delta_YMDHMS");
+            else DATECALC_DATE_ERROR;
         }
-        else DATECALC_TIME_ERROR("Delta_YMDHMS");
+        else DATECALC_TIME_ERROR;
     }
-    else DATECALC_DATE_ERROR("Delta_YMDHMS");
+    else DATECALC_DATE_ERROR;
 }
 
 
@@ -538,7 +555,7 @@ PPCODE:
         PUSHs(sv_2mortal(newSViv((IV)month)));
         PUSHs(sv_2mortal(newSViv((IV)day)));
     }
-    else DATECALC_DATE_ERROR("Add_Delta_Days");
+    else DATECALC_DATE_ERROR;
 }
 
 
@@ -572,11 +589,11 @@ PPCODE:
                 PUSHs(sv_2mortal(newSViv((IV)min)));
                 PUSHs(sv_2mortal(newSViv((IV)sec)));
             }
-            else DATECALC_DATE_ERROR("Add_Delta_DHMS");
+            else DATECALC_DATE_ERROR;
         }
-        else DATECALC_TIME_ERROR("Add_Delta_DHMS");
+        else DATECALC_TIME_ERROR;
     }
-    else DATECALC_DATE_ERROR("Add_Delta_DHMS");
+    else DATECALC_DATE_ERROR;
 }
 
 
@@ -596,7 +613,7 @@ PPCODE:
         PUSHs(sv_2mortal(newSViv((IV)month)));
         PUSHs(sv_2mortal(newSViv((IV)day)));
     }
-    else DATECALC_DATE_ERROR("Add_Delta_YM");
+    else DATECALC_DATE_ERROR;
 }
 
 
@@ -617,7 +634,7 @@ PPCODE:
         PUSHs(sv_2mortal(newSViv((IV)month)));
         PUSHs(sv_2mortal(newSViv((IV)day)));
     }
-    else DATECALC_DATE_ERROR("Add_Delta_YMD");
+    else DATECALC_DATE_ERROR;
 }
 
 
@@ -654,11 +671,11 @@ PPCODE:
                 PUSHs(sv_2mortal(newSViv((IV)min)));
                 PUSHs(sv_2mortal(newSViv((IV)sec)));
             }
-            else DATECALC_DATE_ERROR("Add_Delta_YMDHMS");
+            else DATECALC_DATE_ERROR;
         }
-        else DATECALC_TIME_ERROR("Add_Delta_YMDHMS");
+        else DATECALC_TIME_ERROR;
     }
-    else DATECALC_DATE_ERROR("Add_Delta_YMDHMS");
+    else DATECALC_DATE_ERROR;
 }
 
 
@@ -697,7 +714,7 @@ PPCODE:
             PUSHs(sv_2mortal(newSViv((IV)dow)));
             PUSHs(sv_2mortal(newSViv((IV)dst)));
         }
-        else DATECALC_SYSTEM_ERROR("System_Clock");
+        else DATECALC_SYSTEM_ERROR;
     }
     else croak("Usage: Date::Calc::System_Clock([gmt])");
 }
@@ -732,7 +749,7 @@ PPCODE:
             PUSHs(sv_2mortal(newSViv((IV)month)));
             PUSHs(sv_2mortal(newSViv((IV)day)));
         }
-        else DATECALC_SYSTEM_ERROR("Today");
+        else DATECALC_SYSTEM_ERROR;
     }
     else croak("Usage: Date::Calc::Today([gmt])");
 }
@@ -767,7 +784,7 @@ PPCODE:
             PUSHs(sv_2mortal(newSViv((IV)min)));
             PUSHs(sv_2mortal(newSViv((IV)sec)));
         }
-        else DATECALC_SYSTEM_ERROR("Now");
+        else DATECALC_SYSTEM_ERROR;
     }
     else croak("Usage: Date::Calc::Now([gmt])");
 }
@@ -805,7 +822,7 @@ PPCODE:
             PUSHs(sv_2mortal(newSViv((IV)min)));
             PUSHs(sv_2mortal(newSViv((IV)sec)));
         }
-        else DATECALC_SYSTEM_ERROR("Today_and_Now");
+        else DATECALC_SYSTEM_ERROR;
     }
     else croak("Usage: Date::Calc::Today_and_Now([gmt])");
 }
@@ -838,7 +855,7 @@ PPCODE:
             EXTEND(sp,1);
             PUSHs(sv_2mortal(newSViv((IV)year)));
         }
-        else DATECALC_SYSTEM_ERROR("This_Year");
+        else DATECALC_SYSTEM_ERROR;
     }
     else croak("Usage: Date::Calc::This_Year([gmt])");
 }
@@ -868,7 +885,7 @@ PPCODE:
         if (items == 1) f_seconds = (double) SvNV( ST(0) );
         else            f_seconds = (double) time(NULL);
         if ((f_seconds < 0) or (f_seconds > 0xFFFFFFFF))
-            DATECALC_TIME_RANGE_ERROR("Gmtime");
+            DATECALC_TIME_RANGE_ERROR;
         seconds = (time_t) f_seconds;
 #else
         if (items == 1) seconds = (time_t) SvIV( ST(0) );
@@ -890,7 +907,7 @@ PPCODE:
             PUSHs(sv_2mortal(newSViv((IV)dow)));
             PUSHs(sv_2mortal(newSViv((IV)dst)));
         }
-        else DATECALC_TIME_RANGE_ERROR("Gmtime");
+        else DATECALC_TIME_RANGE_ERROR;
     }
     else croak("Usage: Date::Calc::Gmtime([time])");
 }
@@ -920,7 +937,7 @@ PPCODE:
         if (items == 1) f_seconds = (double) SvNV( ST(0) );
         else            f_seconds = (double) time(NULL);
         if ((f_seconds < 0) or (f_seconds > 0xFFFFFFFF))
-            DATECALC_TIME_RANGE_ERROR("Localtime");
+            DATECALC_TIME_RANGE_ERROR;
         seconds = (time_t) f_seconds;
 #else
         if (items == 1) seconds = (time_t) SvIV( ST(0) );
@@ -942,7 +959,7 @@ PPCODE:
             PUSHs(sv_2mortal(newSViv((IV)dow)));
             PUSHs(sv_2mortal(newSViv((IV)dst)));
         }
-        else DATECALC_TIME_RANGE_ERROR("Localtime");
+        else DATECALC_TIME_RANGE_ERROR;
     }
     else croak("Usage: Date::Calc::Localtime([time])");
 }
@@ -969,7 +986,7 @@ PPCODE:
         PUSHs(sv_2mortal(newSViv((IV)seconds)));
 #endif
     }
-    else DATECALC_DATE_RANGE_ERROR("Mktime");
+    else DATECALC_DATE_RANGE_ERROR;
 }
 
 
@@ -995,7 +1012,7 @@ PPCODE:
         if (items == 1) f_when = (double) SvNV( ST(0) );
         else            f_when = (double) time(NULL);
         if ((f_when < 0) or (f_when > 0xFFFFFFFF))
-            DATECALC_TIME_RANGE_ERROR("Timezone");
+            DATECALC_TIME_RANGE_ERROR;
         when = (time_t) f_when;
 #else
         if (items == 1) when = (time_t) SvIV( ST(0) );
@@ -1014,7 +1031,7 @@ PPCODE:
             PUSHs(sv_2mortal(newSViv((IV)sec)));
             PUSHs(sv_2mortal(newSViv((IV)dst)));
         }
-        else DATECALC_TIME_RANGE_ERROR("Timezone");
+        else DATECALC_TIME_RANGE_ERROR;
     }
     else croak("Usage: Date::Calc::Timezone([time])");
 }
@@ -1041,7 +1058,7 @@ PPCODE:
         PUSHs(sv_2mortal(newSViv((IV)seconds)));
 #endif
     }
-    else DATECALC_DATE_RANGE_ERROR("Date_to_Time");
+    else DATECALC_DATE_RANGE_ERROR;
 }
 
 
@@ -1066,7 +1083,7 @@ PPCODE:
         if (items == 1) f_seconds = (double) SvNV( ST(0) );
         else            f_seconds = (double) time(NULL);
         if ((f_seconds < 0) or (f_seconds > 0xFFFFFFFF))
-            DATECALC_TIME_RANGE_ERROR("Time_to_Date");
+            DATECALC_TIME_RANGE_ERROR;
         seconds = (time_t) f_seconds;
 #else
         if (items == 1) seconds = (time_t) SvIV( ST(0) );
@@ -1082,7 +1099,7 @@ PPCODE:
             PUSHs(sv_2mortal(newSViv((IV)min)));
             PUSHs(sv_2mortal(newSViv((IV)sec)));
         }
-        else DATECALC_TIME_RANGE_ERROR("Time_to_Date");
+        else DATECALC_TIME_RANGE_ERROR;
     }
     else croak("Usage: Date::Calc::Time_to_Date([time])");
 }
@@ -1103,7 +1120,7 @@ PPCODE:
         PUSHs(sv_2mortal(newSViv((IV)month)));
         PUSHs(sv_2mortal(newSViv((IV)day)));
     }
-    else DATECALC_YEAR_ERROR("Easter_Sunday");
+    else DATECALC_YEAR_ERROR;
 }
 
 
@@ -1216,7 +1233,7 @@ PPCODE:
         PUSHs(sv_2mortal(newSViv((IV)day)));
     }
     /* else return empty list */
-    /* else DATECALC_DATE_ERROR("Uncompress"); */
+    /* else DATECALC_DATE_ERROR; */
 }
 
 
@@ -1239,7 +1256,7 @@ PPCODE:
         PUSHs(sv_2mortal(newSVpv((char *)string,0)));
         DateCalc_Dispose(string);
     }
-    else DATECALC_MEMORY_ERROR("Compressed_to_Text");
+    else DATECALC_MEMORY_ERROR;
 }
 
 
@@ -1261,9 +1278,9 @@ PPCODE:
             PUSHs(sv_2mortal(newSVpv((char *)string,0)));
             DateCalc_Dispose(string);
         }
-        else DATECALC_MEMORY_ERROR("Date_to_Text");
+        else DATECALC_MEMORY_ERROR;
     }
-    else DATECALC_DATE_ERROR("Date_to_Text");
+    else DATECALC_DATE_ERROR;
 }
 
 
@@ -1285,9 +1302,9 @@ PPCODE:
             PUSHs(sv_2mortal(newSVpv((char *)string,0)));
             DateCalc_Dispose(string);
         }
-        else DATECALC_MEMORY_ERROR("Date_to_Text_Long");
+        else DATECALC_MEMORY_ERROR;
     }
-    else DATECALC_DATE_ERROR("Date_to_Text_Long");
+    else DATECALC_DATE_ERROR;
 }
 
 
@@ -1330,11 +1347,11 @@ PPCODE:
                     PUSHs(sv_2mortal(newSVpv((char *)string,0)));
                     DateCalc_Dispose(string);
                 }
-                else DATECALC_MEMORY_ERROR("Calendar");
+                else DATECALC_MEMORY_ERROR;
             }
-            else DATECALC_MONTH_ERROR("Calendar");
+            else DATECALC_MONTH_ERROR;
         }
-        else DATECALC_YEAR_ERROR("Calendar");
+        else DATECALC_YEAR_ERROR;
     }
     else croak("Usage: Date::Calc::Calendar(year,month[,orthodox])");
 }
@@ -1350,7 +1367,7 @@ PPCODE:
         EXTEND(sp,1);
         PUSHs(sv_2mortal(newSVpv((char *)DateCalc_Month_to_Text_[DateCalc_Language][month],0)));
     }
-    else DATECALC_MONTH_ERROR("Month_to_Text");
+    else DATECALC_MONTH_ERROR;
 }
 
 
@@ -1364,7 +1381,7 @@ PPCODE:
         EXTEND(sp,1);
         PUSHs(sv_2mortal(newSVpv((char *)DateCalc_Day_of_Week_to_Text_[DateCalc_Language][dow],0)));
     }
-    else DATECALC_DAYOFWEEK_ERROR("Day_of_Week_to_Text");
+    else DATECALC_DAYOFWEEK_ERROR;
 }
 
 
@@ -1389,7 +1406,7 @@ PPCODE:
             PUSHs(sv_2mortal(newSVpv((char *)buffer,0)));
         }
     }
-    else DATECALC_DAYOFWEEK_ERROR("Day_of_Week_Abbreviation");
+    else DATECALC_DAYOFWEEK_ERROR;
 }
 
 
@@ -1403,7 +1420,7 @@ PPCODE:
         EXTEND(sp,1);
         PUSHs(sv_2mortal(newSVpv((char *)DateCalc_Language_to_Text_[lang],0)));
     }
-    else DATECALC_LANGUAGE_ERROR("Language_to_Text");
+    else DATECALC_LANGUAGE_ERROR;
 }
 
 
@@ -1423,7 +1440,7 @@ CODE:
             {
                 DateCalc_Language = lang;
             }
-            else DATECALC_LANGUAGE_ERROR("Language");
+            else DATECALC_LANGUAGE_ERROR;
         }
     }
     else croak("Usage: Date::Calc::Language([lang])");
@@ -1464,9 +1481,9 @@ PPCODE:
             PUSHs(sv_2mortal(newSVpv((char *)buffer,length)));
             free(buffer);
         }
-        else DATECALC_MEMORY_ERROR("ISO_LC");
+        else DATECALC_MEMORY_ERROR;
     }
-    else DATECALC_STRING_ERROR("ISO_LC");
+    else DATECALC_STRING_ERROR;
 }
 
 
@@ -1492,9 +1509,9 @@ PPCODE:
             PUSHs(sv_2mortal(newSVpv((char *)buffer,length)));
             free(buffer);
         }
-        else DATECALC_MEMORY_ERROR("ISO_UC");
+        else DATECALC_MEMORY_ERROR;
     }
-    else DATECALC_STRING_ERROR("ISO_UC");
+    else DATECALC_STRING_ERROR;
 }
 
 
@@ -1510,7 +1527,7 @@ PPCODE:
         EXTEND(sp,1);
         PUSHs(sv_2mortal(newSVpv((char *)string,0)));
     }
-    else DATECALC_MEMORY_ERROR("Version");
+    else DATECALC_MEMORY_ERROR;
 }
 
 

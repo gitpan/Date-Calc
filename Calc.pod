@@ -2833,7 +2833,7 @@ threads as well).
 
 =head1 VERSION
 
-This man page documents "Date::Calc" version 5.2.
+This man page documents "Date::Calc" version 5.3.
 
 =head1 AUTHOR
 

@@ -98,7 +98,7 @@ require DynaLoader;
 ##                                              ##
 ##################################################
 
-$VERSION = '5.2';
+$VERSION = '5.3';
 
 bootstrap Date::Calc $VERSION;
 

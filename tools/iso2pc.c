@@ -358,7 +358,7 @@ int main(int argc, char *argv[])
 /*  COPYRIGHT:                                                               */
 /*****************************************************************************/
 /*                                                                           */
-/*    Copyright (c) 1998 by Steffen Beyer.                                   */
+/*    Copyright (c) 1998 - 2000 by Steffen Beyer.                            */
 /*    All rights reserved.                                                   */
 /*                                                                           */
 /*****************************************************************************/
@@ -379,7 +379,6 @@ int main(int argc, char *argv[])
 /*    along with this program; if not, write to the                          */
 /*    Free Software Foundation, Inc.,                                        */
 /*    59 Temple Place, Suite 330, Boston, MA 02111-1307 USA                  */
-/*                                                                           */
 /*    or download a copy from ftp://ftp.gnu.org/pub/gnu/COPYING-2.0          */
 /*                                                                           */
 /*****************************************************************************/

@@ -1,9 +1,9 @@
                      ====================================
-                       Package "Date::Calc" Version 4.2
+                       Package "Date::Calc" Version 4.3
                      ====================================
 
 
-            Copyright (c) 1995, 1996, 1997, 1998 by Steffen Beyer.
+                  Copyright (c) 1995 - 2000 by Steffen Beyer.
                              All rights reserved.
 
 
@@ -16,6 +16,7 @@ in the "examples" subdirectory of this distribution:
                         examples/age_in_days_eu.pl
                         examples/age_in_days_us.pl
                         examples/cal.c
+                        examples/delta.pl
                         examples/nth_weekday.pl
 
 
@@ -30,13 +31,13 @@ First build and install this package (for instructions, see the file
 "INSTALL.txt" in this distribution), then change directory to the
 "examples" subdirectory, and finally start these two demo programs
 with
-                        > perl age_in_days_eu.pl
+                        % perl age_in_days_eu.pl
 and
-                        > perl age_in_days_us.pl
+                        % perl age_in_days_us.pl
 respectively.
 
 They first ask you to choose a language; any uniquely identifying
-abbreviation for one of the six languages initially provided by this
+abbreviation for one of the first six languages supported by this
 package (English, French, German, Spanish, Portuguese, Dutch) will
 suffice, like "en" for "English", "es" for "Español" (Spanish),
 "f" for "Français" (French), and so on.
@@ -111,19 +112,19 @@ if you haven't done so already.
 Finally, if you have Perl available on your system (no matter wether
 UNIX or Win32), you can compile this program with the following command:
 
-            > perl tools/compile.pl cal.c DateCalc.c
+            % perl tools/compile.pl cal.c DateCalc.c
 or
-            > perl tools\compile.pl cal.c DateCalc.c
+            % perl tools\compile.pl cal.c DateCalc.c
 
 Otherwise, if you have the GNU C compiler ("gcc") available on your system,
 you can also do so (UNIX only) using the command
 
-            > ./tools/compile.sh cal.c DateCalc.c
+            % ./tools/compile.sh cal.c DateCalc.c
 
 On a MSDOS/Windows system, if your ANSI C compiler can be called with "cl",
 you can also compile the program using the command
 
-            > tools\compile cal DateCalc.c
+            % tools\compile cal DateCalc.c
 
 (Note the missing ".c" at the end of the filename "cal" in this case!)
 
@@ -136,12 +137,12 @@ Now start the program with the command "./cal" (UNIX) or simply "cal"
 (Note that this program is not confined to Win32 systems, it also compiles
 and runs perfectly well on pure MS-DOS or other Windows systems!)
 
-The first parameter is the desired language (currently 1..6 or "English",
-"Français", "Deutsch", "Español", "Português" and "Nederlands"),
-the second the month and the third the year.
+The first parameter is the desired language (currently 1..7 or "English",
+"Français", "Deutsch", "Español", "Português", "Nederlands" and
+"Italiano"), the second the month and the third the year.
 
 Example:
-                        > cal en apr 1998
+                        % cal en apr 1998
 
 This will print:
 
@@ -169,13 +170,66 @@ filter), in order to convert the special international characters from
 the ISO-Latin-1 character set (used throughout this package) to one of
 the (two) character sets commonly used on PC's, as follows:
 
-                    > cal Portug Mar 1998 | iso2pc [-dos]
+                    % cal Portug Mar 1998 | iso2pc [-dos]
 
 (for older versions of MS-DOS and the PC-UNIX console) or
 
-                    > cal Portug Mar 1998 | iso2pc -win
+                    % cal Portug Mar 1998 | iso2pc -win
 
 (for newer versions of MS-DOS and the Win32 DOS box).
+
+
+delta.pl:
+---------
+
+This is a little program which contains a routine to determine the
+number of business days between two dates. It is not of much practical
+value, because it doesn't take legal holidays into account.
+
+Moreover, it assumes that counting includes the earlier of the two
+dates, but not the later one. I.e., if you determine the number of
+business days between, for example, two consecutive days, like for
+instance a Friday and a Saturday, the routine will return a difference
+of one business day as the result. If you take a Sunday and Monday, on
+the other hand, however, it will give you a difference of zero business
+days.
+
+The program expects six parameters on the command line, i.e., two dates
+in the order year, month, day, in chronological order (the result will
+be negative if you swap the two dates, but the routine won't go backwards
+in time, i.e., it still counts the earlier date if it is a business day,
+but not the later one). If the number of command line parameters is not
+six, the program prints a usage and exits.
+
+Here's an example of how it can be used:
+
+                    % perl delta.pl 1999 12 24 2000 1 8
+
+                    Fri 24-Dec-1999
+                    Sat 8-Jan-2000
+
+                           December 1999
+                    Mon Tue Wed Thu Fri Sat Sun
+                              1   2   3   4   5
+                      6   7   8   9  10  11  12
+                     13  14  15  16  17  18  19
+                     20  21  22  23  24  25  26
+                     27  28  29  30  31
+
+
+                           January 2000
+                    Mon Tue Wed Thu Fri Sat Sun
+                                          1   2
+                      3   4   5   6   7   8   9
+                     10  11  12  13  14  15  16
+                     17  18  19  20  21  22  23
+                     24  25  26  27  28  29  30
+                     31
+
+                    Difference: 11 Business Days.
+
+(The program prints the calendars of the respective months so that you
+can verify its results.)
 
 
 nth_weekday.pl:
@@ -194,7 +248,7 @@ First build and install this package (for instructions, see the file
 "examples" subdirectory, and finally start this program with the
 following command (example):
 
-            > perl nth_weekday.pl 3rd Thursday April 1998
+            % perl nth_weekday.pl 3rd Thursday April 1998
 
 This will print:
 

@@ -1,9 +1,9 @@
                      ====================================
-                       Package "Date::Calc" Version 4.2
+                       Package "Date::Calc" Version 4.3
                      ====================================
 
 
-            Copyright (c) 1995, 1996, 1997, 1998 by Steffen Beyer.
+                  Copyright (c) 1995 - 2000 by Steffen Beyer.
                              All rights reserved.
 
 
@@ -32,7 +32,7 @@ Edit the file "Makefile.PL" and change the line
 
     'VERSION_FROM'      => 'Calc.pm',
 to
-    'VERSION'           => '4.2',
+    'VERSION'           => '4.3',
 
 Then edit the file "Calc.pm" and change the line
 
@@ -42,7 +42,7 @@ to
 
 Also edit the file "t/f000.t" and change the line
 
-    use Date::Calc 4.2;
+    use Date::Calc 4.3;
 to
     use Date::Calc;
 
@@ -65,8 +65,8 @@ Preliminary steps for console users:
 ------------------------------------
 
 In case you will be running this package in a MS-DOS command shell
-environment *EXCLUSIVELY* (and never under Perl/Tk, for instance),
-or if you will be running this package *EXCLUSIVELY* on the console
+environment PREDOMINANTLY (and never under Perl/Tk, for instance),
+or if you will be running this package PREDOMINANTLY on the console
 of a PC UNIX system (like FreeBSD or GNU/Linux, for example) and
 never under X-windows, you might want to convert the special characters
 embedded in this package from the "ISO-Latin-1" character set (this
@@ -111,7 +111,7 @@ and do the following:
 
 1) Increment the number in the line
 
-    #define DateCalc_LANGUAGES 6
+    #define DateCalc_LANGUAGES 7
 
    as necessary.
 
@@ -141,7 +141,7 @@ and do the following:
    "DateCalc_Day_of_Week_Abbreviation_" of the following form:
 
     {
-        "", "", "", "", "", "", "", ""    /* 7 */
+        "", "", "", "", "", "", "", ""    /* 8 */
     }
 
    Don't forget to add a comma after the closing brace of the immediately
@@ -157,9 +157,25 @@ and do the following:
    field is used to flag the existence of special abbreviations in this
    package.
 
-5) Finally, append the name of the language you have just added
+5) Add a new entry to the bottom of the array "DateCalc_Date_Long_Format_"
+   of the following form:
+
+    "%s, %d %s %d"                      /* 8  Language    */
+
+   Don't forget to add a comma after the closing double quote of
+   the immediately preceding entry above.
+
+   You may change this format to suit your preferences, but the number,
+   type and order of variables is fixed (day of week, day, month, year).
+
+   In case you want to use a different scheme, you will have to
+   add a new "case" to the "switch()" statement in the function
+   "DateCalc_Date_to_Text_Long()" in "DateCalc.c" and provide
+   the "sprintf()" statement with the necessary arguments yourself.
+
+6) Finally, append the name of the language you have just added
    *WRITTEN IN THIS VERY LANGUAGE*, to the end of the array
-   "DateCalc_Language_to_Text_".
+   "DateCalc_Language_to_Text_". (And don't forget the comma...)
 
    The name of the language should be written in that very language
    itself because the name for any given language usually varies
@@ -173,9 +189,9 @@ and do the following:
    thousand different languages in this world), which is the reason why
    they are not used here.
 
-6) Now edit the file "DateCalc.h" and set the number in the line
+7) Now edit the file "DateCalc.h" and set the number in the line
 
-    #define DateCalc_LANGUAGES 6
+    #define DateCalc_LANGUAGES 7
 
    to the same value as in the file "DateCalc.c".
 
@@ -184,7 +200,7 @@ and do the following:
    the compilation, though, and serves only to document what changes you
    have made.
 
-7) If you have never built this version of this package on the current
+8) If you have never built this version of this package on the current
    machine before, just proceed with the instructions in the section
    "Installation" following immediately below.
 
@@ -204,11 +220,6 @@ ALWAYS unpack and build Perl modules OUTSIDE the Perl source and installation
 tree! (You might otherwise inadvertently corrupt your Perl installation!)
 =============================================================================
 
-Note that installation under Windows NT/95 is easiest with the "native"
-"Perl for Win32" port by Perl developer Gurusamy Sarathy, available from:
-
-                http://www.perl.com/CPAN/authors/id/GSAR/
-
 Quick installation guide for experienced users:
 -----------------------------------------------
 
@@ -224,7 +235,7 @@ Detailed installation guide:
 ----------------------------
 
  1) Change directory to the directory that has been created by unpacking this
-    package ("cd Date-Calc-4.2").
+    package ("cd Date-Calc-4.3").
 
  2) Type "perl Makefile.PL" (or whatever the name and path of your Perl 5
     binary is).
@@ -284,8 +295,11 @@ Detailed installation guide:
 
     The output should look somewhat like this:
 
-    PERL_DL_NONLAZY=1 /sw/bin/perl -I./blib/arch -I./blib/lib
-    -I/sw/pkg/perl/lib/i386-freebsd/5.00404 -I/sw/pkg/perl/lib
+    PERL_DL_NONLAZY=1 /usr/sw/bin/perl
+    -I./blib/arch
+    -I./blib/lib
+    -I/usr/sw/pkg/perl/lib/5.00503/i386-freebsd
+    -I/usr/sw/pkg/perl/lib/5.00503
     -e 'use Test::Harness qw(&runtests $verbose); $verbose=0;
     runtests @ARGV;' t/*.t
     t/f000..............ok
@@ -323,7 +337,8 @@ Detailed installation guide:
     t/f032..............ok
     t/f033..............ok
     All tests successful.
-    Files=34,  Tests=1823, 11 secs ( 9.38 cusr  0.98 csys = 10.35 cpu)
+    Files=34,  Tests=1836, 12 wallclock secs
+    ( 8.82 cusr +  1.23 csys = 10.05 CPU)
 
  5) At last, type "make install" (or "dmake install", "nmake install").
 

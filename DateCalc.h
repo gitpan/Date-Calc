@@ -206,6 +206,10 @@ DateCalc_Date_to_Text_Long             (Z_int   year,
                                         Z_int   month,
                                         Z_int   day);
 
+charptr                                                     /*   O   */
+DateCalc_English_Ordinal               (charptr result,     /*   O   */
+                                        Z_int   number);    /*   I   */
+
 charptr
 DateCalc_Calendar                      (Z_int   year,
                                         Z_int   month);
@@ -224,7 +228,7 @@ DateCalc_Version                       (void);
 #define  DateCalc_CENTURY_OF_EPOCH   1900    /* century of reference (epoch) */
 #define  DateCalc_EPOCH (DateCalc_CENTURY_OF_EPOCH + DateCalc_YEAR_OF_EPOCH)
 
-extern Z_int DateCalc_Days_in_Year_[2][14];
+extern const Z_int DateCalc_Days_in_Year_[2][14];
 /*
 {
     { 0, 0, 31, 59, 90, 120, 151, 181, 212, 243, 273, 304, 334, 365 },
@@ -232,7 +236,7 @@ extern Z_int DateCalc_Days_in_Year_[2][14];
 };
 */
 
-extern Z_int DateCalc_Days_in_Month_[2][13];
+extern const Z_int DateCalc_Days_in_Month_[2][13];
 /*
 {
     { 0, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 },
@@ -240,11 +244,11 @@ extern Z_int DateCalc_Days_in_Month_[2][13];
 };
 */
 
-#define DateCalc_LANGUAGES 6
+#define DateCalc_LANGUAGES 7
 
 extern Z_int  DateCalc_Language; /* Default = 1 (English) */
 
-extern N_char DateCalc_Month_to_Text_[DateCalc_LANGUAGES+1][13][32];
+extern const N_char DateCalc_Month_to_Text_[DateCalc_LANGUAGES+1][13][32];
 /*
 {
     {
@@ -274,11 +278,15 @@ extern N_char DateCalc_Month_to_Text_[DateCalc_LANGUAGES+1][13][32];
     {
         "???", "Januari", "Februari", "Maart", "April", "Mei", "Juni",
         "Juli", "Augustus", "September", "October", "November", "December"
+    },
+    {
+        "???", "Gennaio", "Febbraio", "Marzo", "Aprile", "Maggio", "Giugno",
+        "Luglio", "Agosto", "Settembre", "Ottobre", "Novembre", "Dicembre"
     }
 };
 */
 
-extern N_char DateCalc_Day_of_Week_to_Text_[DateCalc_LANGUAGES+1][8][32];
+extern const N_char DateCalc_Day_of_Week_to_Text_[DateCalc_LANGUAGES+1][8][32];
 /*
 {
     {
@@ -308,11 +316,15 @@ extern N_char DateCalc_Day_of_Week_to_Text_[DateCalc_LANGUAGES+1][8][32];
     {
         "???", "Maandag", "Dinsdag", "Woensdag",
         "Donderdag", "Vrijdag", "Zaterdag", "Zondag"
+    },
+    {
+        "???", "Lunedì", "Martedì", "Mercoledì",
+        "Giovedì", "Venerdì", "Sabato", "Domenica"
     }
 };
 */
 
-extern N_char DateCalc_Day_of_Week_Abbreviation_[DateCalc_LANGUAGES+1][8][4];
+extern const N_char DateCalc_Day_of_Week_Abbreviation_[DateCalc_LANGUAGES+1][8][4];
 
     /* Fill the fields below _only_ if special abbreviations are needed! */
     /* Note that the first field serves as a flag and must be non-empty! */
@@ -338,15 +350,42 @@ extern N_char DateCalc_Day_of_Week_Abbreviation_[DateCalc_LANGUAGES+1][8][4];
     },
     {
         "", "", "", "", "", "", "", ""
+    },
+    {
+        "", "", "", "", "", "", "", ""
     }
 };
 */
 
-extern N_char DateCalc_Language_to_Text_[DateCalc_LANGUAGES+1][32];
+extern const N_char DateCalc_English_Ordinals_[4][4];
+/*
+{
+    "th",
+    "st",
+    "nd",
+    "rd"
+};
+*/
+
+extern const N_char DateCalc_Date_Long_Format_[DateCalc_LANGUAGES+1][64];
+/*
+{
+    "%s, %d %s %d",
+    "%s, %s %s %d",
+    "%s, le %d %s %d",
+    "%s, den %d. %s %d",
+    "%s, %d de %s de %d",
+    "%s, dia %d de %s de %d",
+    "%s, %d. %s %d",
+    "%s, %d %s %d"
+};
+*/
+
+extern const N_char DateCalc_Language_to_Text_[DateCalc_LANGUAGES+1][32];
 /*
 {
     "???", "English", "Français", "Deutsch", "Español",
-    "Português", "Nederlands"
+    "Português", "Nederlands", "Italiano"
 };
 */
 
@@ -355,11 +394,12 @@ extern N_char DateCalc_Language_to_Text_[DateCalc_LANGUAGES+1][32];
 /*****************************************************************************/
 
 /*****************************************************************************/
-/*  VERSION:  4.2                                                            */
+/*  VERSION:  4.3                                                            */
 /*****************************************************************************/
 /*  VERSION HISTORY:                                                         */
 /*****************************************************************************/
 /*                                                                           */
+/*    Version 4.3   08.01.00  decode_date_??: (yy < 70 ? 20yy : 19yy)        */
 /*    Version 4.2   07.09.98  No changes.                                    */
 /*    Version 4.1   08.06.98  Fixed bug in "add_delta_ymd()".                */
 /*    Version 4.0   12.05.98  Major rework. Added multi-language support.    */
@@ -397,7 +437,7 @@ extern N_char DateCalc_Language_to_Text_[DateCalc_LANGUAGES+1][32];
 /*  COPYRIGHT:                                                               */
 /*****************************************************************************/
 /*                                                                           */
-/*    Copyright (c) 1993, 1995, 1996, 1997, 1998 by Steffen Beyer.           */
+/*    Copyright (c) 1993 - 2000 by Steffen Beyer.                            */
 /*    All rights reserved.                                                   */
 /*                                                                           */
 /*****************************************************************************/
@@ -418,7 +458,6 @@ extern N_char DateCalc_Language_to_Text_[DateCalc_LANGUAGES+1][32];
 /*    License along with this library; if not, write to the                  */
 /*    Free Software Foundation, Inc.,                                        */
 /*    59 Temple Place, Suite 330, Boston, MA 02111-1307 USA                  */
-/*                                                                           */
 /*    or download a copy from ftp://ftp.gnu.org/pub/gnu/COPYING.LIB-2.0      */
 /*                                                                           */
 /*****************************************************************************/

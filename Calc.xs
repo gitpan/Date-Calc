@@ -2,7 +2,7 @@
 
 /*****************************************************************************/
 /*                                                                           */
-/*    Copyright (c) 1995, 1996, 1997, 1998 by Steffen Beyer.                 */
+/*    Copyright (c) 1995 - 2000 by Steffen Beyer.                            */
 /*    All rights reserved.                                                   */
 /*                                                                           */
 /*    This package is free software; you can redistribute it                 */
@@ -780,6 +780,19 @@ PPCODE:
         else DATECALC_MEMORY_ERROR("Date_to_Text_Long");
     }
     else DATECALC_DATE_ERROR("Date_to_Text_Long");
+}
+
+
+void
+DateCalc_English_Ordinal(number)
+    Z_int	number
+PPCODE:
+{
+    blockdef(string,64);
+
+    DateCalc_English_Ordinal(string,number);
+    EXTEND(sp,1);
+    PUSHs(sv_2mortal(newSVpv((char *)string,0)));
 }
 
 

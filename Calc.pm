@@ -1,7 +1,7 @@
 
 ###############################################################################
 ##                                                                           ##
-##    Copyright (c) 1995, 1996, 1997, 1998 by Steffen Beyer.                 ##
+##    Copyright (c) 1995 - 2000 by Steffen Beyer.                            ##
 ##    All rights reserved.                                                   ##
 ##                                                                           ##
 ##    This package is free software; you can redistribute it                 ##
@@ -55,6 +55,7 @@ require DynaLoader;
     Compressed_to_Text
     Date_to_Text
     Date_to_Text_Long
+    English_Ordinal
     Calendar
     Month_to_Text
     Day_of_Week_to_Text
@@ -77,7 +78,7 @@ require DynaLoader;
 ##                                              ##
 ##################################################
 
-$VERSION = '4.2';
+$VERSION = '4.3';
 
 bootstrap Date::Calc $VERSION;
 
@@ -148,7 +149,11 @@ sub Decode_Date_EU2
     }
     else { return(); } # no match at all!
 
-    if ($year < 100) { $year += 1900; }
+    if ($year < 100)
+    {
+        if ($year < 70) { $year += 100; }
+        $year += 1900;
+    }
 
     if (check_date($year,$month,$day))
     {
@@ -258,7 +263,11 @@ sub Decode_Date_US2
     }
     else { return(); } # no match at all!
 
-    if ($year < 100) { $year += 1900; }
+    if ($year < 100)
+    {
+        if ($year < 70) { $year += 100; }
+        $year += 1900;
+    }
 
     if (check_date($year,$month,$day))
     {
@@ -321,10 +330,10 @@ The module of course handles year numbers of 2000 and above correctly
 to the largest positive integer representable on your system (which
 is at least 32767) can be dealt with.
 
-Note that this package B<EXTRAPOLATES> the Gregorian calendar B<BACK>
-until the year S<1 A.D.> -- even though the Gregorian calendar was only
-adopted in 1582 by most (not all) European countries, in obedience to
-the corresponding decree of catholic pope S<Gregor I> in that year.
+Note that this package projects the Gregorian calendar back until the
+year S<1 A.D.> -- even though the Gregorian calendar was only adopted
+in 1582 by most (not all) European countries, in obedience to the
+corresponding decree of catholic pope S<Gregor I> in that year.
 
 Some (mainly protestant) countries continued to use the Julian calendar
 (used until then) until as late as the beginning of the 20th century.
@@ -334,8 +343,11 @@ ever imagine automagically for you; it is rather intended to serve as a
 toolbox (in the best of UNIX spirit and traditions) which should, however,
 always get you where you want to go.
 
+See the section "RECIPES" at the bottom of this document for solutions
+to common problems!
+
 If nevertheless you can't figure out how to solve a particular problem,
-please let me know! (See e-mail address at the bottom of this document.)
+please let me know! (See e-mail address at the end of this document.)
 
 =head1 SYNOPSIS
 
@@ -376,6 +388,7 @@ please let me know! (See e-mail address at the bottom of this document.)
       Compressed_to_Text
       Date_to_Text
       Date_to_Text_Long
+      English_Ordinal
       Calendar
       Month_to_Text
       Day_of_Week_to_Text
@@ -511,6 +524,9 @@ please let me know! (See e-mail address at the bottom of this document.)
   Date_to_Text_Long
       $string = Date_to_Text_Long($year,$month,$day);
 
+  English_Ordinal
+      $string = English_Ordinal($number);
+
   Calendar
       $string = Calendar($year,$month);
 
@@ -548,6 +564,9 @@ please let me know! (See e-mail address at the bottom of this document.)
 
 =head1 IMPORTANT NOTES
 
+(See the section "RECIPES" at the bottom of this document for
+solutions to common problems!)
+
 =over 2
 
 =item *
@@ -559,10 +578,10 @@ by the size of the largest positive integer that can be represented
 in a variable of the C type "int" on your system, which is at least
 32767, according to the ANSI C standard (exceptions see below).
 
-In order to simplify calculations, this module B<EXTRAPOLATES>
-the gregorian calendar B<BACK> until the year S<1 A.D.> -- i.e.,
-back B<BEYOND> the year 1582 when this calendar was first decreed
-by the catholic pope S<Gregor I>!
+In order to simplify calculations, this module projects the gregorian
+calendar back until the year S<1 A.D.> -- i.e., back B<BEYOND> the
+year 1582 when this calendar was first decreed by the catholic pope
+S<Gregor I>!
 
 Therefore, B<BE SURE TO ALWAYS SPECIFY "1998" WHEN YOU MEAN "1998">,
 for instance, and B<DO NOT WRITE "98" INSTEAD>, because this will
@@ -572,8 +591,9 @@ B<NOT> "1998"!
 The only exceptions from this rule are the functions which contain
 the word "compress" in their names (which only handle years between
 1970 and 2069 and also accept the abbreviations "00" to "99"), and
-the functions with the words "decode_date" in their names (which
-add "1900" to the year if the year is less than 100).
+the functions whose names begin with "Decode_Date_" (which map year
+numbers below 100 to the range 1970 - 2069, using a technique known
+as "windowing").
 
 =item *
 
@@ -716,8 +736,13 @@ and "false" ("C<0>") otherwise.
 C<if (check_business_date($year,$week,$dow))>
 
 This function returns "true" ("C<1>") if the given three numerical
-values "C<$year>", "C<$week>" and "C<$dow>" constitute a valid
-business date, and "false" ("C<0>") otherwise.
+values "C<$year>", "C<$week>" and "C<$dow>" constitute a valid date
+in business format, and "false" ("C<0>") otherwise.
+
+B<Beware> that this function does B<NOT> compute wether a given date
+is a business day (i.e., Monday to Friday)!
+
+To do so, use "C<(Day_of_Week($year,$month,$day) E<lt> 6)>" instead.
 
 =item *
 
@@ -818,7 +843,7 @@ the 3rd Thursday of a given month and year.
 This can be used to send a notification mail to the members of a group
 which meets regularly on every 3rd Thursday of a month, for instance.
 
-(See the section "EXAMPLES" near the end of this document for a code
+(See the section "RECIPES" near the end of this document for a code
 snippet to actually do so.)
 
 "C<$year>" must be greater than or equal to "C<1>", "C<$month>" must lie
@@ -1107,7 +1132,7 @@ C<if ($month = Decode_Month($string))>
 
 This function takes a string as its argument, which should contain the
 name of a month B<IN THE CURRENTLY SELECTED LANGUAGE> (see further below
-for details about multi-language support by this package), or any uniquely
+for details about the multi-language support of this package), or any uniquely
 identifying abbreviation of a month's name (i.e., the first few letters),
 and returns the corresponding number (1..12) upon a successful match, or
 "C<0>" otherwise (therefore, the return value can also be used as the
@@ -1133,7 +1158,7 @@ C<if ($dow = Decode_Day_of_Week($string))>
 
 This function takes a string as its argument, which should contain the
 name of a day of week B<IN THE CURRENTLY SELECTED LANGUAGE> (see further
-below for details about multi-language support by this package), or any
+below for details about the multi-language support of this package), or any
 uniquely identifying abbreviation of the name of a day of week (i.e., the
 first few letters), and returns the corresponding number (1..7) upon a
 successful match, or "C<0>" otherwise (therefore, the return value can
@@ -1162,7 +1187,7 @@ This function takes a string as its argument, which should contain the
 name of one of the languages supported by this package (B<IN THIS VERY
 LANGUAGE ITSELF>), or any uniquely identifying abbreviation of the name
 of a language (i.e., the first few letters), and returns its corresponding
-internal number (1..6 in the original distribution) upon a successful match,
+internal number (1..7 in the original distribution) upon a successful match,
 or "C<0>" otherwise (therefore, the return value can also be used as the
 conditional expression in an "if" statement).
 
@@ -1173,7 +1198,7 @@ whitespace.
 Note also that matching is performed in a case-insensitive manner (this may
 depend on the "locale" setting on your current system, though!)
 
-The original distribution supports the following six languages:
+The original distribution supports the following seven languages:
 
             English                    ==>   1    (default)
             Français    (French)       ==>   2
@@ -1181,6 +1206,7 @@ The original distribution supports the following six languages:
             Español     (Spanish)      ==>   4
             Português   (Portuguese)   ==>   5
             Nederlands  (Dutch)        ==>   6
+            Italiano    (Italian)      ==>   7
 
 See the section "How to install additional languages" in the file
 "INSTALL.txt" in this distribution for how to add more languages
@@ -1226,10 +1252,14 @@ to "C<12>"), or alphanumerically, i.e., as the name of the month B<IN
 THE CURRENTLY SELECTED LANGUAGE>, or any uniquely identifying abbreviation
 thereof.
 
-(See further below for details about multi-language support by this package!)
+(See further below for details about the multi-language support of this
+package!)
 
 If the year is given as one or two digits only (i.e., if the year is less
-than 100), "C<1900>" is added to it.
+than 100), it is mapped to the window "C<1970 - 2069>" as follows:
+
+   0 E<lt>= $year E<lt>  70  ==>  $year += 2000;
+  70 E<lt>= $year E<lt> 100  ==>  $year += 1900;
 
 If the day, month and year are all given numerically but B<WITHOUT> any
 delimiting characters between them, this string of digits will be mapped
@@ -1293,10 +1323,14 @@ to "C<12>"), or alphanumerically, i.e., as the name of the month B<IN
 THE CURRENTLY SELECTED LANGUAGE>, or any uniquely identifying abbreviation
 thereof.
 
-(See further below for details about multi-language support by this package!)
+(See further below for details about the multi-language support of this
+package!)
 
 If the year is given as one or two digits only (i.e., if the year is less
-than 100), "C<1900>" is added to it.
+than 100), it is mapped to the window "C<1970 - 2069>" as follows:
+
+   0 E<lt>= $year E<lt>  70  ==>  $year += 2000;
+  70 E<lt>= $year E<lt> 100  ==>  $year += 1900;
 
 If the month, day and year are all given numerically but B<WITHOUT> any
 delimiting characters between them, this string of digits will be mapped
@@ -1434,8 +1468,8 @@ containing a textual representation of the compressed date encoded in
 This string has the form "dd-Mmm-yy", where "dd" is the two-digit number
 of the day, "Mmm" are the first three letters of the name of the month
 in the currently selected language (see further below for details about
-multi-language support by this package), and "yy" is the two-digit year
-number (i.e., the year number taken modulo 100).
+the multi-language support of this package), and "yy" is the two-digit
+year number (i.e., the year number taken modulo 100).
 
 If "C<$date>" does not represent a valid date, the string "??-???-??" is
 returned instead.
@@ -1451,15 +1485,15 @@ This function returns a string containing a textual representation of the
 given date of the form "www dd-Mmm-yyyy", where "www" are the first three
 letters of the name of the day of week in the currently selected language,
 or a special abbreviation, if special abbreviations have been defined for
-the currently selected language (see further below for details about
-multi-language support by this package), "dd" is the day (one or two digits),
+the currently selected language (see further below for details about the
+multi-language support of this package), "dd" is the day (one or two digits),
 "Mmm" are the first three letters of the name of the month in the currently
 selected language, and "yyyy" is the number of the year in full length.
 
 If the given input values do not constitute a valid date, a fatal "not a
 valid date" error occurs.
 
-(See the section "EXAMPLES" near the end of this document for a code snippet
+(See the section "RECIPES" near the end of this document for a code snippet
 for how to print dates in any format you like.)
 
 =item *
@@ -1467,17 +1501,55 @@ for how to print dates in any format you like.)
 C<$string = Date_to_Text_Long($year,$month,$day);>
 
 This function returns a string containing a textual representation of the
-given date of the form "wwwwww dd Mmmmmm yyyy", where "wwwwww" is the name
-of the day of week in the currently selected language (see further below
-for details about multi-language support by this package), "dd" is the day
-(one or two digits), "Mmmmmm" is the name of the month in the currently
-selected language, and "yyyy" is the number of the year in full length.
+given date roughly of the form "Wwwwww, dd Mmmmmm yyyy", where "Wwwwww"
+is the name of the day of week in the currently selected language (see
+further below for details about the multi-language support of this package),
+"dd" is the day (one or two digits), "Mmmmmm" is the name of the month
+in the currently selected language, and "yyyy" is the number of the year
+in full length.
 
-If the given input values do not constitute a valid date, a fatal "not a
-valid date" error occurs.
+The exact format of the output string depends on the currently selected
+language. In the original distribution of this package, these formats are
+defined as follows:
 
-(See the section "EXAMPLES" near the end of this document for a code snippet
-for how to print dates in any format you like.)
+  1  English    :  "Wwwwww, Mmmmmm ddth yyyy"
+  2  French     :  "Wwwwww, le dd Mmmmmm yyyy"
+  3  German     :  "Wwwwww, den dd. Mmmmmm yyyy"
+  4  Spanish    :  "Wwwwww, dd de Mmmmmm de yyyy"
+  5  Portuguese :  "Wwwwww, dia dd de Mmmmmm de yyyy"
+  6  Dutch      :  "Wwwwww, dd. Mmmmmm yyyy"
+  7  Italian    :  "Wwwwww, dd Mmmmmm yyyy"
+
+(You can change these formats in the file "DateCalc.c" before
+building this module in order to suit your personal preferences.)
+
+If the given input values do not constitute a valid date, a fatal
+"not a valid date" error occurs.
+
+(See the section "RECIPES" near the end of this document for
+an example on how to print dates in any format you like.)
+
+=item *
+
+C<$string = English_Ordinal($number);>
+
+This function returns a string containing the (english) abbreviation
+of the ordinal number for the given (cardinal) number "C<$number>".
+
+I.e.,
+
+    0  =>  '0th'    10  =>  '10th'    20  =>  '20th'
+    1  =>  '1st'    11  =>  '11th'    21  =>  '21st'
+    2  =>  '2nd'    12  =>  '12th'    22  =>  '22nd'
+    3  =>  '3rd'    13  =>  '13th'    23  =>  '23rd'
+    4  =>  '4th'    14  =>  '14th'    24  =>  '24th'
+    5  =>  '5th'    15  =>  '15th'    25  =>  '25th'
+    6  =>  '6th'    16  =>  '16th'    26  =>  '26th'
+    7  =>  '7th'    17  =>  '17th'    27  =>  '27th'
+    8  =>  '8th'    18  =>  '18th'    28  =>  '28th'
+    9  =>  '9th'    19  =>  '19th'    29  =>  '29th'
+
+etc.
 
 =item *
 
@@ -1485,8 +1557,8 @@ C<$string = Calendar($year,$month);>
 
 This function returns a calendar of the given month in the given year
 (somewhat similar to the UNIX "cal" command), B<IN THE CURRENTLY SELECTED
-LANGUAGE> (see further below for details about multi-language support by
-this package).
+LANGUAGE> (see further below for details about the multi-language support
+of this package).
 
 Example:
 
@@ -1507,8 +1579,8 @@ This will print:
 C<$string = Month_to_Text($month);>
 
 This function returns the name of the given month in the currently selected
-language (see further below for details about multi-language support by this
-package).
+language (see further below for details about the multi-language support of
+this package).
 
 If the given month lies outside of the valid range from "C<1>" to "C<12>",
 a fatal "month out of range" error will occur.
@@ -1518,8 +1590,8 @@ a fatal "month out of range" error will occur.
 C<$string = Day_of_Week_to_Text($dow);>
 
 This function returns the name of the given day of week in the currently
-selected language (see further below for details about multi-language support
-by this package).
+selected language (see further below for details about the multi-language
+support of this package).
 
 If the given day of week lies outside of the valid range from "C<1>" to "C<7>",
 a fatal "day of week out of range" error will occur.
@@ -1530,8 +1602,8 @@ C<$string = Day_of_Week_Abbreviation($dow);>
 
 This function returns the special abbreviation of the name of the given
 day of week, B<IF> such special abbreviations have been defined for the
-currently selected language (see further below for details about
-multi-language support by this package).
+currently selected language (see further below for details about the
+multi-language support of this package).
 
 (In the original distribution of this package, this is only true for
 Portuguese.)
@@ -1552,7 +1624,7 @@ C<$string = Language_to_Text($lang);>
 This function returns the name of any language supported by this package
 when the internal number representing that language is given as input.
 
-The original distribution supports the following six languages:
+The original distribution supports the following seven languages:
 
             1   ==>   English                     (default)
             2   ==>   Français    (French)
@@ -1560,6 +1632,7 @@ The original distribution supports the following six languages:
             4   ==>   Español     (Spanish)
             5   ==>   Português   (Portuguese)
             6   ==>   Nederlands  (Dutch)
+            7   ==>   Italiano    (Italian)
 
 See the section "How to install additional languages" in the file
 "INSTALL.txt" in this distribution for how to add more languages
@@ -1586,7 +1659,7 @@ and to change the selected language.
 
 Thereby, each language has a unique internal number.
 
-The original distribution contains the following six languages:
+The original distribution contains the following seven languages:
 
             1   ==>   English                     (default)
             2   ==>   Français    (French)
@@ -1594,6 +1667,7 @@ The original distribution contains the following six languages:
             4   ==>   Español     (Spanish)
             5   ==>   Português   (Portuguese)
             6   ==>   Nederlands  (Dutch)
+            7   ==>   Italiano    (Italian)
 
 See the section "How to install additional languages" in the file
 "INSTALL.txt" in this distribution for how to add more languages
@@ -1649,8 +1723,8 @@ See the section "How to install additional languages" in the file
 "INSTALL.txt" in this distribution for how to add more languages
 to this package.
 
-In the original distribution of this package there are six built-in
-languages, therefore the value returned by this function will be "C<6>"
+In the original distribution of this package there are seven built-in
+languages, therefore the value returned by this function will be "C<7>"
 if no other languages have been added to your particular installation.
 
 =item *
@@ -1699,7 +1773,7 @@ C<if (($year,$month,$day) = Parse_Date($string))>
 
 This function is useful for parsing dates as returned by the UNIX "C<date>"
 command or as found in the headers of e-mail (in order to determine the
-date at which some e-mail has been sent, for instance).
+date at which some e-mail has been sent or received, for instance).
 
 Example #1:
 
@@ -1740,7 +1814,7 @@ other modules.
 
 =back
 
-=head1 EXAMPLES
+=head1 RECIPES
 
 =over 4
 
@@ -1827,7 +1901,7 @@ How do I verify wether someone has a certain age?
 
   ($year2,$month2,$day2) = Today();
 
-  if (($month1 == 2) && ($day1 == 29) && !leap_year($year2))
+  if (($day1 == 29) && ($month1 == 2) && !leap_year($year2))
       { $day1--; }
 
   if ( (($year2 - $year1) >  18) ||
@@ -1885,11 +1959,10 @@ Sunday of that month?
 
 Solution:
 
-  use Date::Calc qw( Delta_Days Nth_Weekday_of_Month_Year
-                     Day_of_Week Day_of_Week_to_Text
-                     Date_to_Text_Long Month_to_Text );
-
-  %ordinal = ( 1 => 'st', 2 => 'nd', 3 => 'rd' );
+  use Date::Calc qw( Day_of_Week Delta_Days
+                     Nth_Weekday_of_Month_Year
+                     Date_to_Text_Long English_Ordinal
+                     Day_of_Week_to_Text Month_to_Text );
 
   ($year,$month,$day) = (2000,10,15);
 
@@ -1902,14 +1975,14 @@ Solution:
 
   printf("%s is the %s %s in %s %d.\n",
       Date_to_Text_Long($year,$month,$day),
-      $n . ($ordinal{$n} || 'th'),
+      English_Ordinal($n),
       Day_of_Week_to_Text($dow),
       Month_to_Text($month),
       $year);
 
 This prints:
 
-  Sunday, 15 October 2000 is the 3rd Sunday in October 2000.
+  Sunday, October 15th 2000 is the 3rd Sunday in October 2000.
 
 =item 6)
 
@@ -1930,8 +2003,8 @@ Solution #1:
 
 Solution #2:
 
-  use Date::Calc qw( Today Monday_of_Week
-                     Week_of_Year Add_Delta_Days );
+  use Date::Calc qw( Today Add_Delta_Days
+                     Monday_of_Week Week_of_Year );
 
   $searching_dow = 3; # 3 = Wednesday
 
@@ -1942,8 +2015,8 @@ Solution #2:
 
 Solution #3:
 
-  use Date::Calc qw( Today Standard_to_Business
-                           Business_to_Standard );
+  use Date::Calc qw( Standard_to_Business Today
+                     Business_to_Standard );
 
   @business = Standard_to_Business(Today());
 
@@ -1956,13 +2029,14 @@ Solution #3:
 How can I add a week offset to a business date (including across
 year boundaries)?
 
-  use Date::Calc qw( Standard_to_Business Business_to_Standard );
+  use Date::Calc qw( Business_to_Standard Add_Delta_Days
+                     Standard_to_Business );
 
   @temp = Business_to_Standard($year,$week,$dow);
 
   @temp = Add_Delta_Days(@temp, $week_offset * 7);
 
-  ($year,$week,$dow) = Business_to_Standard(@temp);
+  ($year,$week,$dow) = Standard_to_Business(@temp);
 
 =item 8)
 
@@ -2018,6 +2092,8 @@ How can I calculate the last business day (payday!) of a month?
 
 Solution #1 (holidays B<NOT> taken into account):
 
+  use Date::Calc qw( Days_in_Month Day_of_Week Add_Delta_Days );
+
   $day = Days_in_Month($year,$month);
   $dow = Day_of_Week($year,$month,$day);
   if ($dow > 5)
@@ -2036,6 +2112,8 @@ how to calculate the moving (variable) christian feast days!)
 
 Days which are not holidays remain undefined or should have a value of zero
 in this array.
+
+  use Date::Calc qw( Days_in_Month Add_Delta_Days Day_of_Week );
 
   $day = Days_in_Month($year,$month);
   while (1)
@@ -2078,7 +2156,7 @@ This prints:
 =item 11)
 
 How can I send a reminder to members of a group on the day
-before a meeting occurring each first Friday of a month?
+before a meeting which occurs every first Friday of a month?
 
   use Date::Calc qw( Today Date_to_Days Add_Delta_YMD
                      Nth_Weekday_of_Month_Year );
@@ -2101,7 +2179,7 @@ before a meeting occurring each first Friday of a month?
   if (($tomorrow == $meeting_this_month) ||
       ($tomorrow == $meeting_next_month))
   {
-      # Send reminder mail!
+      # Send reminder e-mail!
   }
 
 =item 12)
@@ -2110,8 +2188,9 @@ How can I print a date in a different format than provided by
 the functions "C<Date_to_Text()>", "C<Date_to_Text_Long()>" or
 "C<Compressed_to_Text()>"?
 
-  use Date::Calc qw( Day_of_Week Day_of_Week_to_Text
-                     Month_to_Text Today );
+  use Date::Calc qw( Today Day_of_Week_to_Text
+                     Day_of_Week Month_to_Text
+                     English_Ordinal );
 
   ($year,$month,$day) = Today();
 
@@ -2125,22 +2204,124 @@ For example with leading zeros for the day: "S<Fri 03-Jan-1964>"
 
 For example in U.S. american format: "S<April 12th, 1998>"
 
-  %ordinal = ( 1 => 'st', 2 => 'nd', 3 => 'rd' );
-
-  sub ordinal
-  {
-      return( $_[0] .
-          ( (substr($_[0],-2,1) ne '1') &&
-            $ordinal{substr($_[0],-1)} ||
-            'th' ) );
-  }
-
   $string = sprintf("%s %s, %d",
                 Month_to_Text($month),
-                ordinal($day),
+                English_Ordinal($day),
                 $year);
 
 (See also L<perlfunc(1)/printf> and/or L<perlfunc(1)/sprintf>!)
+
+=item 13)
+
+How can I iterate through a range of dates?
+
+  use Date::Calc qw( Delta_Days Add_Delta_Days );
+
+  @start = (1999,5,27);
+  @stop  = (1999,6,1);
+
+  $j = Delta_Days(@start,@stop);
+
+  for ( $i = 0; $i <= $j; $i++ )
+  {
+      @date = Add_Delta_Days(@start,$i);
+      printf("%4d/%02d/%02d\n", @date);
+  }
+
+Note that the loop can be improved; see also the recipe below.
+
+=item 14)
+
+How can I create a (Perl) list of dates in a certain range?
+
+  use Date::Calc qw( Delta_Days Add_Delta_Days Date_to_Text );
+
+  sub date_range
+  {
+      my(@date) = (@_)[0,1,2];
+      my(@list);
+      my($i);
+
+      $i = Delta_Days(@_);
+      while ($i-- >= 0)
+      {
+          push( @list, [ @date ] );
+          @date = Add_Delta_Days(@date, 1) if ($i >= 0);
+      }
+      return(@list);
+  }
+
+  @range = &date_range(1999,11,3, 1999,12,24); # in chronological order
+
+  foreach $date (@range)
+  {
+      print Date_to_Text(@{$date}), "\n";
+  }
+
+Note that you probably shouldn't use this one, because it is much
+more efficient to iterate through all the dates (as shown in the
+recipe immediately above) than to construct such an array and then
+to loop through it. Also, it is much more space-efficient not to
+create this array.
+
+=item 15)
+
+How can I calculate the difference in days between dates,
+but without counting Saturdays and Sundays?
+
+  sub Delta_Business_Days
+  {
+      my(@date1) = (@_)[0,1,2];
+      my(@date2) = (@_)[3,4,5];
+      my($minus,$result,$dow1,$dow2,$diff,$temp);
+
+      $minus  = 0;
+      $result = Delta_Days(@date1,@date2);
+      if ($result != 0)
+      {
+          if ($result < 0)
+          {
+              $minus = 1;
+              $result = -$result;
+              $dow1 = Day_of_Week(@date2);
+              $dow2 = Day_of_Week(@date1);
+          }
+          else
+          {
+              $dow1 = Day_of_Week(@date1);
+              $dow2 = Day_of_Week(@date2);
+          }
+          $diff = $dow2 - $dow1;
+          $temp = $result;
+          if ($diff != 0)
+          {
+              if ($diff < 0)
+              {
+                  $diff += 7;
+              }
+              $temp -= $diff;
+              $dow1 += $diff;
+              if ($dow1 > 6)
+              {
+                  $result--;
+                  if ($dow1 > 7)
+                  {
+                      $result--;
+                  }
+              }
+          }
+          if ($temp != 0)
+          {
+              $temp /= 7;
+              $result -= ($temp << 1);
+          }
+      }
+      if ($minus) { return -$result; }
+      else        { return  $result; }
+  }
+
+This solution is probably of little practical value, however,
+because it doesn't take legal holidays into account.
 
 =back
 
@@ -2169,14 +2350,13 @@ http://www.pip.dknet.dk/~pip10160/calendar.html
 In the current implementation of this package, the selected language
 is stored in a global variable.
 
-Therefore, on systems where the "Date::Calc" module is a shared library,
-or as soon as Perl will be capable of multi-threading, this may cause
-undesired effects (of one process or thread always selecting the language
-for B<ALL OTHER> processes or threads as well).
+Therefore, when you are using a threaded Perl, this may cause undesired
+side effects (of one thread always selecting the language for B<ALL OTHER>
+threads as well).
 
 =head1 VERSION
 
-This man page documents "Date::Calc" version 4.2.
+This man page documents "Date::Calc" version 4.3.
 
 =head1 AUTHOR
 
@@ -2192,7 +2372,7 @@ B<Please contact me by e-mail whenever possible!>
 
 =head1 COPYRIGHT
 
-Copyright (c) 1995, 1996, 1997, 1998 by Steffen Beyer.
+Copyright (c) 1995 - 2000 by Steffen Beyer.
 All rights reserved.
 
 =head1 LICENSE

@@ -2,7 +2,7 @@
 
 ###############################################################################
 ##                                                                           ##
-##    Copyright (c) 1998 by Steffen Beyer.                                   ##
+##    Copyright (c) 1998 - 2000 by Steffen Beyer.                            ##
 ##    All rights reserved.                                                   ##
 ##                                                                           ##
 ##    This program is free software; you can redistribute it                 ##
@@ -76,7 +76,7 @@ while (! $ok)
     print "Please choose a language among $languages: ";
     chomp($lang = <STDIN>);
     print "\n";
-    if ($lang = Decode_Language($lang))
+    if (($lang = Decode_Language($lang)) && ($lang < 7))
     {
         $string0 = Language_to_Text($lang);
         print "Your chosen language is: $string0\n";

@@ -17,6 +17,7 @@ ToolBox.h
 examples/age_in_days_eu.pl
 examples/age_in_days_us.pl
 examples/cal.c
+examples/delta.pl
 examples/nth_weekday.pl
 t/f000.t
 t/f001.t
@@ -60,5 +61,4 @@ tools/convert.pl
 tools/convert.sh
 tools/iso2pc.c
 tools/pc2iso.c
-tools/upgrade_DC40.pl
 typemap

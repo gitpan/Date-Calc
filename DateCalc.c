@@ -206,6 +206,10 @@ DateCalc_Date_to_Text_Long             (Z_int   year,
                                         Z_int   month,
                                         Z_int   day);
 
+charptr                                                     /*   O   */
+DateCalc_English_Ordinal               (charptr result,     /*   O   */
+                                        Z_int   number);    /*   I   */
+
 charptr
 DateCalc_Calendar                      (Z_int   year,
                                         Z_int   month);
@@ -224,23 +228,23 @@ DateCalc_Version                       (void);
 #define  DateCalc_CENTURY_OF_EPOCH   1900    /* century of reference (epoch) */
 #define  DateCalc_EPOCH (DateCalc_CENTURY_OF_EPOCH + DateCalc_YEAR_OF_EPOCH)
 
-Z_int DateCalc_Days_in_Year_[2][14] =
+const Z_int DateCalc_Days_in_Year_[2][14] =
 {
     { 0, 0, 31, 59, 90, 120, 151, 181, 212, 243, 273, 304, 334, 365 },
     { 0, 0, 31, 60, 91, 121, 152, 182, 213, 244, 274, 305, 335, 366 }
 };
 
-Z_int DateCalc_Days_in_Month_[2][13] =
+const Z_int DateCalc_Days_in_Month_[2][13] =
 {
     { 0, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 },
     { 0, 31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 }
 };
 
-#define DateCalc_LANGUAGES 6
+#define DateCalc_LANGUAGES 7
 
 Z_int  DateCalc_Language = 1; /* Default = 1 (English) */
 
-N_char DateCalc_Month_to_Text_[DateCalc_LANGUAGES+1][13][32] =
+const N_char DateCalc_Month_to_Text_[DateCalc_LANGUAGES+1][13][32] =
 {
     {
         "???", "???", "???", "???", "???", "???", "???",
@@ -269,10 +273,14 @@ N_char DateCalc_Month_to_Text_[DateCalc_LANGUAGES+1][13][32] =
     {
         "???", "Januari", "Februari", "Maart", "April", "Mei", "Juni",
         "Juli", "Augustus", "September", "October", "November", "December"
+    },
+    {
+        "???", "Gennaio", "Febbraio", "Marzo", "Aprile", "Maggio", "Giugno",
+        "Luglio", "Agosto", "Settembre", "Ottobre", "Novembre", "Dicembre"
     }
 };
 
-N_char DateCalc_Day_of_Week_to_Text_[DateCalc_LANGUAGES+1][8][32] =
+const N_char DateCalc_Day_of_Week_to_Text_[DateCalc_LANGUAGES+1][8][32] =
 {
     {
         "???", "???", "???", "???",
@@ -301,10 +309,14 @@ N_char DateCalc_Day_of_Week_to_Text_[DateCalc_LANGUAGES+1][8][32] =
     {
         "???", "Maandag", "Dinsdag", "Woensdag",
         "Donderdag", "Vrijdag", "Zaterdag", "Zondag"
+    },
+    {
+        "???", "Lunedì", "Martedì", "Mercoledì",
+        "Giovedì", "Venerdì", "Sabato", "Domenica"
     }
 };
 
-N_char DateCalc_Day_of_Week_Abbreviation_[DateCalc_LANGUAGES+1][8][4] =
+const N_char DateCalc_Day_of_Week_Abbreviation_[DateCalc_LANGUAGES+1][8][4] =
 
     /* Fill the fields below _only_ if special abbreviations are needed! */
     /* Note that the first field serves as a flag and must be non-empty! */
@@ -329,13 +341,36 @@ N_char DateCalc_Day_of_Week_Abbreviation_[DateCalc_LANGUAGES+1][8][4] =
     },
     {
         "", "", "", "", "", "", "", ""    /* 6 */
+    },
+    {
+        "", "", "", "", "", "", "", ""    /* 7 */
     }
 };
 
-N_char DateCalc_Language_to_Text_[DateCalc_LANGUAGES+1][32] =
+const N_char DateCalc_English_Ordinals_[4][4] =
+{
+    "th",
+    "st",
+    "nd",
+    "rd"
+};
+
+const N_char DateCalc_Date_Long_Format_[DateCalc_LANGUAGES+1][64] =
+{
+    "%s, %d %s %d",                     /* 0  Default     */
+    "%s, %s %s %d",                     /* 1  English     */
+    "%s, le %d %s %d",                  /* 2  Français    */
+    "%s, den %d. %s %d",                /* 3  Deutsch     */
+    "%s, %d de %s de %d",               /* 4  Español     */
+    "%s, dia %d de %s de %d",           /* 5  Português   */
+    "%s, %d. %s %d",                    /* 6  Nederlands  */
+    "%s, %d %s %d"                      /* 7  Italiano    */
+};
+
+const N_char DateCalc_Language_to_Text_[DateCalc_LANGUAGES+1][32] =
 {
     "???", "English", "Français", "Deutsch", "Español",
-    "Portuguêsec", "Nederlands"
+    "Português", "Nederlands", "Italiano"
 };
 
 /*****************************************************************************/
@@ -1069,7 +1104,7 @@ boolean DateCalc_decode_date_eu(charptr buffer,
     else return(false); /* length <= 0 */
     if (*year < 100)
     {
-        /* if (*year < DateCalc_YEAR_OF_EPOCH) *year += 100; */
+        if (*year < DateCalc_YEAR_OF_EPOCH) *year += 100;
         *year += DateCalc_CENTURY_OF_EPOCH;
     }
     return(DateCalc_check_date(*year,*month,*day));
@@ -1241,7 +1276,7 @@ boolean DateCalc_decode_date_us(charptr buffer,
     else return(false); /* length <= 0 */
     if (*year < 100)
     {
-        /* if (*year < DateCalc_YEAR_OF_EPOCH) *year += 100; */
+        if (*year < DateCalc_YEAR_OF_EPOCH) *year += 100;
         *year += DateCalc_CENTURY_OF_EPOCH;
     }
     return(DateCalc_check_date(*year,*month,*day));
@@ -1360,16 +1395,61 @@ charptr DateCalc_Date_to_Text(Z_int year, Z_int month, Z_int day)
     else return(NULL);
 }
 
+charptr DateCalc_English_Ordinal(charptr result, Z_int number)
+{
+    N_int length;
+    N_int digit;
+
+    sprintf((char *)result, "%d", number);
+    if (length = strlen((char *)result))
+    {
+        if ( not
+             (
+               ( ((length > 1) and (result[length-2] != '1')) or (length == 1) )
+               and
+               ( (digit = (N_int)(result[length-1] XOR '0')) <= 3 )
+             )
+           )
+        {
+            digit = 0;
+        }
+        sprintf( (char *)(result+length), "%s",
+            DateCalc_English_Ordinals_[digit] );
+    }
+    return(result);
+}
+
 charptr DateCalc_Date_to_Text_Long(Z_int year, Z_int month, Z_int day)
 {
     charptr string;
+    blockdef(buffer,64);
 
     if (DateCalc_check_date(year,month,day) and
         ((string = (charptr) malloc(64)) != NULL))
     {
-        sprintf((char *)string,"%s, %d %s %d",
-          DateCalc_Day_of_Week_to_Text_[DateCalc_Language][DateCalc_Day_of_Week(year,month,day)],
-          day,DateCalc_Month_to_Text_[DateCalc_Language][month],year);
+        switch (DateCalc_Language)
+        {
+            case 1:
+                sprintf(
+                    (char *)string,
+                    (char *)DateCalc_Date_Long_Format_[DateCalc_Language],
+                    DateCalc_Day_of_Week_to_Text_[DateCalc_Language]
+                        [DateCalc_Day_of_Week(year,month,day)],
+                    DateCalc_Month_to_Text_[DateCalc_Language][month],
+                    DateCalc_English_Ordinal(buffer,day),
+                    year );
+                break;
+            default:
+                sprintf(
+                    (char *)string,
+                    (char *)DateCalc_Date_Long_Format_[DateCalc_Language],
+                    DateCalc_Day_of_Week_to_Text_[DateCalc_Language]
+                        [DateCalc_Day_of_Week(year,month,day)],
+                    day,
+                    DateCalc_Month_to_Text_[DateCalc_Language][month],
+                    year );
+                break;
+        }
         return(string);
     }
     else return(NULL);
@@ -1442,15 +1522,16 @@ void DateCalc_Dispose(charptr string)
 
 charptr DateCalc_Version(void)
 {
-    return((charptr)"4.2");
+    return((charptr)"4.3");
 }
 
 /*****************************************************************************/
-/*  VERSION:  4.2                                                            */
+/*  VERSION:  4.3                                                            */
 /*****************************************************************************/
 /*  VERSION HISTORY:                                                         */
 /*****************************************************************************/
 /*                                                                           */
+/*    Version 4.3   08.01.00  decode_date_??: (yy < 70 ? 20yy : 19yy)        */
 /*    Version 4.2   07.09.98  No changes.                                    */
 /*    Version 4.1   08.06.98  Fixed bug in "add_delta_ymd()".                */
 /*    Version 4.0   12.05.98  Major rework. Added multi-language support.    */
@@ -1488,7 +1569,7 @@ charptr DateCalc_Version(void)
 /*  COPYRIGHT:                                                               */
 /*****************************************************************************/
 /*                                                                           */
-/*    Copyright (c) 1993, 1995, 1996, 1997, 1998 by Steffen Beyer.           */
+/*    Copyright (c) 1993 - 2000 by Steffen Beyer.                            */
 /*    All rights reserved.                                                   */
 /*                                                                           */
 /*****************************************************************************/
@@ -1509,7 +1590,6 @@ charptr DateCalc_Version(void)
 /*    License along with this library; if not, write to the                  */
 /*    Free Software Foundation, Inc.,                                        */
 /*    59 Temple Place, Suite 330, Boston, MA 02111-1307 USA                  */
-/*                                                                           */
 /*    or download a copy from ftp://ftp.gnu.org/pub/gnu/COPYING.LIB-2.0      */
 /*                                                                           */
 /*****************************************************************************/

@@ -1,9 +1,9 @@
                      ====================================
-                       Package "Date::Calc" Version 4.2
+                       Package "Date::Calc" Version 4.3
                      ====================================
 
 
-            Copyright (c) 1995, 1996, 1997, 1998 by Steffen Beyer.
+                  Copyright (c) 1995 - 2000 by Steffen Beyer.
                              All rights reserved.
 
 
@@ -81,5 +81,8 @@ the bug in the "Add_Delta_YMD()" function which was fixed in version 4.1.
 Thanks to the several people who notified me about two compiler warnings
 concerning incompatible character types in Calc.xs line 857 (added two
 casts in version 4.2 to fix this flaw).
+
+Many thanks to Alessio Bragadini <alessio@albourne.com> for the patch he
+sent in to add Italian as one of the supported languages (version 4.3).
 
 

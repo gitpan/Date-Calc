@@ -1,5 +1,5 @@
                      ====================================
-                       Package "Date::Calc" Version 4.2
+                       Package "Date::Calc" Version 4.3
                      ====================================
 
 
@@ -24,7 +24,7 @@ Legal issues:
 
 This package with all its parts is
 
-Copyright (c) 1995, 1996, 1997, 1998 by Steffen Beyer.
+Copyright (c) 1995 - 2000 by Steffen Beyer.
 All rights reserved.
 
 This package is free software; you can redistribute it and/or
@@ -64,13 +64,13 @@ Changes over previous versions:
 -------------------------------
 
 Please refer to the file "CHANGES.txt" in this distribution for a detailed
-version history and instructions on how to upgrade existing applications.
+version history.
 
 
 Documentation:
 --------------
 
-The documentation to this package is included in POD format (= "Plain Old
+The documentation of this package is included in POD format (= "Plain Old
 Documentation") in the file "Calc.pm" in this distribution, the human-
 readable markup-language standard for Perl documentation.
 
@@ -100,10 +100,10 @@ The module of course handles year numbers of 2000 and above correctly
 to the largest positive integer representable on your system (which
 is at least 32767) can be dealt with.
 
-Note that this package EXTRAPOLATES the Gregorian calendar BACK
-until the year 1 A.D. -- even though the Gregorian calendar was only
-adopted in 1582 by most (not all) European countries, in obedience to
-the corresponding decree of catholic pope Gregor I in that year.
+Note that this package projects the Gregorian calendar back until the
+year 1 A.D. -- even though the Gregorian calendar was only adopted
+in 1582 by most (not all) European countries, in obedience to the
+corresponding decree of catholic pope Gregor I in that year.
 
 Some (mainly protestant) countries continued to use the Julian calendar
 (used until then) until as late as the beginning of the 20th century.
@@ -112,6 +112,9 @@ Finally, note that this package is not intended to do everything you could
 ever imagine automagically for you; it is rather intended to serve as a
 toolbox (in the best of UNIX spirit and traditions) which should, however,
 always get you where you want to go.
+
+See the section "RECIPES" at the end of the manual page for solutions
+to common problems!
 
 If nevertheless you can't figure out how to solve a particular problem,
 please let me know! (See e-mail address at the bottom of this document.)

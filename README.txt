@@ -1,5 +1,55 @@
+Thursday, December 13, 2001
+
+Dear MacPerl Users,
+
+this is the Date::Calc 4.3 module with a shared library compiled for MacPerl 5.6.1
+(and higher). This was compiled with MPW's MrC (PPC). Passed all tests with the MrC
+build of the MacPerl 5.6.1 MPW tool (after a static build, though) and application. 
+Let me know of any problems you might encounter.
+
+
+*** NOTE:
+This package contains shared libraries, which are loaded dynamically by MacPerl -- 
+well, normally. Currently, dynamic loading of shared libs might NOT work with the MPW 
+MacPerl tool. However, dynamic loading reliable works with the MacPerl application.
+Note also that dynamic loading is NOT supported by the 68K versions of the MacPerl 
+application and tool. And finally, note that this distribution will NOT work with 
+good old MacPerl 5.2.0r4.
+
+
+You can download the Date-Calc-4.3-bin56Mac.tar.gz tarball via my website at
+
+    http://usemacperl.esmartweb.com/modules.html
+
+or from my CPAN directory
+
+    $CPAN/authors/id/T/TW/TWEGNER/
+
+
+
+INSTALLATION
+============
+The module is best installed using Chris Nandor's installme.plx droplet. Simply 
+drop the packed archive or the unpacked folder on the droplet. Answer the 
+upcoming question "Convert all text and MacBinary files?" with "Yes". This should 
+install the module properly. 
+
+Since MacPerl 5.6.1 beta 1, the installer is part of the MacPerl disribution.
+	
+
+Have fun.
+
+--
+Thomas Wegner
+
+<wegner_thomas@yahoo.com>
+
+
+############################ ORIGINAL FOLLOWS ####################################################################
+
+
                      ====================================
-                       Package "Date::Calc" Version 5.0
+                       Package "Date::Calc" Version 4.3
                      ====================================
 
 
@@ -9,64 +59,14 @@ This package is available for download either from my web site at
 
 or from any CPAN (= "Comprehensive Perl Archive Network") mirror server:
 
-               http://www.perl.com/CPAN/authors/id/S/ST/STBEY/
+                  http://www.perl.com/CPAN/authors/id/STBEY/
 
 
-Abstract:
----------
-
-This package consists of a C library (intended to make life easier for C
-developers) and a Perl module to access this library from Perl.
-
-The library provides all sorts of date calculations based on the Gregorian
-calendar (the one used in all western countries today), thereby complying
-with all relevant norms and standards: ISO/R 2015-1971, DIN 1355 and, to
-some extent, ISO 8601 (where applicable).
-
-The package is designed as an efficient (and fast) toolbox, not a bulky
-ready-made application. It provides extensive documentation and examples
-of use, multi-language support and special functions for business needs.
+The package consists of a C library (useful for C developers) which is the
+core of a Perl (wrapper) module (for easy access to the library from Perl).
 
 The C library is specifically designed so that it can be used stand-alone,
 without Perl.
-
-Moreover, version 5.0 features date objects (in addition to the functional
-interface) with overloaded operators, and a set of modules for calculations
-which take local holidays into account (both additions in Perl only, however).
-
-
-New features in version 5.0:
-----------------------------
-
- *  Many new functions in Date::Calc
-    (but the module continues to be small, fast and simple)
-
- *  Optionally, Date::Calc objects with overloaded operators
-    for more ease of use (when speed is not so critical)
-
- *  An optional module for performing date calculations which
-    take holidays into account, e.g., today plus 60 workdays,
-    what date gives that?  Or how many workdays are there
-    between two dates?
-
- *  A library containing profiles for a large number of countries
-    with all their legal holidays (i.e., you get a day off) and
-    many commemorative days (you don't)
-
- *  The possibility to create your own profiles for any special
-    needs you may have, for instance for schools, banks, stock
-    market, birthdays of relatives and friends, ...
-
- *  It is easy to generate calendars for any of these profiles
-    and any year you like - there is a script to do so on the
-    command line, and a CGI script for doing so on the web
-
- *  A couple of new example scripts to illustrate the use of
-    the various modules
-
- *  Modularized, tailor-made components to assist you in particular
-    tasks, instead of one bulky application larger than your own
-    costing lots of overhead for features you do not need or want
 
 
 Legal issues:
@@ -74,98 +74,26 @@ Legal issues:
 
 This package with all its parts is
 
-Copyright (c) 1995 - 2001 by Steffen Beyer.
+Copyright (c) 1995 - 2000 by Steffen Beyer.
 All rights reserved.
 
-This package is free software; you can use, modify and redistribute
-it under the same terms as Perl itself, i.e., under the terms of
-the "Artistic License" or the "GNU General Public License".
+This package is free software; you can redistribute it and/or
+modify it under the same terms as Perl itself, i.e., under the
+terms of the "Artistic License" or the "GNU General Public License".
 
 The C library at the core of this Perl module can additionally
-be used, modified and redistributed under the terms of the
+be redistributed and/or modified under the terms of the
 "GNU Library General Public License".
 
 Please refer to the files "Artistic.txt", "GNU_GPL.txt" and
-"GNU_LGPL.txt" in this distribution, respectively, for details!
+"GNU_LGPL.txt" in this distribution for details!
 
 
 Prerequisites:
 --------------
 
-Perl version 5.000 or higher, and an ANSI C compiler. (!)
+Perl version 5.000 or higher, and an ANSI C compiler (!)
                                      ^^^^^^
-If you plan to use the modules "Date::Calendar" or
-"Date::Calendar::Year" from this package, you will
-also need the module "Bit::Vector" version 5.7 or
-newer (which also needs an ANSI C compiler!).
-
-Otherwise you may safely ignore the warning message
-"Warning: prerequisite Bit::Vector 5.7 not found at ..."
-when running "perl Makefile.PL".
-
-You can install "Bit::Vector" at any time later if you
-change your mind.
-
-If you compile under Windows, note that you will need
-exactly the same compiler your Perl itself was compiled
-with! (This is also true for Unix, but rarely a problem.)
-
-Moreover, you usually cannot build any modules under
-Windows 95/98, the Win 95/98 command shell doesn't
-grok the "&&" operator. You will need the Windows NT
-command shell ("cmd.exe") or the "4DOS" shell.
-
-Note that ActiveState provides precompiled binaries of
-both modules (Date::Calc and Bit::Vector) for their
-Win32 port of Perl ("ActivePerl") on their web site,
-which you should be able to install simply by typing
-"ppm install Bit-Vector" and "ppm install Date-Calc"
-in your MS-DOS command shell (but note the "-" instead
-of "::" in the package name!). This also works under
-Windows 95/98.
-
-If your firewall prevents "ppm" from downloading these
-packages, you can also download them manually from
-http://www.activestate.com/ppmpackages/5.005/zips/ or
-http://www.activestate.com/ppmpackages/5.6/zips/.
-Follow the installation instructions included in
-the "zip" archives.
-
-Note also that a "plain Perl" version of "Date::Calc" called
-"Date::Pcalc" exists (written by J. David Eisenberg); you
-should be able to download it from the same place where
-you found this package, or from David's web site at
-http://catcode.com/date/pcalc.html.
-
-
-Note to CPAN Testers:
----------------------
-
-Version 5.0 of this module has already been tested successfully
-during development with the following configurations:
-
-  Perl 5.003     -  Solaris 2.6 (SunOS 5.6)
-  Perl 5.003_07  -  Solaris 2.6 (SunOS 5.6)
-  Perl 5.004_04  -  Solaris 2.6 (SunOS 5.6)
-  Perl 5.004_05  -  Solaris 2.6 (SunOS 5.6)
-  Perl 5.005_03  -  FreeBSD 4.1.1-RELEASE (with "dlopen() relative paths" patch)
-  Perl 5.005_03  -  Windows NT 4.0 & MS VC++ 6.0 (native Perl build)
-  Perl 5.6.0     -  FreeBSD 4.1.1-RELEASE
-  Perl 5.6.1     -  FreeBSD 4.1.1-RELEASE
-  Perl 5.6.1     -  Windows NT 4.0 & ActivePerl 5.6.1.626 (multi-thread)
-  Perl 5.7.0     -  FreeBSD 4.1.1-RELEASE
-  Perl 5.7.1     -  FreeBSD 4.1.1-RELEASE
-  Perl 5.7.2     -  FreeBSD 4.1.1-RELEASE
-
-Note: You can safely ignore the failing tests in module Bit::Vector 6.0
-(Bit::Vector::Overload, to be precise) in file "t/30_overloaded.t" under
-Perl 5.7.1 and Perl 5.7.2. The same applies to older versions of
-Bit::Vector.
-
-The failing tests are due to a change in Perl's core module "overload.pm"
-which attempts to modify a read-only value when an exception is thrown
-in the handler of an overloaded operator. This just causes a different
-error message to be printed than the intended one.
 
 
 Installation:
@@ -173,10 +101,6 @@ Installation:
 
 Please see the file "INSTALL.txt" in this distribution for instructions
 on how to install this package.
-
-It is essential that you read this file since one of the special cases
-described in it might apply to you, especially if you are running Perl
-under Windows.
 
 
 Adding more languages:
@@ -189,56 +113,37 @@ distribution for detailed instructions on how to add other languages.
 Changes over previous versions:
 -------------------------------
 
-Please refer to the file "CHANGES.txt" in this distribution for a more
-detailed version history log.
+Please refer to the file "CHANGES.txt" in this distribution for a detailed
+version history.
 
 
 Documentation:
 --------------
 
-The documentation of this package is included in POD format (= "Plain
-Old Documentation") in the files with the extension ".pod" in this
-distribution, the human-readable markup-language standard for Perl
-documentation.
+The documentation of this package is included in POD format (= "Plain Old
+Documentation") in the file "Calc.pm" in this distribution, the human-
+readable markup-language standard for Perl documentation.
 
-By building this package, this documentation will automatically be
-converted into man pages, which will automatically be installed in
-your Perl tree for further reference through the installation process,
-where they can be accessed by the commands "man Date::Calc" (Unix)
-and "perldoc Date::Calc" (Unix and Win32 alike), for example.
+By building this package, this documentation will automatically be converted
+into a man page, which will automatically be installed in your Perl tree for
+further reference in this process, where it can be accessed via the command
+"man Date::Calc" (UNIX) or "perldoc Date::Calc" (UNIX and Win32).
 
-Available man pages:
-
-    Carp::Clan(3)
-    Date::Calc(3)
-    Date::Calc::Object(3)
-    Date::Calendar(3)
-    Date::Calendar::Profiles(3)
-    Date::Calendar::Year(3)
-
-If Perl is not available on your system, you can also read the ".pod"
-files
-
-    ./Calc.pod
-    ./Calendar.pod
-    ./lib/Carp/Clan.pod
-    ./lib/Date/Calc/Object.pod
-    ./lib/Date/Calendar/Profiles.pod
-    ./lib/Date/Calendar/Year.pod
-
+If Perl is not available on your system, you can also read this documentation
 directly.
 
 
 What does it do:
 ----------------
 
-This package performs date calculations based on the Gregorian calendar
-(the one used in all western countries today), thereby complying with
-all relevant norms and standards: ISO/R 2015-1971, DIN 1355 and, to
-some extent, ISO 8601 (where applicable).
+This package consists of a C library and a Perl module (which uses
+the C library, internally) for all kinds of date calculations based
+on the Gregorian calendar (the one used in all western countries today),
+thereby complying with all relevant norms and standards: ISO/R 2015-1971,
+DIN 1355 and, to some extent, ISO 8601 (where applicable).
 
-See also http://www.engelschall.com/u/sb/download/Date-Calc/DIN1355/
-for a scan of part of the "DIN 1355" document (in German).
+(See also http://www.engelschall.com/u/sb/download/Date-Calc/DIN1355/
+for a scan of part of the "DIN 1355" document (in German)).
 
 The module of course handles year numbers of 2000 and above correctly
 ("Year 2000" or "Y2K" compliance) -- actually all year numbers from 1
@@ -253,40 +158,20 @@ corresponding decree of catholic pope Gregor I in that year.
 Some (mainly protestant) countries continued to use the Julian calendar
 (used until then) until as late as the beginning of the 20th century.
 
-Therefore, do *NEVER* write something like "99" when you really mean
-"1999" - or you may get wrong results!
-
 Finally, note that this package is not intended to do everything you could
-ever imagine automagically :-) for you; it is rather intended to serve as a
-toolbox (in the best of UNIX spirit and tradition) which should, however,
-always get you where you need and want to go.
+ever imagine automagically for you; it is rather intended to serve as a
+toolbox (in the best of UNIX spirit and traditions) which should, however,
+always get you where you want to go.
 
-See the section "RECIPES" at the end of the manual pages for solutions
+See the section "RECIPES" at the end of the manual page for solutions
 to common problems!
 
 If nevertheless you can't figure out how to solve a particular problem,
-please let me know! (See e-mail address at the bottom of this file.)
-
-The new module "Date::Calc::Object" adds date objects to the (functional)
-"Date::Calc" module (just "use Date::Calc::Object qw(...);" INSTEAD of
-"use Date::Calc qw(...);"), plus built-in operators like +,+=,++,-,-=,--,
-<=>,<,<=,>,>=,==,!=,cmp,lt,le,gt,ge,eq,ne,abs(),"" and true/false
-testing, as well as a number of other useful methods.
-
-The new modules "Date::Calendar::Year" and "Date::Calendar" allow you
-to create calendar objects (for a single year or arbitrary (dynamic)
-ranges of years, respectively) for different countries/states/locations/
-companies/individuals which know about all local holidays, and which allow
-you to perform calculations based on work days (rather than just days),
-like calculating the difference between two dates in terms of work days,
-or adding/subtracting a number of work days to/from a date to yield a
-new date. The dates in the calendar are also tagged with their names,
-so that you can find out the name of a given day, or search for the
-date of a given holiday.
+please let me know! (See e-mail address at the bottom of this document.)
 
 
-Note to C developers:
----------------------
+Important note to C developers:
+-------------------------------
 
 Note again that the C library at the core of this module can also be
 used stand-alone (i.e., it contains no inter-dependencies whatsoever
@@ -327,13 +212,12 @@ Author's note:
 If you have any questions, suggestions or need any assistance, please
 let me know!
 
-Please do send feedback, this is essential for improving this module
-according to your needs!
+I would in fact be glad to receive any kind of feedback from you!
 
-I hope you will find this module useful. Enjoy!
+I hope you will find this module beneficial.
 
 Yours,
 --
   Steffen Beyer <sb@engelschall.com> http://www.engelschall.com/u/sb/
-  "There is enough for the need of everyone in this world, but not
-   for the greed of everyone." - Mohandas Karamchand "Mahatma" Gandhi
+       "There is enough for the need of everyone in this world,
+         but not for the greed of everyone." - Mahatma Gandhi

@@ -79,7 +79,11 @@ typedef  Z_longword         *Z_longwordptr;
 #undef  TRUE
 #define TRUE        (0==0)
 
-typedef enum { false = FALSE , true = TRUE } boolean;
+#ifdef MACOS_TRADITIONAL
+  #define boolean Boolean
+#else
+  typedef enum { false = FALSE , true = TRUE } boolean;
+#endif
 
 #define and         &&      /* logical (boolean) operators: lower case */
 #define or          ||
@@ -125,6 +129,10 @@ typedef enum { false = FALSE , true = TRUE } boolean;
 /*****************************************************************************/
 /*                                                                           */
 /*    Steffen Beyer                                                          */
+/*    Ainmillerstr. 5 / App. 513                                             */
+/*    D-80801 Munich                                                         */
+/*    Germany                                                                */
+/*                                                                           */
 /*    mailto:sb@engelschall.com                                              */
 /*    http://www.engelschall.com/u/sb/download/                              */
 /*                                                                           */
@@ -132,7 +140,7 @@ typedef enum { false = FALSE , true = TRUE } boolean;
 /*  COPYRIGHT:                                                               */
 /*****************************************************************************/
 /*                                                                           */
-/*    Copyright (c) 1995 - 2001 by Steffen Beyer.                            */
+/*    Copyright (c) 1995 - 2000 by Steffen Beyer.                            */
 /*    All rights reserved.                                                   */
 /*                                                                           */
 /*****************************************************************************/

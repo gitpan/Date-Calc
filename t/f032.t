@@ -160,80 +160,7 @@ VERBATIM
 $test[13] = <<"VERBATIM";
 
        January 1997
-Sun Mon Tue Wed Thu Fri Sat
-              1   2   3   4
-  5   6   7   8   9  10  11
- 12  13  14  15  16  17  18
- 19  20  21  22  23  24  25
- 26  27  28  29  30  31
-
-VERBATIM
-
-$test[14] = <<"VERBATIM";
-
-       February 1997
-Sun Mon Tue Wed Thu Fri Sat
-                          1
-  2   3   4   5   6   7   8
-  9  10  11  12  13  14  15
- 16  17  18  19  20  21  22
- 23  24  25  26  27  28
-
-VERBATIM
-
-$test[15] = <<"VERBATIM";
-
-        March 1997
-Sun Mon Tue Wed Thu Fri Sat
-                          1
-  2   3   4   5   6   7   8
-  9  10  11  12  13  14  15
- 16  17  18  19  20  21  22
- 23  24  25  26  27  28  29
- 30  31
-
-VERBATIM
-
-$test[16] = <<"VERBATIM";
-
-        April 1997
-Sun Mon Tue Wed Thu Fri Sat
-          1   2   3   4   5
-  6   7   8   9  10  11  12
- 13  14  15  16  17  18  19
- 20  21  22  23  24  25  26
- 27  28  29  30
-
-VERBATIM
-
-$test[17] = <<"VERBATIM";
-
-         May 1997
-Sun Mon Tue Wed Thu Fri Sat
-                  1   2   3
-  4   5   6   7   8   9  10
- 11  12  13  14  15  16  17
- 18  19  20  21  22  23  24
- 25  26  27  28  29  30  31
-
-VERBATIM
-
-$test[18] = <<"VERBATIM";
-
-         June 1997
-Sun Mon Tue Wed Thu Fri Sat
-  1   2   3   4   5   6   7
-  8   9  10  11  12  13  14
- 15  16  17  18  19  20  21
- 22  23  24  25  26  27  28
- 29  30
-
-VERBATIM
-
-$test[19] = <<"VERBATIM";
-
-         July 1997
-Sun Mon Tue Wed Thu Fri Sat
+Mon Tue Wed Thu Fri Sat Sun
           1   2   3   4   5
   6   7   8   9  10  11  12
  13  14  15  16  17  18  19
@@ -242,10 +169,22 @@ Sun Mon Tue Wed Thu Fri Sat
 
 VERBATIM
 
-$test[20] = <<"VERBATIM";
+$test[14] = <<"VERBATIM";
 
-        August 1997
-Sun Mon Tue Wed Thu Fri Sat
+       February 1997
+Mon Tue Wed Thu Fri Sat Sun
+                      1   2
+  3   4   5   6   7   8   9
+ 10  11  12  13  14  15  16
+ 17  18  19  20  21  22  23
+ 24  25  26  27  28
+
+VERBATIM
+
+$test[15] = <<"VERBATIM";
+
+        March 1997
+Mon Tue Wed Thu Fri Sat Sun
                       1   2
   3   4   5   6   7   8   9
  10  11  12  13  14  15  16
@@ -255,10 +194,10 @@ Sun Mon Tue Wed Thu Fri Sat
 
 VERBATIM
 
-$test[21] = <<"VERBATIM";
+$test[16] = <<"VERBATIM";
 
-      September 1997
-Sun Mon Tue Wed Thu Fri Sat
+        April 1997
+Mon Tue Wed Thu Fri Sat Sun
       1   2   3   4   5   6
   7   8   9  10  11  12  13
  14  15  16  17  18  19  20
@@ -267,10 +206,10 @@ Sun Mon Tue Wed Thu Fri Sat
 
 VERBATIM
 
-$test[22] = <<"VERBATIM";
+$test[17] = <<"VERBATIM";
 
-       October 1997
-Sun Mon Tue Wed Thu Fri Sat
+         May 1997
+Mon Tue Wed Thu Fri Sat Sun
               1   2   3   4
   5   6   7   8   9  10  11
  12  13  14  15  16  17  18
@@ -279,10 +218,10 @@ Sun Mon Tue Wed Thu Fri Sat
 
 VERBATIM
 
-$test[23] = <<"VERBATIM";
+$test[18] = <<"VERBATIM";
 
-       November 1997
-Sun Mon Tue Wed Thu Fri Sat
+         June 1997
+Mon Tue Wed Thu Fri Sat Sun
                           1
   2   3   4   5   6   7   8
   9  10  11  12  13  14  15
@@ -292,10 +231,10 @@ Sun Mon Tue Wed Thu Fri Sat
 
 VERBATIM
 
-$test[24] = <<"VERBATIM";
+$test[19] = <<"VERBATIM";
 
-       December 1997
-Sun Mon Tue Wed Thu Fri Sat
+         July 1997
+Mon Tue Wed Thu Fri Sat Sun
       1   2   3   4   5   6
   7   8   9  10  11  12  13
  14  15  16  17  18  19  20
@@ -304,14 +243,76 @@ Sun Mon Tue Wed Thu Fri Sat
 
 VERBATIM
 
+$test[20] = <<"VERBATIM";
+
+        August 1997
+Mon Tue Wed Thu Fri Sat Sun
+                  1   2   3
+  4   5   6   7   8   9  10
+ 11  12  13  14  15  16  17
+ 18  19  20  21  22  23  24
+ 25  26  27  28  29  30  31
+
+VERBATIM
+
+$test[21] = <<"VERBATIM";
+
+      September 1997
+Mon Tue Wed Thu Fri Sat Sun
+  1   2   3   4   5   6   7
+  8   9  10  11  12  13  14
+ 15  16  17  18  19  20  21
+ 22  23  24  25  26  27  28
+ 29  30
+
+VERBATIM
+
+$test[22] = <<"VERBATIM";
+
+       October 1997
+Mon Tue Wed Thu Fri Sat Sun
+          1   2   3   4   5
+  6   7   8   9  10  11  12
+ 13  14  15  16  17  18  19
+ 20  21  22  23  24  25  26
+ 27  28  29  30  31
+
+VERBATIM
+
+$test[23] = <<"VERBATIM";
+
+       November 1997
+Mon Tue Wed Thu Fri Sat Sun
+                      1   2
+  3   4   5   6   7   8   9
+ 10  11  12  13  14  15  16
+ 17  18  19  20  21  22  23
+ 24  25  26  27  28  29  30
+
+VERBATIM
+
+$test[24] = <<"VERBATIM";
+
+       December 1997
+Mon Tue Wed Thu Fri Sat Sun
+  1   2   3   4   5   6   7
+  8   9  10  11  12  13  14
+ 15  16  17  18  19  20  21
+ 22  23  24  25  26  27  28
+ 29  30  31
+
+VERBATIM
+
 $n = 1;
 
-$ortho = 0;
-for ( $year = 1996; $year <= 1997; $year++, $ortho++ )
+for ( $year = 1996; $year <= 1997; $year++ )
 {
     for ( $month = 1; $month <= 12; $month++ )
     {
-        if (Calendar($year,$month,$ortho) eq $test[$n])
+        $string = Calendar($year,$month);
+        $string =~ s![ \t]+\n!\n!g;
+
+        if ($string eq $test[$n])
         {print "ok $n\n";} else {print "not ok $n\n";}
         $n++;
     }

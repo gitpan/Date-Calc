@@ -1,8 +1,8 @@
-#!perl
+#!perl -w
 
 ###############################################################################
 ##                                                                           ##
-##    Copyright (c) 1998 - 2001 by Steffen Beyer.                            ##
+##    Copyright (c) 2001 by Steffen Beyer.                                   ##
 ##    All rights reserved.                                                   ##
 ##                                                                           ##
 ##    This program is free software; you can redistribute it                 ##
@@ -10,29 +10,27 @@
 ##                                                                           ##
 ###############################################################################
 
-use Config;
+use Date::Calendar::Profiles qw( $Profiles );
+use Date::Calendar;
+use Date::Calc::Object qw(:all);
 
-$self = $0;
-$self =~ s!^.*/!!;
+Language(Decode_Language("Deutsch"));
 
-unless (@ARGV)
-{
-    die "Usage:  perl  $self  <main>[.c]  [ <other.c> ]*\n";
-}
+Date::Calc->date_format(3);
 
-$main = shift;
-$main =~ s/\.c$//;
+$cal = Date::Calendar->new( $Profiles->{'DE-NW'} );
 
-unless (-f "$main.c")
-{
-    die "$self: file '$main.c' does not exist!\n";
-}
+$cal->cache_add( 2000..2003 );
 
-$cc = $Config{'cc'};
+@date = $cal->search("Weiber");
+print map sprintf("%s (%s)\n", $_, join(' ', $cal->labels($_->date()))), @date;
 
-$flags = $Config{'ccflags'};
+print "\n";
 
-@ARGV = map("\"$_\"",@ARGV);
+$year = $cal->year( 2004 );
 
-system("$cc $flags -o $main $main.c @ARGV");
+@date = $year->search("Weiber");
+print map sprintf("%s (%s)\n", $_, join(' ', $cal->labels($_->date()))), @date;
+
+__END__
 

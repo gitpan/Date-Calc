@@ -1,7 +1,7 @@
 
 ###############################################################################
 ##                                                                           ##
-##    Copyright (c) 2000 by Steffen Beyer.                                   ##
+##    Copyright (c) 2000, 2001 by Steffen Beyer.                             ##
 ##    All rights reserved.                                                   ##
 ##                                                                           ##
 ##    This package is free software; you can redistribute it                 ##
@@ -28,24 +28,21 @@ $VERSION = '5.0';
 
 use Bit::Vector;
 use Carp::Clan qw(^Date::);
-use Date::Calc::Object qw(:all);
+use Date::Calc::Object qw(:ALL);
 
 sub check_year
 {
-    my($year);
-
-    if (ref($_[0]) and ref($_[0]) !~ /^[A-Z]+$/) { $year = $_[0]->year(); }
-    else                                         { $year = $_[0]; }
+    my($year) = shift_year(\@_);
 
     if (($year < 1583) || ($year > 2299))
     {
-        croak("given year ($year) out of range [1583,2299]");
+        croak("given year ($year) out of range [1583..2299]");
     }
 }
 
 sub empty_period
 {
-    carp("empty time period selected") if ($^W);
+    carp("dates interval is empty") if ($^W);
 }
 
 sub _invalid_
@@ -103,11 +100,9 @@ sub _set_fixed_date_
 
 sub date2index
 {
-    my($self) = shift;
-    my($yy,$mm,$dd,$year,$index);
-
-    if (ref($_[0]) and ref($_[0]) !~ /^[A-Z]+$/) { ($yy,$mm,$dd) = $_[0]->date(); }
-    else                                         { ($yy,$mm,$dd) = @_; }
+    my($self)       = shift;
+    my($yy,$mm,$dd) = shift_date(\@_);
+    my($year,$index);
 
     $year = ${$self}{'YEAR'};
     if ($yy != $year)
@@ -145,32 +140,28 @@ sub index2date
 
 sub new
 {
-    my($class) = shift;
-    my($year,$profile);
+    my($class)    = shift;
+    my($year)     = shift_year(\@_);
+    my($profile)  = shift;
+    my($language) = shift || 0;
     my($self);
-
-    if (ref($_[0]) and ref($_[0]) !~ /^[A-Z]+$/) { $year = $_[0]->year(); }
-    else                                         { $year = $_[0]; }
-    $profile = $_[1];
 
     &check_year($year);
     $self = { };
-    $class = ref($class) || $class || __PACKAGE__;
+    $class = ref($class) || $class || 'Date::Calendar::Year';
     bless($self, $class);
-    $self->init($year,$profile);
+    $self->init($year,$profile,$language);
     return $self;
 }
 
 sub init
 {
-    my($self) = shift;
-    my($year,$profile);
-    my($days,$dow,$name,$item,$flag,$temp,$n);
+    my($self)     = shift;
+    my($year)     = shift_year(\@_);
+    my($profile)  = shift;
+    my($language) = shift || 0;
+    my($days,$dow,$lang,$name,$item,$flag,$temp,$n);
     my(@easter,@date);
-
-    if (ref($_[0]) and ref($_[0]) !~ /^[A-Z]+$/) { $year = $_[0]->year(); }
-    else                                         { $year = $_[0]; }
-    $profile = $_[1];
 
     &check_year($year);
     croak("given profile is not a HASH ref") unless (ref($profile) eq 'HASH');
@@ -192,6 +183,20 @@ sub init
         $dow += 6;
     }
     @easter = Easter_Sunday($year);
+    if ($language =~ /^\d+$/)
+    {
+        if (($language > 0) and ($language <= Languages()))
+            { $lang = Language($language); }
+        else
+            { $lang = Language(1); }
+    }
+    else
+    {
+        if ($language = Decode_Language($language))
+            { $lang = Language($language); }
+        else
+            { $lang = Language(1); }
+    }
     foreach $name (keys %{$profile})
     {
         @date = ();
@@ -217,8 +222,9 @@ sub init
             &_check_init_date_($item,$name,$year,@date);
             &_set_date_($self,$name,@date,$flag);
         }
-        elsif (($item =~ /^ ([#:]?) (\d+) \.  (\d+)       \.? $/x) ||
-               ($item =~ /^ ([#:]?) (\d+) \.? ([a-zA-Z]+) \.? $/x))
+        elsif (($item =~ /^ ([#:]?) (\d+) \.  (\d+)           \.? $/x) ||
+               ($item =~ /^ ([#:]?) (\d+) \.? ([a-zA-Z]+)     \.? $/x) ||
+               ($item =~ /^ ([#:]?) (\d+)  -  (\d+|[a-zA-Z]+)  -? $/x))
         {
             $flag = $1;
             @date = ($year,$3,$2);
@@ -267,6 +273,7 @@ sub init
         }
     }
     ${$self}{'HALF'}->AndNot( ${$self}{'HALF'}, ${$self}{'FULL'} );
+    Language($lang);
 }
 
 sub vec_full # full holidays
@@ -290,22 +297,52 @@ sub vec_work # work space
     return ${$self}{'WORK'};
 }
 
+sub val_days
+{
+    my($self) = @_;
+
+    return ${$self}{'DAYS'};
+}
+
+sub val_base
+{
+    my($self) = @_;
+
+    return ${$self}{'BASE'};
+}
+
+sub val_year
+{
+    my($self) = @_;
+
+    return ${$self}{'YEAR'};
+}
+
+sub year # as a shortcut and to enable shift_year
+{
+    my($self) = @_;
+
+    return ${$self}{'YEAR'};
+}
+
 sub labels
 {
     my($self) = shift;
+    my(@date);
     my($index);
     my(%result);
 
     if (@_)
     {
-        $index = $self->date2index(@_);
+        @date = shift_date(\@_);
+        $index = $self->date2index(@date);
         if (defined $self->{'TAGS'}{$index})
         {
             if (defined wantarray and wantarray)
             {
                 return
                 (
-                    Day_of_Week_to_Text(Day_of_Week(@_)),
+                    Day_of_Week_to_Text(Day_of_Week(@date)),
                     keys(%{$self->{'TAGS'}{$index}})
                 );
             }
@@ -318,7 +355,7 @@ sub labels
         {
             if (defined wantarray and wantarray)
             {
-                return( Day_of_Week_to_Text(Day_of_Week(@_)) );
+                return( Day_of_Week_to_Text(Day_of_Week(@date)) );
             }
             else
             {
@@ -370,6 +407,23 @@ sub search
     return( map( $self->index2date($_), sort {$a<=>$b} @result ) );
 }
 
+sub _interval_workdays_
+{
+    my($self,$lower,$upper) = @_;
+    my($work,$full,$half,$days);
+
+    $work = ${$self}{'WORK'};
+    $full = ${$self}{'FULL'};
+    $half = ${$self}{'HALF'};
+    $work->Empty();
+    $work->Interval_Fill($lower,$upper);
+    $work->AndNot($work,$full);
+    $days = $work->Norm();
+    $work->And($work,$half);
+    $days -= $work->Norm() * 0.5;
+    return $days;
+}
+
 sub _delta_workdays_
 {
     my($self,$lower_index,$upper_index,$include_lower,$include_upper) = @_;
@@ -397,26 +451,16 @@ sub _delta_workdays_
         &empty_period();
         return 0;
     }
-    ${$self}{'WORK'}->Empty();
-    ${$self}{'WORK'}->Interval_Fill($lower_index,$upper_index);
-    ${$self}{'WORK'}->AndNot( ${$self}{'WORK'}, ${$self}{'FULL'} );
-    $days = ${$self}{'WORK'}->Norm();
-    ${$self}{'WORK'}->And( ${$self}{'WORK'}, ${$self}{'HALF'} );
-    $days -= ${$self}{'WORK'}->Norm() * 0.5;
-    return $days;
+    return $self->_interval_workdays_($lower_index,$upper_index);
 }
 
 sub delta_workdays
 {
-    my($self) = shift;
-    my($yy1,$mm1,$dd1,$yy2,$mm2,$dd2,$including1,$including2);
+    my($self)                   =  shift;
+    my($yy1,$mm1,$dd1)          =  shift_date(\@_);
+    my($yy2,$mm2,$dd2)          =  shift_date(\@_);
+    my($including1,$including2) = (shift,shift);
     my($index1,$index2);
-
-    if (ref($_[0]) and ref($_[0]) !~ /^[A-Z]+$/) { ($yy1,$mm1,$dd1) = shift->date(); }
-    else                                         { ($yy1,$mm1,$dd1) = (shift,shift,shift); }
-    if (ref($_[0]) and ref($_[0]) !~ /^[A-Z]+$/) { ($yy2,$mm2,$dd2) = shift->date(); }
-    else                                         { ($yy2,$mm2,$dd2) = (shift,shift,shift); }
-    ($including1,$including2) = (shift,shift);
 
     $index1 = $self->date2index($yy1,$mm1,$dd1);
     $index2 = $self->date2index($yy2,$mm2,$dd2);
@@ -432,114 +476,189 @@ sub delta_workdays
     }
 }
 
+sub _move_forward_
+{
+    my($self,$index,$rest,$sign) = @_;
+    my($limit,$year,$full,$half,$loop,$min,$max);
+
+    if ($sign == 0)
+    {
+        return( $self->index2date($index), $rest, 0 );
+    }
+    $limit = ${$self}{'DAYS'} - 1;
+    $year  = ${$self}{'YEAR'};
+    $full  = ${$self}{'FULL'};
+    $half  = ${$self}{'HALF'};
+    $loop  = 1;
+    if ($sign > 0)
+    {
+        $rest = -$rest if ($rest < 0);
+        while ($loop)
+        {
+            $loop = 0;
+            if ($full->bit_test($index) &&
+                (($min,$max) = $full->Interval_Scan_inc($index)) &&
+                ($min == $index))
+            {
+                if ($max >= $limit)
+                {
+                    return( Date::Calc->new(++$year,1,1), $rest, +1 );
+                }
+                else { $index = $max + 1; }
+            }
+            if ($half->bit_test($index))
+            {
+                if ($rest >= 0.5) { $rest -= 0.5; $index++; $loop = 1; }
+            }
+            elsif  ($rest >= 1.0) { $rest -= 1.0; $index++; $loop = 1; }
+            if ($loop && ($index > $limit))
+            {
+                return( Date::Calc->new(++$year,1,1), $rest, +1 );
+            }
+        }
+        return( $self->index2date($index), $rest, 0 );
+    }
+    else # ($sign < 0)
+    {
+        $rest = -$rest if ($rest > 0);
+        while ($loop)
+        {
+            $loop = 0;
+            if ($full->bit_test($index) &&
+                (($min,$max) = $full->Interval_Scan_dec($index)) &&
+                ($max == $index))
+            {
+                if ($min <= 0)
+                {
+                    return( Date::Calc->new(--$year,12,31), $rest, -1 );
+                }
+                else { $index = $min - 1; }
+            }
+            if ($half->bit_test($index))
+            {
+                if ($rest <= -0.5) { $rest += 0.5; $index--; $loop = 1; }
+            }
+            elsif  ($rest <= -1.0) { $rest += 1.0; $index--; $loop = 1; }
+            if ($loop && ($index < 0))
+            {
+                return( Date::Calc->new(--$year,12,31), $rest, -1 );
+            }
+        }
+        return( $self->index2date($index), $rest, 0 );
+    }
+}
+
 sub add_delta_workdays
 {
+    my($self)       = shift;
+    my($yy,$mm,$dd) = shift_date(\@_);
+    my($days)       = shift;
+    my($sign)       = shift;
+    my($index,$full,$half,$limit,$diff,$guess);
+
+    $index = $self->date2index($yy,$mm,$dd); # check date
+    if ($sign == 0)
+    {
+        return( Date::Calc->new($yy,$mm,$dd), $days, 0 );
+    }
+    $days = -$days if ($days < 0);
+    if ($days < 2) # other values possible for fine-tuning optimal speed
+    {
+        return( $self->_move_forward_($index,$days,$sign) );
+    }
+    # else sufficiently large distance
+    $full = ${$self}{'FULL'};
+    $half = ${$self}{'HALF'};
+    if ($sign > 0)
+    {
+        # First, check against whole rest of year:
+        $limit = ${$self}{'DAYS'} - 1;
+        $diff = $self->_interval_workdays_($index,$limit);
+        if ($days >= $diff)
+        {
+            $days -= $diff;
+            return( Date::Calc->new(++$yy,1,1), $days, +1 );
+        }
+        # else ($days < $diff)
+        # Now calculate proportional jump (approximatively):
+        $guess = $index + int($days * ($limit-$index+1) / $diff);
+        $guess = $limit if ($guess > $limit);
+        if ($index + 2 > $guess) # again, other values possible for fine-tuning
+        {
+            return( $self->_move_forward_($index,$days,+1) );
+        }
+        # else sufficiently long jump
+        $diff = $self->_interval_workdays_($index,$guess-1);
+        while ($days < $diff) # reverse gear (jumped too far)
+        {
+            $guess--;
+            unless ($full->bit_test($guess))
+            {
+                if ($half->bit_test($guess)) { $diff -= 0.5; }
+                else                         { $diff -= 1.0; }
+            }
+        }
+        # Now move in original direction:
+        $days -= $diff;
+        return( $self->_move_forward_($guess,$days,+1) );
+    }
+    else # ($sign < 0)
+    {
+        # First, check against whole rest of year:
+        $limit = 0;
+        $diff = $self->_interval_workdays_($limit,$index);
+        if ($days >= $diff)
+        {
+            $days -= $diff;
+            return( Date::Calc->new(--$yy,12,31), -$days, -1 );
+        }
+        # else ($days < $diff)
+        # Now calculate proportional jump (approximatively):
+        $guess = $index - int($days * ($index+1) / $diff);
+        $guess = $limit if ($guess < $limit);
+        if ($guess > $index - 2) # again, other values possible for fine-tuning
+        {
+            return( $self->_move_forward_($index,-$days,-1) );
+        }
+        # else sufficiently long jump
+        $diff = $self->_interval_workdays_($guess+1,$index);
+        while ($days < $diff) # reverse gear (jumped too far)
+        {
+            $guess++;
+            unless ($full->bit_test($guess))
+            {
+                if ($half->bit_test($guess)) { $diff -= 0.5; }
+                else                         { $diff -= 1.0; }
+            }
+        }
+        # Now move in original direction:
+        $days -= $diff;
+        return( $self->_move_forward_($guess,-$days,-1) );
+    }
+}
+
+sub is_full
+{
     my($self) = shift;
-    my($yy,$mm,$dd,$days);
-    my($index,$limit,$forward,$lower,$upper,$diff);
+    my(@date) = shift_date(\@_);
 
-    if (ref($_[0]) and ref($_[0]) !~ /^[A-Z]+$/) { ($yy,$mm,$dd) = shift->date(); }
-    else                                         { ($yy,$mm,$dd) = (shift,shift,shift); }
-    $days = shift;
+    return $self->vec_full->bit_test( $self->date2index(@date) );
+}
 
-    $index = $self->date2index($yy,$mm,$dd);
-    return(Date::Calc->new($yy,$mm,$dd),0) if ($days == 0);
-    $limit = ${$self}{'DAYS'} - 1;
-    if ($days > 0)
-    {
-        $forward = 1;
-        $lower = $index;
-        $upper = $limit;
-    }
-    else # ($days < 0)
-    {
-        $forward = 0;
-        $days = -$days;
-        $lower = 0;
-        $upper = $index;
-    }
-    ${$self}{'WORK'}->Empty();
-    ${$self}{'WORK'}->Interval_Fill($lower,$upper);
-    ${$self}{'WORK'}->AndNot( ${$self}{'WORK'}, ${$self}{'FULL'} );
-    $diff = ${$self}{'WORK'}->Norm();
-    ${$self}{'WORK'}->And( ${$self}{'WORK'}, ${$self}{'HALF'} );
-    $diff -= ${$self}{'WORK'}->Norm() * 0.5;
-    if ($forward)
-    {
-        if ($days >= $diff)
-        {
-            $days -= $diff;
-            return(Date::Calc->new(++$yy,1,1),$days);
-        }
-        # else ($days < $diff)
-        $lower = $index;
-        $upper = $index + int(($days * ($limit-$index+1) / $diff) + 0.5);
-        $upper = $limit if ($upper > $limit);
-    }
-    else # backward
-    {
-        if ($days >= $diff)
-        {
-            $days -= $diff;
-            return(Date::Calc->new(--$yy,12,31),-$days);
-        }
-        # else ($days < $diff)
-        $upper = $index;
-        $lower = $index - int(($days * ($index+1) / $diff) + 0.5);
-        $lower = 0 if ($lower < 0);
-    }
-    ${$self}{'WORK'}->Empty();
-    ${$self}{'WORK'}->Interval_Fill($lower,$upper);
-    ${$self}{'WORK'}->AndNot( ${$self}{'WORK'}, ${$self}{'FULL'} );
-    $diff = ${$self}{'WORK'}->Norm();
-    ${$self}{'WORK'}->And( ${$self}{'WORK'}, ${$self}{'HALF'} );
-    $diff -= ${$self}{'WORK'}->Norm() * 0.5;
-    while ( abs( $days - $diff ) > 0.5 )
-    {
-        if ($forward)
-        {
-            if ($days > $diff) # continue in same direction
-            {
-                $upper++;
-                $upper++ while (${$self}{'FULL'}->bit_test($upper));
-                if (${$self}{'HALF'}->bit_test($upper)) { $diff += 0.5; }
-                else                                    { $diff++; }
-            }
-            else # ($days < $diff) # reverse gear
-            {
-                $upper--;
-                $upper-- while (${$self}{'FULL'}->bit_test($upper));
-                if (${$self}{'HALF'}->bit_test($upper)) { $diff -= 0.5; }
-                else                                    { $diff--; }
-            }
-        }
-        else # backward
-        {
-            if ($days > $diff) # continue in same direction
-            {
-                $lower--;
-                $lower-- while (${$self}{'FULL'}->bit_test($lower));
-                if (${$self}{'HALF'}->bit_test($lower)) { $diff += 0.5; }
-                else                                    { $diff++; }
-            }
-            else # ($days < $diff) # reverse gear
-            {
-                $lower++;
-                $lower++ while (${$self}{'FULL'}->bit_test($lower));
-                if (${$self}{'HALF'}->bit_test($lower)) { $diff -= 0.5; }
-                else                                    { $diff--; }
-            }
-        }
-    }
-    $days -= $diff;
-    if ($forward)
-    {
-        return($self->index2date($upper),$days);
-    }
-    else # backward
-    {
-        return($self->index2date($lower),-$days);
-    }
+sub is_half
+{
+    my($self) = shift;
+    my(@date) = shift_date(\@_);
+
+    return $self->vec_half->bit_test( $self->date2index(@date) );
+}
+
+sub is_work
+{
+    my($self) = shift;
+    my(@date) = shift_date(\@_);
+
+    return $self->vec_work->bit_test( $self->date2index(@date) );
 }
 
 1;

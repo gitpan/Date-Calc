@@ -1,7 +1,7 @@
 
 ###############################################################################
 ##                                                                           ##
-##    Copyright (c) 2000 by Steffen Beyer.                                   ##
+##    Copyright (c) 2000, 2001 by Steffen Beyer.                             ##
 ##    All rights reserved.                                                   ##
 ##                                                                           ##
 ##    This package is free software; you can redistribute it                 ##
@@ -22,21 +22,185 @@
 package Date::Calc::Object;
 
 use strict;
-use vars qw(@ISA @EXPORT @EXPORT_OK %EXPORT_TAGS $VERSION);
+use vars qw(@ISA @AUXILIARY @EXPORT @EXPORT_OK %EXPORT_TAGS $VERSION);
+
+use Carp::Clan qw(^Date::);
 
 BEGIN # Re-export imports from Date::Calc:
 {
     require Exporter;
     require Date::Calc;
     @ISA         = qw(Exporter Date::Calc);
+    @AUXILIARY   = qw(shift_year shift_date shift_time shift_datetime);
     @EXPORT      = @Date::Calc::EXPORT;
-    @EXPORT_OK   = @Date::Calc::EXPORT_OK;
-    %EXPORT_TAGS = (all => [@EXPORT_OK]);
+    @EXPORT_OK   = (@Date::Calc::EXPORT_OK,@AUXILIARY);
+    %EXPORT_TAGS = (all => [@Date::Calc::EXPORT_OK],
+                    aux => [@AUXILIARY],
+                    ALL => [@EXPORT_OK]);
     $VERSION     = '5.0';
-    Date::Calc->import(@EXPORT,@EXPORT_OK);
+    Date::Calc->import(@Date::Calc::EXPORT,@Date::Calc::EXPORT_OK);
+}
+
+sub shift_year
+{
+    croak("internal error - parameter is not an ARRAY ref") if (ref($_[0]) ne 'ARRAY');
+
+    if (ref($_[0][0]))
+    {
+        if (ref($_[0][0]) eq 'ARRAY')
+        {
+            if (@{$_[0][0]} == 3) # otherwise anonymous array is pointless
+            {
+                return ${shift(@{$_[0]})}[0];
+            }
+            else
+            {
+                croak("wrong number of elements in date constant");
+            }
+        }
+        elsif (ref($_[0][0]) =~ /[^:]::[^:]/)
+        {
+            return shift(@{$_[0]})->year();
+        }
+        else
+        {
+            croak("input parameter is neither ARRAY ref nor object");
+        }
+    }
+    else
+    {
+        if (@{$_[0]} >= 1)
+        {
+            return shift(@{$_[0]});
+        }
+        else
+        {
+            croak("not enough input parameters for a year");
+        }
+    }
+}
+
+sub shift_date
+{
+    croak("internal error - parameter is not an ARRAY ref") if (ref($_[0]) ne 'ARRAY');
+
+    if (ref($_[0][0]))
+    {
+        if (ref($_[0][0]) eq 'ARRAY')
+        {
+            if (@{$_[0][0]} == 3)
+            {
+                return( @{shift(@{$_[0]})} );
+            }
+            else
+            {
+                croak("wrong number of elements in date constant");
+            }
+        }
+        elsif (ref($_[0][0]) =~ /[^:]::[^:]/)
+        {
+            return( shift(@{$_[0]})->date() );
+        }
+        else
+        {
+            croak("input parameter is neither ARRAY ref nor object");
+        }
+    }
+    else
+    {
+        if (@{$_[0]} >= 3)
+        {
+            return( shift(@{$_[0]}), shift(@{$_[0]}), shift(@{$_[0]}) );
+        }
+        else
+        {
+            croak("not enough input parameters for a date");
+        }
+    }
+}
+
+sub shift_time
+{
+    croak("internal error - parameter is not an ARRAY ref") if (ref($_[0]) ne 'ARRAY');
+
+    if (ref($_[0][0]))
+    {
+        if (ref($_[0][0]) eq 'ARRAY')
+        {
+            if (@{$_[0][0]} == 3)
+            {
+                return( @{shift(@{$_[0]})} );
+            }
+            else
+            {
+                croak("wrong number of elements in time constant");
+            }
+        }
+        elsif (ref($_[0][0]) =~ /[^:]::[^:]/)
+        {
+            return( (shift(@{$_[0]})->datetime())[3,4,5] );
+        }
+        else
+        {
+            croak("input parameter is neither ARRAY ref nor object");
+        }
+    }
+    else
+    {
+        if (@{$_[0]} >= 3)
+        {
+            return( shift(@{$_[0]}), shift(@{$_[0]}), shift(@{$_[0]}) );
+        }
+        else
+        {
+            croak("not enough input parameters for time values");
+        }
+    }
+}
+
+sub shift_datetime
+{
+    croak("internal error - parameter is not an ARRAY ref") if (ref($_[0]) ne 'ARRAY');
+
+    if (ref($_[0][0]))
+    {
+        if (ref($_[0][0]) eq 'ARRAY')
+        {
+            if (@{$_[0][0]} == 6)
+            {
+                return( @{shift(@{$_[0]})} );
+            }
+            else
+            {
+                croak("wrong number of elements in date-time constant");
+            }
+        }
+        elsif (ref($_[0][0]) =~ /[^:]::[^:]/)
+        {
+            return( shift(@{$_[0]})->datetime() );
+        }
+        else
+        {
+            croak("input parameter is neither ARRAY ref nor object");
+        }
+    }
+    else
+    {
+        if (@{$_[0]} >= 6)
+        {
+            return( shift(@{$_[0]}), shift(@{$_[0]}), shift(@{$_[0]}),
+                    shift(@{$_[0]}), shift(@{$_[0]}), shift(@{$_[0]}) );
+        }
+        else
+        {
+            croak("not enough input parameters for a date and time");
+        }
+    }
 }
 
 package Date::Calc;
+
+use strict;
 
 use Carp::Clan qw(^Date::);
 
@@ -46,7 +210,6 @@ use overload
     'bool' => 'is_valid',
      'neg' => '_unary_minus_',
      'abs' => 'number',
-       'x' => '_xerox_',
      '<=>' => '_compare_date_',
      'cmp' => '_compare_date_time_',
       '==' => '_equal_date_',
@@ -59,18 +222,31 @@ use overload
       '-=' => '_minus_equal_',
       '++' => '_increment_',
       '--' => '_decrement_',
+       'x' => '_times_',
+      'x=' => '_times_equal_',
        '=' => 'clone',
-'nomethod' => 'OVERLOAD', # equivalent of AUTOLOAD :-)
+'nomethod' => 'OVERLOAD', # equivalent of AUTOLOAD ;-)
 'fallback' =>  undef;
 
-sub OVERLOAD # notify user
+# Report unimplemented overloaded operators:
+
+sub OVERLOAD
 {
-    croak("operator '$_[3]' is not implemented");
+    croak("operator '$_[3]' is unimplemented");
 }
 
-sub _xerox_ # prevent nonsense (e.g. nearly infinite loops)
+# Prevent nearly infinite loops:
+
+sub _times_
 {
-    croak("operator 'x' is not implemented");
+    $_[3] = 'x';
+    goto &OVERLOAD;
+}
+
+sub _times_equal_
+{
+    $_[3] = 'x=';
+    goto &OVERLOAD;
 }
 
 my $ACCURATE_MODE = 1;
@@ -102,24 +278,99 @@ sub number_format
 
 sub delta_format
 {
-    my($flag) = $DELTA_FORMAT;
+    my($self) = shift;
+    my($flag);
 
-    if (@_ > 1)
+    if (ref $self) # object method
     {
-        $DELTA_FORMAT = $_[1] || 0;
+        $flag = defined($self->[0][1]) ? $self->[0][1] : undef;
+        if (@_ > 0)
+        {
+            $self->[0][1] = defined($_[0]) ? $_[0] : undef;
+        }
+    }
+    else           # class method
+    {
+        $flag = $DELTA_FORMAT;
+        if (@_ > 0)
+        {
+            $DELTA_FORMAT = $_[0] || 0;
+        }
     }
     return $flag;
 }
 
 sub date_format
 {
-    my($flag) = $DATE_FORMAT;
+    my($self) = shift;
+    my($flag);
 
-    if (@_ > 1)
+    if (ref $self) # object method
     {
-        $DATE_FORMAT = $_[1] || 0;
+        $flag = defined($self->[0][2]) ? $self->[0][2] : undef;
+        if (@_ > 0)
+        {
+            $self->[0][2] = defined($_[0]) ? $_[0] : undef;
+        }
+    }
+    else           # class method
+    {
+        $flag = $DATE_FORMAT;
+        if (@_ > 0)
+        {
+            $DATE_FORMAT = $_[0] || 0;
+        }
     }
     return $flag;
+}
+
+sub language
+{
+    my($self) = shift;
+    my($lang,$temp);
+
+    eval
+    {
+        if (ref $self) # object method
+        {
+            $lang = defined($self->[0][3]) ? Language_to_Text($self->[0][3]) : undef;
+            if (@_ > 0)
+            {
+                if (defined $_[0])
+                {
+                    $temp = $_[0];
+                    if ($temp !~ /^\d+$/)
+                        { $temp = Decode_Language($temp); }
+                    if ($temp > 0 and $temp <= Languages())
+                        { $self->[0][3] = $temp; }
+                    else
+                        { die "no such language '$_[0]'"; }
+                }
+                else { $self->[0][3] = undef; }
+            }
+        }
+        else           # class method
+        {
+            $lang = Language_to_Text(Language());
+            if (@_ > 0)
+            {
+                $temp = $_[0];
+                if ($temp !~ /^\d+$/)
+                    { $temp = Decode_Language($temp); }
+                if ($temp > 0 and $temp <= Languages())
+                    { Language($temp); }
+                else
+                    { die "no such language '$_[0]'"; }
+            }
+        }
+    };
+    if ($@)
+    {
+        $@ =~ s!^.*[A-Za-z0-9_]+(?:::[A-Za-z0-9_]+)*\(\):\s*!!;
+        $@ =~ s!\s+at\s+\S.*\s*$!!;
+        croak($@);
+    }
+    return $lang;
 }
 
 sub is_delta
@@ -129,7 +380,10 @@ sub is_delta
 
     eval
     {
-        if (defined ${$self}[0]) { $bool = (${$self}[0] ? 1 : 0); }
+        if (defined($self->[0]) and
+            ref($self->[0]) eq 'ARRAY' and
+            defined($self->[0][0]))
+        { $bool = ($self->[0][0] ? 1 : 0); }
     };
     if ($@) { $@ =~ s!\s+at\s+\S.*\s*$!!; croak($@); }
     return $bool;
@@ -142,7 +396,10 @@ sub is_date
 
     eval
     {
-        if (defined ${$self}[0]) { $bool = (${$self}[0] ? 0 : 1); }
+        if (defined($self->[0]) and
+            ref($self->[0]) eq 'ARRAY' and
+            defined($self->[0][0]))
+        { $bool = ($self->[0][0] ? 0 : 1); }
     };
     if ($@) { $@ =~ s!\s+at\s+\S.*\s*$!!; croak($@); }
     return $bool;
@@ -183,25 +440,29 @@ sub is_valid
 
     $bool = eval
     {
-        if (defined ${$self}[0] and
-            (${$self}[0] == 0 or ${$self}[0] == 1) and
-            (@{$self}    == 4 or @{$self}    == 7))
+        if (defined($self->[0]) and
+            ref($self->[0]) eq 'ARRAY' and
+            @{$self->[0]} > 0 and
+            defined($self->[0][0]) and
+            not ref($self->[0][0]) and
+            ($self->[0][0] == 0 or $self->[0][0] == 1) and
+            (@{$self} == 4 or @{$self} == 7))
         {
-            if (${$self}[0]) # is_delta
+            if ($self->[0][0]) # is_delta
             {
                 return 0 unless
                 (
-                    defined ${$self}[1] and
-                    defined ${$self}[2] and
-                    defined ${$self}[3]
+                    defined($self->[1]) and not ref($self->[1]) and
+                    defined($self->[2]) and not ref($self->[2]) and
+                    defined($self->[3]) and not ref($self->[3])
                 );
                 if (@{$self} > 4) # is_long
                 {
                     return 0 unless
                     (
-                        defined ${$self}[4] and
-                        defined ${$self}[5] and
-                        defined ${$self}[6]
+                        defined($self->[4]) and not ref($self->[4]) and
+                        defined($self->[5]) and not ref($self->[5]) and
+                        defined($self->[6]) and not ref($self->[6])
                     );
                 }
                 return 1;
@@ -210,18 +471,18 @@ sub is_valid
             {
                 return 0 unless
                 (
-                    defined ${$self}[1] and
-                    defined ${$self}[2] and
-                    defined ${$self}[3] and
+                    defined($self->[1]) and not ref($self->[1]) and
+                    defined($self->[2]) and not ref($self->[2]) and
+                    defined($self->[3]) and not ref($self->[3]) and
                     check_date(@{$self}[1..3])
                 );
                 if (@{$self} > 4) # is_long
                 {
                     return 0 unless
                     (
-                        defined ${$self}[4] and
-                        defined ${$self}[5] and
-                        defined ${$self}[6] and
+                        defined($self->[4]) and not ref($self->[4]) and
+                        defined($self->[5]) and not ref($self->[5]) and
+                        defined($self->[6]) and not ref($self->[6]) and
                         check_time(@{$self}[4..6])
                     );
                 }
@@ -236,28 +497,30 @@ sub is_valid
 
 sub new
 {
-    splice(@_,1,1,@{$_[1]}) if (@_ == 2 and ref($_[1]) eq 'ARRAY');
+    my($class,$list,$type,$self);
 
-    croak("wrong number of arguments")
-        unless (@_ == 1 or @_ == 2 or @_ == 4 or @_ == 5 or @_ == 7 or @_ == 8);
-
-    my($class) = shift;
-    my($type,$self);
-
-    if (@_ == 1 or @_ == 4 or @_ == 7)
+    if (@_)
     {
-        $type = (shift() ? 1 : 0);
-        $self = [ $type, @_ ];
+        $class = shift;
+        if (@_ == 1 and ref($_[0]) eq 'ARRAY') { $list = $_[0]; } else { $list = \@_; }
     }
-    elsif (@_ == 3 or @_ == 6)
+    croak("wrong number of arguments")
+        unless (defined($list) and
+        (@$list == 0 or @$list == 1 or @$list == 3 or @$list == 4 or @$list == 6 or @$list == 7));
+    if (@$list == 1 or @$list == 4 or @$list == 7)
     {
-        $self = [ 0, @_ ];
+        $type = (shift(@$list) ? 1 : 0);
+        $self = [ [$type], @$list ];
+    }
+    elsif (@$list == 3 or @$list == 6)
+    {
+        $self = [ [0], @$list ];
     }
     else
     {
-        $self = [ ];
+        $self = [ [] ];
     }
-    bless($self, ref($class) || $class || __PACKAGE__);
+    bless($self, ref($class) || $class || 'Date::Calc');
     return $self;
 }
 
@@ -269,14 +532,27 @@ sub clone
     croak("invalid date/time") unless ($self->is_valid());
     $this = $self->new();
     @{$this} = @{$self};
+    $this->[0] = [];
+    @{$this->[0]} = @{$self->[0]};
     return $this;
 }
 
 sub copy
 {
-    my($self,$this) = @_;
+    my($self) = shift;
+    my($this);
 
-    eval { @{$self} = @{$this}; };
+    eval
+    {
+        if (@_ == 1 and ref($_[0])) { $this = $_[0]; } else { $this = \@_; }
+        @{$self} = @{$this};
+        $self->[0] = [];
+        if (defined $this->[0])
+        {
+            if (ref($this->[0]) eq 'ARRAY') { @{$self->[0]} = @{$this->[0]}; }
+            else                            { $self->[0][0] = $this->[0]; }
+        }
+    };
     if ($@) { $@ =~ s!\s+at\s+\S.*\s*$!!; croak($@); }
     croak("invalid date/time") unless ($self->is_valid());
     return $self;
@@ -284,22 +560,25 @@ sub copy
 
 sub date
 {
-    splice(@_,1,1,@{$_[1]}) if (@_ == 2 and ref($_[1]) eq 'ARRAY');
+    my($self,$list);
 
+    if (@_)
+    {
+        $self = shift;
+        if (@_ == 1 and ref($_[0]) eq 'ARRAY') { $list = $_[0]; } else { $list = \@_; }
+    }
     croak("wrong number of arguments")
-        unless (@_ == 1 or @_ == 2 or @_ == 4 or @_ == 5 or @_ == 7 or @_ == 8);
-
-    my($self) = shift;
-
+        unless (defined($list) and
+        (@$list == 0 or @$list == 1 or @$list == 3 or @$list == 4 or @$list == 6 or @$list == 7));
     eval
     {
-        if (@_ == 1 or @_ == 4 or @_ == 7)
+        if (@$list == 1 or @$list == 4 or @$list == 7)
         {
-            ${$self}[0] = (shift() ? 1 : 0);
+            $self->[0][0] = (shift(@$list) ? 1 : 0);
         }
-        if (@_ == 3 or @_ == 6)
+        if (@$list == 3 or @$list == 6)
         {
-            splice( @{$self}, 1, scalar(@_), @_ );
+            splice( @{$self}, 1, scalar(@$list), @$list );
         }
     };
     if ($@) { $@ =~ s!\s+at\s+\S.*\s*$!!; croak($@); }
@@ -309,22 +588,25 @@ sub date
 
 sub time
 {
-    splice(@_,1,1,@{$_[1]}) if (@_ == 2 and ref($_[1]) eq 'ARRAY');
+    my($self,$list);
 
+    if (@_)
+    {
+        $self = shift;
+        if (@_ == 1 and ref($_[0]) eq 'ARRAY') { $list = $_[0]; } else { $list = \@_; }
+    }
     croak("wrong number of arguments")
-        unless (@_ == 1 or @_ == 2 or @_ == 4 or @_ == 5);
-
-    my($self) = shift;
-
+        unless (defined($list) and
+        (@$list == 0 or @$list == 1 or @$list == 3 or @$list == 4));
     eval
     {
-        if (@_ == 1 or @_ == 4)
+        if (@$list == 1 or @$list == 4)
         {
-            ${$self}[0] = (shift() ? 1 : 0);
+            $self->[0][0] = (shift(@$list) ? 1 : 0);
         }
-        if (@_ == 3)
+        if (@$list == 3)
         {
-            splice( @{$self}, 4, 3, @_ );
+            splice( @{$self}, 4, 3, @$list );
         }
     };
     if ($@) { $@ =~ s!\s+at\s+\S.*\s*$!!; croak($@); }
@@ -335,26 +617,29 @@ sub time
 
 sub datetime
 {
-    splice(@_,1,1,@{$_[1]}) if (@_ == 2 and ref($_[1]) eq 'ARRAY');
+    my($self,$list);
 
+    if (@_)
+    {
+        $self = shift;
+        if (@_ == 1 and ref($_[0]) eq 'ARRAY') { $list = $_[0]; } else { $list = \@_; }
+    }
     croak("wrong number of arguments")
-        unless (@_ == 1 or @_ == 2 or @_ == 4 or @_ == 5 or @_ == 7 or @_ == 8);
-
-    my($self) = shift;
-
+        unless (defined($list) and
+        (@$list == 0 or @$list == 1 or @$list == 3 or @$list == 4 or @$list == 6 or @$list == 7));
     eval
     {
-        if (@_ == 1 or @_ == 4 or @_ == 7)
+        if (@$list == 1 or @$list == 4 or @$list == 7)
         {
-            ${$self}[0] = (shift() ? 1 : 0);
+            $self->[0][0] = (shift(@$list) ? 1 : 0);
         }
-        if (@_ == 3)
+        if (@$list == 3)
         {
-            splice( @{$self}, 1, 6, @_, 0,0,0 );
+            splice( @{$self}, 1, 6, @$list, 0,0,0 );
         }
-        elsif (@_ == 6)
+        elsif (@$list == 6)
         {
-            splice( @{$self}, 1, 6, @_ );
+            splice( @{$self}, 1, 6, @$list );
         }
     };
     if ($@) { $@ =~ s!\s+at\s+\S.*\s*$!!; croak($@); }
@@ -365,49 +650,214 @@ sub datetime
 
 sub today
 {
-    my($self) = @_;
+    my($self) = shift;
+    my($gmt)  = shift || 0;
 
-    if (ref $self)
+    if (ref $self) # object method
     {
-        $self->date( 0, Today() );
+        $self->date( 0, Today($gmt) );
         return $self;
     }
-    else
+    else           # class method
     {
-        $self ||= __PACKAGE__;
-        return $self->new( 0, Today() );
+        $self ||= 'Date::Calc';
+        return $self->new( 0, Today($gmt) );
     }
 }
 
 sub now
 {
-    my($self) = @_;
+    my($self) = shift;
+    my($gmt)  = shift || 0;
 
-    if (ref $self)
+    if (ref $self) # object method
     {
-        $self->time( 0, Now() );
+        $self->time( 0, Now($gmt) );
         return $self;
     }
-    else
+    else           # class method
     {
-        $self ||= __PACKAGE__;
-        return $self->new( 0, Today_and_Now() );
+        $self ||= 'Date::Calc';
+        return $self->new( 0, Today_and_Now($gmt) );
     }
 }
 
 sub today_and_now
 {
-    my($self) = @_;
+    my($self) = shift;
+    my($gmt)  = shift || 0;
 
-    if (ref $self)
+    if (ref $self) # object method
     {
-        $self->date( 0, Today_and_Now() );
+        $self->date( 0, Today_and_Now($gmt) );
         return $self;
     }
-    else
+    else           # class method
     {
-        $self ||= __PACKAGE__;
-        return $self->new( 0, Today_and_Now() );
+        $self ||= 'Date::Calc';
+        return $self->new( 0, Today_and_Now($gmt) );
+    }
+}
+
+sub gmtime
+{
+    my($self) = shift;
+    my(@date);
+
+    eval
+    {
+        @date = (Gmtime(@_))[0..5];
+    };
+    if ($@)
+    {
+        $@ =~ s!^.*[A-Za-z0-9_]+(?:::[A-Za-z0-9_]+)*\(\):\s*!!;
+        $@ =~ s!\s+at\s+\S.*\s*$!!;
+        croak($@);
+    }
+    if (ref $self) # object method
+    {
+        $self->date( 0, @date );
+        return $self;
+    }
+    else           # class method
+    {
+        $self ||= 'Date::Calc';
+        return $self->new( 0, @date );
+    }
+}
+
+sub localtime
+{
+    my($self) = shift;
+    my(@date);
+
+    eval
+    {
+        @date = (Localtime(@_))[0..5];
+    };
+    if ($@)
+    {
+        $@ =~ s!^.*[A-Za-z0-9_]+(?:::[A-Za-z0-9_]+)*\(\):\s*!!;
+        $@ =~ s!\s+at\s+\S.*\s*$!!;
+        croak($@);
+    }
+    if (ref $self) # object method
+    {
+        $self->date( 0, @date );
+        return $self;
+    }
+    else           # class method
+    {
+        $self ||= 'Date::Calc';
+        return $self->new( 0, @date );
+    }
+}
+
+sub mktime
+{
+    my($self) = @_;
+    my($time);
+
+    if (ref $self) # object method
+    {
+        croak("invalid date/time")            unless ($self->is_valid());
+        croak("can't mktime from a delta vector") if ($self->is_delta()); # add [1970,1,1,0,0,0] first!
+        eval
+        {
+            $time = Mktime( $self->datetime() );
+        };
+        if ($@)
+        {
+            $@ =~ s!^.*[A-Za-z0-9_]+(?:::[A-Za-z0-9_]+)*\(\):\s*!!;
+            $@ =~ s!\s+at\s+\S.*\s*$!!;
+            croak($@);
+        }
+        return $time;
+    }
+    else           # class method
+    {
+        return CORE::time();
+    }
+}
+
+sub tzoffset
+{
+    my($self) = shift;
+    my(@diff);
+
+    eval
+    {
+        @diff = (Timezone(@_))[0..5];
+    };
+    if ($@)
+    {
+        $@ =~ s!^.*[A-Za-z0-9_]+(?:::[A-Za-z0-9_]+)*\(\):\s*!!;
+        $@ =~ s!\s+at\s+\S.*\s*$!!;
+        croak($@);
+    }
+    if (ref $self) # object method
+    {
+        $self->date( 1, @diff );
+        return $self;
+    }
+    else           # class method
+    {
+        $self ||= 'Date::Calc';
+        return $self->new( 1, @diff );
+    }
+}
+
+sub date2time
+{
+    my($self) = @_;
+    my($time);
+
+    if (ref $self) # object method
+    {
+        croak("invalid date/time")               unless ($self->is_valid());
+        croak("can't make time from a delta vector") if ($self->is_delta()); # add [1970,1,1,0,0,0] first!
+        eval
+        {
+            $time = Date_to_Time( $self->datetime() );
+        };
+        if ($@)
+        {
+            $@ =~ s!^.*[A-Za-z0-9_]+(?:::[A-Za-z0-9_]+)*\(\):\s*!!;
+            $@ =~ s!\s+at\s+\S.*\s*$!!;
+            croak($@);
+        }
+        return $time;
+    }
+    else           # class method
+    {
+        return CORE::time();
+    }
+}
+
+sub time2date
+{
+    my($self) = shift;
+    my(@date);
+
+    eval
+    {
+        @date = Time_to_Date(@_);
+    };
+    if ($@)
+    {
+        $@ =~ s!^.*[A-Za-z0-9_]+(?:::[A-Za-z0-9_]+)*\(\):\s*!!;
+        $@ =~ s!\s+at\s+\S.*\s*$!!;
+        croak($@);
+    }
+    if (ref $self) # object method
+    {
+        $self->date( 0, @date );
+        return $self;
+    }
+    else           # class method
+    {
+        $self ||= 'Date::Calc';
+        return $self->new( 0, @date );
     }
 }
 
@@ -417,11 +867,11 @@ sub year
 
     if (@_ > 0)
     {
-        eval { ${$self}[1] = $_[0] || 0; };
+        eval { $self->[1] = $_[0] || 0; };
         if ($@) { $@ =~ s!\s+at\s+\S.*\s*$!!; croak($@); }
     }
     croak("invalid date/time") unless ($self->is_valid());
-    return ${$self}[1];
+    return $self->[1];
 }
 
 sub month
@@ -430,11 +880,11 @@ sub month
 
     if (@_ > 0)
     {
-        eval { ${$self}[2] = $_[0] || 0; };
+        eval { $self->[2] = $_[0] || 0; };
         if ($@) { $@ =~ s!\s+at\s+\S.*\s*$!!; croak($@); }
     }
     croak("invalid date/time") unless ($self->is_valid());
-    return ${$self}[2];
+    return $self->[2];
 }
 
 sub day
@@ -443,11 +893,11 @@ sub day
 
     if (@_ > 0)
     {
-        eval { ${$self}[3] = $_[0] || 0; };
+        eval { $self->[3] = $_[0] || 0; };
         if ($@) { $@ =~ s!\s+at\s+\S.*\s*$!!; croak($@); }
     }
     croak("invalid date/time") unless ($self->is_valid());
-    return ${$self}[3];
+    return $self->[3];
 }
 
 sub hours
@@ -460,19 +910,19 @@ sub hours
         {
             if (@{$self} == 4)
             {
-                ${$self}[4] = 0;
-                ${$self}[5] = 0;
-                ${$self}[6] = 0;
+                $self->[4] = 0;
+                $self->[5] = 0;
+                $self->[6] = 0;
             }
             if (@{$self} == 7)
             {
-                ${$self}[4] = $_[0] || 0;
+                $self->[4] = $_[0] || 0;
             }
         };
         if ($@) { $@ =~ s!\s+at\s+\S.*\s*$!!; croak($@); }
     }
     croak("invalid date/time") unless ($self->is_valid());
-    if (@{$self} == 7) { return ${$self}[4]; }
+    if (@{$self} == 7) { return $self->[4]; }
     else               { return undef; }
 }
 
@@ -486,19 +936,19 @@ sub minutes
         {
             if (@{$self} == 4)
             {
-                ${$self}[4] = 0;
-                ${$self}[5] = 0;
-                ${$self}[6] = 0;
+                $self->[4] = 0;
+                $self->[5] = 0;
+                $self->[6] = 0;
             }
             if (@{$self} == 7)
             {
-                ${$self}[5] = $_[0] || 0;
+                $self->[5] = $_[0] || 0;
             }
         };
         if ($@) { $@ =~ s!\s+at\s+\S.*\s*$!!; croak($@); }
     }
     croak("invalid date/time") unless ($self->is_valid());
-    if (@{$self} == 7) { return ${$self}[5]; }
+    if (@{$self} == 7) { return $self->[5]; }
     else               { return undef; }
 }
 
@@ -512,204 +962,297 @@ sub seconds
         {
             if (@{$self} == 4)
             {
-                ${$self}[4] = 0;
-                ${$self}[5] = 0;
-                ${$self}[6] = 0;
+                $self->[4] = 0;
+                $self->[5] = 0;
+                $self->[6] = 0;
             }
             if (@{$self} == 7)
             {
-                ${$self}[6] = $_[0] || 0;
+                $self->[6] = $_[0] || 0;
             }
         };
         if ($@) { $@ =~ s!\s+at\s+\S.*\s*$!!; croak($@); }
     }
     croak("invalid date/time") unless ($self->is_valid());
-    if (@{$self} == 7) { return ${$self}[6]; }
+    if (@{$self} == 7) { return $self->[6]; }
     else               { return undef; }
 }
 
+###############################
+##                           ##
+##    Selector constants     ##
+##    for formatting         ##
+##    callback functions:    ##
+##                           ##
+###############################
+##                           ##
+##    IS_SHORT   =  0x00;    ##
+##    IS_LONG    =  0x01;    ##
+##    IS_DATE    =  0x00;    ##
+##    IS_DELTA   =  0x02;    ##
+##    TO_NUMBER  =  0x00;    ##
+##    TO_STRING  =  0x04;    ##
+##                           ##
+###############################
+
 sub number
 {
-    my($self) = shift;
-    my($format,$sign,@temp);
+    my($self,$format) = @_;
+    my($number,$sign,@temp);
 
     if ($self->is_valid())
-    {              ################# = because of overloading!
-        if (@_ > 0 and defined $_[0]) { $format = $_[0]; }
-        else                          { $format = $NUMBER_FORMAT; }
-        if (${$self}[0]) # is_delta
+    {
+        eval
         {
-            croak("can't convert a delta vector with year/month diff into a number")
-                if ((${$self}[1] != 0) or (${$self}[2] != 0));
-            if (@{$self} == 4) # is_short
+            $format = $NUMBER_FORMAT unless (defined $format); # because of overloading!
+            if ($self->[0][0]) # is_delta
             {
-                return ${$self}[3];
+#               carp("returning a fictitious number of days for delta vector")
+#                   if ((($self->[1] != 0) or ($self->[2] != 0)) and $^W);
+                if (@{$self} == 4) # is_short
+                {
+                    if (ref($format) eq 'CODE')
+                    {
+                        $number = &{$format}( $self, 0x02 ); # = TO_NUMBER | IS_DELTA | IS_SHORT
+                    }
+                    else
+                    {
+                        $number = ($self->[1]*12+$self->[2])*31+$self->[3];
+                    }
+                }
+                else # is_long
+                {
+                    if (ref($format) eq 'CODE')
+                    {
+                        $number = &{$format}( $self, 0x03 ); # = TO_NUMBER | IS_DELTA | IS_LONG
+                    }
+                    elsif ($format == 2)
+                    {
+                        $number = ($self->[1]*12+$self->[2])*31+$self->[3] +
+                            ((($self->[4]*60+$self->[5])*60+$self->[6])/86400);
+                    }
+                    else
+                    {
+                        local($_);
+                        $sign = 0;
+                        @temp = @{$self}[3..6];
+                        $temp[0] += ($self->[1] * 12 + $self->[2]) * 31;
+                        @temp = map( $_ < 0 ? $sign = -$_ : $_, Normalize_DHMS(@temp) );
+                        $number = sprintf( "%s%d.%02d%02d%02d", $sign ? '-' : '', @temp );
+                    }
+                }
             }
-            else # is_long
+            else # is_date
             {
-                if ($format == 2)
+                if (@{$self} == 4) # is_short
                 {
-                    return ${$self}[3] +
-                        (((${$self}[4]*60+${$self}[5])*60+${$self}[6])/86400);
+                    if (ref($format) eq 'CODE')
+                    {
+                        $number = &{$format}( $self, 0x00 ); # = TO_NUMBER | IS_DATE | IS_SHORT
+                    }
+                    elsif ($format == 2 or $format == 1)
+                    {
+                        $number = Date_to_Days( @{$self}[1..3] );
+                    }
+                    else
+                    {
+                        $number = sprintf( "%04d%02d%02d",
+                            @{$self}[1..3] );
+                    }
                 }
-                else
+                else # is_long
                 {
-                    local($_);
-                    $sign = 0;
-                    @temp = map( $_ < 0 ? $sign = -$_ : $_, Normalize_DHMS(@{$self}[3..6]) );
-                    return sprintf( "%s%d.%02d%02d%02d", $sign ? '-' : '', @temp );
+                    if (ref($format) eq 'CODE')
+                    {
+                        $number = &{$format}( $self, 0x01 ); # = TO_NUMBER | IS_DATE | IS_LONG
+                    }
+                    elsif ($format == 2)
+                    {
+                        $number = Date_to_Days( @{$self}[1..3] ) +
+                            ((($self->[4]*60+$self->[5])*60+$self->[6])/86400);
+                    }
+                    elsif ($format == 1)
+                    {
+                        $number = Date_to_Days( @{$self}[1..3] ) .
+                            sprintf( ".%02d%02d%02d", @{$self}[4..6] );
+                    }
+                    else
+                    {
+                        $number = sprintf( "%04d%02d%02d.%02d%02d%02d",
+                            @{$self}[1..6] );
+                    }
                 }
             }
-        }
-        else # is_date
+        };
+        if ($@)
         {
-            if (@{$self} == 4) # is_short
-            {
-                if ($format == 2 or $format == 1)
-                {
-                    return Date_to_Days( @{$self}[1..3] );
-                }
-                else
-                {
-                    return sprintf( "%04d%02d%02d",
-                        @{$self}[1..3] );
-                }
-            }
-            else # is_long
-            {
-                if ($format == 2)
-                {
-                    return Date_to_Days( @{$self}[1..3] ) +
-                        (((${$self}[4]*60+${$self}[5])*60+${$self}[6])/86400);
-                }
-                elsif ($format == 1)
-                {
-                    return Date_to_Days( @{$self}[1..3] ) .
-                        sprintf( ".%02d%02d%02d", @{$self}[4..6] );
-                }
-                else
-                {
-                    return sprintf( "%04d%02d%02d.%02d%02d%02d",
-                        @{$self}[1..6] );
-                }
-            }
+            $@ =~ s!^.*[A-Za-z0-9_]+(?:::[A-Za-z0-9_]+)*\(\):\s*!!;
+            $@ =~ s!\s+at\s+\S.*\s*$!!;
+            croak($@);
         }
+        return $number;
     }
     return undef;
 }
 
 sub string
 {
-    my($self) = shift;
-    my($format);
+    my($self,$format,$language) = @_;
+    my($restore,$string);
 
     if ($self->is_valid())
     {
-        if (${$self}[0]) # is_delta
-        {              ################# = because of overloading!
-            if (@_ > 0 and defined $_[0]) { $format = $_[0]; }
-            else                          { $format = $DELTA_FORMAT; }
-            if (@{$self} == 4) # is_short
+        eval
+        {
+            if (defined($language) and $language ne '') # because of overloading!
             {
-                if ($format == 3)
-                {
-                    return sprintf( "%+d Y %+d M %+d D",
-                        @{$self}[1..3] );
-                }
-                elsif ($format == 2)
-                {
-                    return sprintf( "%+dY %+dM %+dD",
-                        @{$self}[1..3] );
-                }
-                elsif ($format == 1)
-                {
-                    return sprintf( "%+d %+d %+d",
-                        @{$self}[1..3] );
-                }
-                else
-                {
-                    return sprintf( "%+d%+d%+d",
-                        @{$self}[1..3] );
-                }
+                if ($language =~ /^\d+$/)  { $restore = Language($language); }
+                else                       { $restore = Language(Decode_Language($language)); }
             }
-            else # is_long
+            else
             {
-                if ($format == 3)
-                {
-                    return sprintf( "%+d Y %+d M %+d D %+d h %+d m %+d s",
-                        @{$self}[1..6] );
-                }
-                elsif ($format == 2)
-                {
-                    return sprintf( "%+dY %+dM %+dD %+dh %+dm %+ds",
-                        @{$self}[1..6] );
-                }
-                elsif ($format == 1)
-                {
-                    return sprintf( "%+d %+d %+d %+d %+d %+d",
-                        @{$self}[1..6] );
-                }
-                else
-                {
-                    return sprintf( "%+d%+d%+d%+d%+d%+d",
-                        @{$self}[1..6] );
-                }
+                if (defined $self->[0][3]) { $restore = Language($self->[0][3]); }
+                else                       { $restore = undef; }
             }
+        };
+        if ($@)
+        {
+            $@ =~ s!^.*[A-Za-z0-9_]+(?:::[A-Za-z0-9_]+)*\(\):\s*!!;
+            $@ =~ s!\s+at\s+\S.*\s*$!!;
+            croak($@);
         }
-        else # is_date
-        {              ################# = because of overloading!
-            if (@_ > 0 and defined $_[0]) { $format = $_[0]; }
-            else                          { $format = $DATE_FORMAT; }
-            if (@{$self} == 4) # is_short
+        eval
+        {
+            if ($self->[0][0]) # is_delta
             {
-                if ($format == 3)
+                $format = defined($self->[0][1]) ? $self->[0][1] : $DELTA_FORMAT
+                    unless (defined $format); # because of overloading!
+                if (@{$self} == 4) # is_short
                 {
-                    return Date_to_Text_Long( @{$self}[1..3] );
+                    if (ref($format) eq 'CODE')
+                    {
+                        $string = &{$format}( $self, 0x06 ); # = TO_STRING | IS_DELTA | IS_SHORT
+                    }
+                    elsif ($format == 3)
+                    {
+                        $string = sprintf( "%+d Y %+d M %+d D",
+                            @{$self}[1..3] );
+                    }
+                    elsif ($format == 2)
+                    {
+                        $string = sprintf( "%+dY %+dM %+dD",
+                            @{$self}[1..3] );
+                    }
+                    elsif ($format == 1)
+                    {
+                        $string = sprintf( "%+d %+d %+d",
+                            @{$self}[1..3] );
+                    }
+                    else
+                    {
+                        $string = sprintf( "%+d%+d%+d",
+                            @{$self}[1..3] );
+                    }
                 }
-                elsif ($format == 2)
+                else # is_long
                 {
-                    return Date_to_Text( @{$self}[1..3] );
-                }
-                elsif ($format == 1)
-                {
-                    return sprintf( "%02d-%.3s-%04d",
-                        ${$self}[3],
-                        Month_to_Text(${$self}[2]),
-                        ${$self}[1] );
-                }
-                else
-                {
-                    return sprintf( "%04d%02d%02d",
-                        @{$self}[1..3] );
+                    if (ref($format) eq 'CODE')
+                    {
+                        $string = &{$format}( $self, 0x07 ); # = TO_STRING | IS_DELTA | IS_LONG
+                    }
+                    elsif ($format == 3)
+                    {
+                        $string = sprintf( "%+d Y %+d M %+d D %+d h %+d m %+d s",
+                            @{$self}[1..6] );
+                    }
+                    elsif ($format == 2)
+                    {
+                        $string = sprintf( "%+dY %+dM %+dD %+dh %+dm %+ds",
+                            @{$self}[1..6] );
+                    }
+                    elsif ($format == 1)
+                    {
+                        $string = sprintf( "%+d %+d %+d %+d %+d %+d",
+                            @{$self}[1..6] );
+                    }
+                    else
+                    {
+                        $string = sprintf( "%+d%+d%+d%+d%+d%+d",
+                            @{$self}[1..6] );
+                    }
                 }
             }
-            else # is_long
+            else # is_date
             {
-                if ($format == 3)
+                $format = defined($self->[0][2]) ? $self->[0][2] : $DATE_FORMAT
+                    unless (defined $format); # because of overloading!
+                if (@{$self} == 4) # is_short
                 {
-                    return Date_to_Text_Long( @{$self}[1..3] ) .
-                        sprintf( " %02d:%02d:%02d", @{$self}[4..6] );
+                    if (ref($format) eq 'CODE')
+                    {
+                        $string = &{$format}( $self, 0x04 ); # = TO_STRING | IS_DATE | IS_SHORT
+                    }
+                    elsif ($format == 3)
+                    {
+                        $string = Date_to_Text_Long( @{$self}[1..3] );
+                    }
+                    elsif ($format == 2)
+                    {
+                        $string = Date_to_Text( @{$self}[1..3] );
+                    }
+                    elsif ($format == 1)
+                    {
+                        $string = sprintf( "%02d-%.3s-%04d",
+                            $self->[3],
+                            Month_to_Text($self->[2]),
+                            $self->[1] );
+                    }
+                    else
+                    {
+                        $string = sprintf( "%04d%02d%02d",
+                            @{$self}[1..3] );
+                    }
                 }
-                elsif ($format == 2)
+                else # is_long
                 {
-                    return Date_to_Text( @{$self}[1..3] ) .
-                        sprintf( " %02d:%02d:%02d", @{$self}[4..6] );
-                }
-                elsif ($format == 1)
-                {
-                    return sprintf( "%02d-%.3s-%04d %02d:%02d:%02d",
-                        ${$self}[3],
-                        Month_to_Text(${$self}[2]),
-                        ${$self}[1],
-                        @{$self}[4..6] );
-                }
-                else
-                {
-                    return sprintf( "%04d%02d%02d%02d%02d%02d",
-                        @{$self}[1..6] );
+                    if (ref($format) eq 'CODE')
+                    {
+                        $string = &{$format}( $self, 0x05 ); # = TO_STRING | IS_DATE | IS_LONG
+                    }
+                    elsif ($format == 3)
+                    {
+                        $string = Date_to_Text_Long( @{$self}[1..3] ) .
+                            sprintf( " %02d:%02d:%02d", @{$self}[4..6] );
+                    }
+                    elsif ($format == 2)
+                    {
+                        $string = Date_to_Text( @{$self}[1..3] ) .
+                            sprintf( " %02d:%02d:%02d", @{$self}[4..6] );
+                    }
+                    elsif ($format == 1)
+                    {
+                        $string = sprintf( "%02d-%.3s-%04d %02d:%02d:%02d",
+                            $self->[3],
+                            Month_to_Text($self->[2]),
+                            $self->[1],
+                            @{$self}[4..6] );
+                    }
+                    else
+                    {
+                        $string = sprintf( "%04d%02d%02d%02d%02d%02d",
+                            @{$self}[1..6] );
+                    }
                 }
             }
+        };
+        Language($restore) if (defined $restore);
+        if ($@)
+        {
+            $@ =~ s!^.*[A-Za-z0-9_]+(?:::[A-Za-z0-9_]+)*\(\):\s*!!;
+            $@ =~ s!\s+at\s+\S.*\s*$!!;
+            croak($@);
         }
+        return $string;
     }
     return undef;
 }
@@ -725,14 +1268,14 @@ sub _process_
         croak("can't apply unary minus to a date")
             unless ($self->is_delta());
         $result = $self->new();
-        ${$result}[0] = ${$self}[0];
+        $result->[0][0] = $self->[0][0];
         for ( $item = 1; $item < @{$self}; $item++ )
         {
-            ${$result}[$item] = -${$self}[$item];
+            $result->[$item] = -$self->[$item];
         }
         return $result;
     }
-    if (defined $this and ref($this) =~ /::/)
+    if (defined $this and ref($this) =~ /[^:]::[^:]/)
     {
         croak("invalid date/time") unless ($this->is_valid());
     }
@@ -788,29 +1331,29 @@ sub _process_
         else               { $result = $self; }
         if (not $val1 and not $val2)
         {
-            ${$result}[0] = 1;
+            $result->[0][0] = 1;
             for ( $item = 1; $item < $last; $item++ )
             {
                 if ($code == 6)
                 {
                     if ($flag)
                     {
-                        ${$result}[$item] =
-                            (${$this}[$item] || 0) -
-                            (${$self}[$item] || 0);
+                        $result->[$item] =
+                            ($this->[$item] || 0) -
+                            ($self->[$item] || 0);
                     }
                     else
                     {
-                        ${$result}[$item] =
-                            (${$self}[$item] || 0) -
-                            (${$this}[$item] || 0);
+                        $result->[$item] =
+                            ($self->[$item] || 0) -
+                            ($this->[$item] || 0);
                     }
                 }
                 else
                 {
-                    ${$result}[$item] =
-                        (${$self}[$item] || 0) +
-                        (${$this}[$item] || 0);
+                    $result->[$item] =
+                        ($self->[$item] || 0) +
+                        ($this->[$item] || 0);
                 }
             }
         }
@@ -828,16 +1371,16 @@ sub _process_
             ITEM:
             for ( $item = 1; $item < $last; $item++ )
             {
-                if ((${$self}[$item] || 0) !=
-                    (${$this}[$item] || 0))
+                if (($self->[$item] || 0) !=
+                    ($this->[$item] || 0))
                 { $result = 0; last ITEM; }
             }
             return $result;
         }
         else # ($code <= 2)
         {
-            croak("can't compare two delta vectors")
-                if (not $val1 and not $val2);
+#           croak("can't compare two delta vectors")
+#               if (not $val1 and not $val2);
             if ($code == 2)
             {
                 $len1 = $self->number();
@@ -946,7 +1489,7 @@ sub _add_
         carp("implicitly changed object type from delta vector to date")
             if (not defined $flag and $^W);
     }
-    ${$result}[0] = 0;
+    $result->[0][0] = 0;
 }
 
 sub _plus_
@@ -1036,27 +1579,27 @@ sub _minus_
             }
             carp("implicitly changed object type from date to delta vector")
                 if (not defined $flag and $^W);
-            ${$result}[0] = 1;
+            $result->[0][0] = 1;
         }
         else # date - delta => date
         {
             if ($val1)
             {
                 $temp = $this->new();
-                ${$temp}[0] = ${$this}[0];
+                $temp->[0][0] = $this->[0][0];
                 for ( $item = 1; $item < @{$this}; $item++ )
                 {
-                    ${$temp}[$item] = -${$this}[$item];
+                    $temp->[$item] = -$this->[$item];
                 }
                 $result->_add_($self,$temp,$flag,$val1,$val2,$len1,$len2);
             }
             else
             {
                 $temp = $self->new();
-                ${$temp}[0] = ${$self}[0];
+                $temp->[0][0] = $self->[0][0];
                 for ( $item = 1; $item < @{$self}; $item++ )
                 {
-                    ${$temp}[$item] = -${$self}[$item];
+                    $temp->[$item] = -$self->[$item];
                 }
                 $result->_add_($temp,$this,$flag,$val1,$val2,$len1,$len2);
             }

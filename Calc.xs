@@ -2,7 +2,7 @@
 
 /*****************************************************************************/
 /*                                                                           */
-/*    Copyright (c) 1995 - 2000 by Steffen Beyer.                            */
+/*    Copyright (c) 1995 - 2001 by Steffen Beyer.                            */
 /*    All rights reserved.                                                   */
 /*                                                                           */
 /*    This package is free software; you can redistribute it                 */
@@ -16,23 +16,22 @@
 #include "XSUB.h"
 
 
-#include "DateCalc.h"
-
-// ###TOM added
-// The following is required for (Mac-) Perl 5.004:
-// With version 5.0 of this module, the author has replaced the global 
-// variable 'na' with 'PL_na'(see perlguts.pod), to make the module 
-// ready for Perl 5.6.0 (see INSTALL.txt). Perl versions < 5.005 
-// don't know about the 'PL_na' variable. I use the following 
-// conditional #define for Perl versions with PATCHLEVEL < 5.
-
 #include "patchlevel.h"
-
-#if (PATCHLEVEL < 5)
-#define PL_na na
+#if ((PATCHLEVEL < 4) || ((PATCHLEVEL == 4) && (SUBVERSION < 5)))
+/* PL_na was introduced in perl5.004_05 */
+#ifndef PL_na
+    #define PL_na na
+#endif
+#endif
+#if (PATCHLEVEL < 4)
+/* GIMME_V was introduced in perl5.004 */
+#ifndef GIMME_V
+    #define GIMME_V GIMME
+#endif
 #endif
 
-// end ###TOM added
+
+#include "DateCalc.h"
 
 
 #define DATECALC_ERROR(name,error) \
@@ -55,6 +54,12 @@
 
 #define DATECALC_DAYOFWEEK_ERROR(name) \
     DATECALC_ERROR(name,"day of week out of range")
+
+#define DATECALC_DATE_RANGE_ERROR(name) \
+    DATECALC_ERROR(name,"date out of range")
+
+#define DATECALC_TIME_RANGE_ERROR(name) \
+    DATECALC_ERROR(name,"time out of range")
 
 #define DATECALC_FACTOR_ERROR(name) \
     DATECALC_ERROR(name,"factor out of range")
@@ -242,9 +247,17 @@ PPCODE:
 
     if (DateCalc_week_of_year(&week,&year,month,day))
     {
-        EXTEND(sp,2);
-        PUSHs(sv_2mortal(newSViv((IV)week)));
-        PUSHs(sv_2mortal(newSViv((IV)year)));
+        if (GIMME_V == G_ARRAY)
+        {
+            EXTEND(sp,2);
+            PUSHs(sv_2mortal(newSViv((IV)week)));
+            PUSHs(sv_2mortal(newSViv((IV)year)));
+        }
+        else
+        {
+            EXTEND(sp,1);
+            PUSHs(sv_2mortal(newSViv((IV)week)));
+        }
     }
     else DATECALC_DATE_ERROR("Week_of_Year");
 }
@@ -650,119 +663,376 @@ PPCODE:
 
 
 void
-DateCalc_System_Clock()
+DateCalc_System_Clock(...)
 PPCODE:
 {
-    Z_int year;
-    Z_int month;
-    Z_int day;
-    Z_int hour;
-    Z_int min;
-    Z_int sec;
-    Z_int doy;
-    Z_int dow;
-    Z_int dst;
+    Z_int   year;
+    Z_int   month;
+    Z_int   day;
+    Z_int   hour;
+    Z_int   min;
+    Z_int   sec;
+    Z_int   doy;
+    Z_int   dow;
+    Z_int   dst;
+    boolean gmt;
 
-    if (DateCalc_system_clock(&year,&month,&day,
-                              &hour,&min,&sec,
-                              &doy,&dow,&dst))
+    if ((items == 0) or (items == 1))
     {
-        EXTEND(sp,9);
-        PUSHs(sv_2mortal(newSViv((IV)year)));
-        PUSHs(sv_2mortal(newSViv((IV)month)));
-        PUSHs(sv_2mortal(newSViv((IV)day)));
-        PUSHs(sv_2mortal(newSViv((IV)hour)));
-        PUSHs(sv_2mortal(newSViv((IV)min)));
-        PUSHs(sv_2mortal(newSViv((IV)sec)));
-        PUSHs(sv_2mortal(newSViv((IV)doy)));
-        PUSHs(sv_2mortal(newSViv((IV)dow)));
-        PUSHs(sv_2mortal(newSViv((IV)dst)));
+        if (items == 1) gmt = (boolean) SvIV( ST(0) );
+        else            gmt = false;
+        if (DateCalc_system_clock(&year,&month,&day,
+                                  &hour,&min,&sec,
+                                  &doy,&dow,&dst,
+                                  gmt))
+        {
+            EXTEND(sp,9);
+            PUSHs(sv_2mortal(newSViv((IV)year)));
+            PUSHs(sv_2mortal(newSViv((IV)month)));
+            PUSHs(sv_2mortal(newSViv((IV)day)));
+            PUSHs(sv_2mortal(newSViv((IV)hour)));
+            PUSHs(sv_2mortal(newSViv((IV)min)));
+            PUSHs(sv_2mortal(newSViv((IV)sec)));
+            PUSHs(sv_2mortal(newSViv((IV)doy)));
+            PUSHs(sv_2mortal(newSViv((IV)dow)));
+            PUSHs(sv_2mortal(newSViv((IV)dst)));
+        }
+        else DATECALC_SYSTEM_ERROR("System_Clock");
     }
-    else DATECALC_SYSTEM_ERROR("System_Clock");
+    else croak("Usage: Date::Calc::System_Clock([gmt])");
 }
 
 
 void
-DateCalc_Today()
+DateCalc_Today(...)
 PPCODE:
 {
-    Z_int year;
-    Z_int month;
-    Z_int day;
-    Z_int hour;
-    Z_int min;
-    Z_int sec;
-    Z_int doy;
-    Z_int dow;
-    Z_int dst;
+    Z_int   year;
+    Z_int   month;
+    Z_int   day;
+    Z_int   hour;
+    Z_int   min;
+    Z_int   sec;
+    Z_int   doy;
+    Z_int   dow;
+    Z_int   dst;
+    boolean gmt;
 
-    if (DateCalc_system_clock(&year,&month,&day,
-                              &hour,&min,&sec,
-                              &doy,&dow,&dst))
+    if ((items == 0) or (items == 1))
     {
-        EXTEND(sp,3);
-        PUSHs(sv_2mortal(newSViv((IV)year)));
-        PUSHs(sv_2mortal(newSViv((IV)month)));
-        PUSHs(sv_2mortal(newSViv((IV)day)));
+        if (items == 1) gmt = (boolean) SvIV( ST(0) );
+        else            gmt = false;
+        if (DateCalc_system_clock(&year,&month,&day,
+                                  &hour,&min,&sec,
+                                  &doy,&dow,&dst,
+                                  gmt))
+        {
+            EXTEND(sp,3);
+            PUSHs(sv_2mortal(newSViv((IV)year)));
+            PUSHs(sv_2mortal(newSViv((IV)month)));
+            PUSHs(sv_2mortal(newSViv((IV)day)));
+        }
+        else DATECALC_SYSTEM_ERROR("Today");
     }
-    else DATECALC_SYSTEM_ERROR("Today");
+    else croak("Usage: Date::Calc::Today([gmt])");
 }
 
 
 void
-DateCalc_Now()
+DateCalc_Now(...)
 PPCODE:
 {
-    Z_int year;
-    Z_int month;
-    Z_int day;
-    Z_int hour;
-    Z_int min;
-    Z_int sec;
-    Z_int doy;
-    Z_int dow;
-    Z_int dst;
+    Z_int   year;
+    Z_int   month;
+    Z_int   day;
+    Z_int   hour;
+    Z_int   min;
+    Z_int   sec;
+    Z_int   doy;
+    Z_int   dow;
+    Z_int   dst;
+    boolean gmt;
 
-    if (DateCalc_system_clock(&year,&month,&day,
-                              &hour,&min,&sec,
-                              &doy,&dow,&dst))
+    if ((items == 0) or (items == 1))
     {
-        EXTEND(sp,3);
-        PUSHs(sv_2mortal(newSViv((IV)hour)));
-        PUSHs(sv_2mortal(newSViv((IV)min)));
-        PUSHs(sv_2mortal(newSViv((IV)sec)));
+        if (items == 1) gmt = (boolean) SvIV( ST(0) );
+        else            gmt = false;
+        if (DateCalc_system_clock(&year,&month,&day,
+                                  &hour,&min,&sec,
+                                  &doy,&dow,&dst,
+                                  gmt))
+        {
+            EXTEND(sp,3);
+            PUSHs(sv_2mortal(newSViv((IV)hour)));
+            PUSHs(sv_2mortal(newSViv((IV)min)));
+            PUSHs(sv_2mortal(newSViv((IV)sec)));
+        }
+        else DATECALC_SYSTEM_ERROR("Now");
     }
-    else DATECALC_SYSTEM_ERROR("Now");
+    else croak("Usage: Date::Calc::Now([gmt])");
 }
 
 
 void
-DateCalc_Today_and_Now()
+DateCalc_Today_and_Now(...)
 PPCODE:
 {
-    Z_int year;
-    Z_int month;
-    Z_int day;
-    Z_int hour;
-    Z_int min;
-    Z_int sec;
-    Z_int doy;
-    Z_int dow;
-    Z_int dst;
+    Z_int   year;
+    Z_int   month;
+    Z_int   day;
+    Z_int   hour;
+    Z_int   min;
+    Z_int   sec;
+    Z_int   doy;
+    Z_int   dow;
+    Z_int   dst;
+    boolean gmt;
 
-    if (DateCalc_system_clock(&year,&month,&day,
-                              &hour,&min,&sec,
-                              &doy,&dow,&dst))
+    if ((items == 0) or (items == 1))
     {
-        EXTEND(sp,6);
-        PUSHs(sv_2mortal(newSViv((IV)year)));
-        PUSHs(sv_2mortal(newSViv((IV)month)));
-        PUSHs(sv_2mortal(newSViv((IV)day)));
-        PUSHs(sv_2mortal(newSViv((IV)hour)));
-        PUSHs(sv_2mortal(newSViv((IV)min)));
-        PUSHs(sv_2mortal(newSViv((IV)sec)));
+        if (items == 1) gmt = (boolean) SvIV( ST(0) );
+        else            gmt = false;
+        if (DateCalc_system_clock(&year,&month,&day,
+                                  &hour,&min,&sec,
+                                  &doy,&dow,&dst,
+                                  gmt))
+        {
+            EXTEND(sp,6);
+            PUSHs(sv_2mortal(newSViv((IV)year)));
+            PUSHs(sv_2mortal(newSViv((IV)month)));
+            PUSHs(sv_2mortal(newSViv((IV)day)));
+            PUSHs(sv_2mortal(newSViv((IV)hour)));
+            PUSHs(sv_2mortal(newSViv((IV)min)));
+            PUSHs(sv_2mortal(newSViv((IV)sec)));
+        }
+        else DATECALC_SYSTEM_ERROR("Today_and_Now");
     }
-    else DATECALC_SYSTEM_ERROR("Today_and_Now");
+    else croak("Usage: Date::Calc::Today_and_Now([gmt])");
+}
+
+
+void
+DateCalc_This_Year(...)
+PPCODE:
+{
+    Z_int   year;
+    Z_int   month;
+    Z_int   day;
+    Z_int   hour;
+    Z_int   min;
+    Z_int   sec;
+    Z_int   doy;
+    Z_int   dow;
+    Z_int   dst;
+    boolean gmt;
+
+    if ((items == 0) or (items == 1))
+    {
+        if (items == 1) gmt = (boolean) SvIV( ST(0) );
+        else            gmt = false;
+        if (DateCalc_system_clock(&year,&month,&day,
+                                  &hour,&min,&sec,
+                                  &doy,&dow,&dst,
+                                  gmt))
+        {
+            EXTEND(sp,1);
+            PUSHs(sv_2mortal(newSViv((IV)year)));
+        }
+        else DATECALC_SYSTEM_ERROR("This_Year");
+    }
+    else croak("Usage: Date::Calc::This_Year([gmt])");
+}
+
+
+void
+DateCalc_Gmtime(...)
+PPCODE:
+{
+    time_t  seconds;
+    Z_int   year;
+    Z_int   month;
+    Z_int   day;
+    Z_int   hour;
+    Z_int   min;
+    Z_int   sec;
+    Z_int   doy;
+    Z_int   dow;
+    Z_int   dst;
+
+    if ((items == 0) or (items == 1))
+    {
+        if (items == 1) seconds = (time_t) SvIV( ST(0) );
+        else            seconds = time(NULL);
+        if (DateCalc_gmtime(&year,&month,&day,
+                            &hour,&min,&sec,
+                            &doy,&dow,&dst,
+                            seconds))
+        {
+            EXTEND(sp,9);
+            PUSHs(sv_2mortal(newSViv((IV)year)));
+            PUSHs(sv_2mortal(newSViv((IV)month)));
+            PUSHs(sv_2mortal(newSViv((IV)day)));
+            PUSHs(sv_2mortal(newSViv((IV)hour)));
+            PUSHs(sv_2mortal(newSViv((IV)min)));
+            PUSHs(sv_2mortal(newSViv((IV)sec)));
+            PUSHs(sv_2mortal(newSViv((IV)doy)));
+            PUSHs(sv_2mortal(newSViv((IV)dow)));
+            PUSHs(sv_2mortal(newSViv((IV)dst)));
+        }
+        else DATECALC_TIME_RANGE_ERROR("Gmtime");
+    }
+    else croak("Usage: Date::Calc::Gmtime([time])");
+}
+
+
+void
+DateCalc_Localtime(...)
+PPCODE:
+{
+    time_t  seconds;
+    Z_int   year;
+    Z_int   month;
+    Z_int   day;
+    Z_int   hour;
+    Z_int   min;
+    Z_int   sec;
+    Z_int   doy;
+    Z_int   dow;
+    Z_int   dst;
+
+    if ((items == 0) or (items == 1))
+    {
+        if (items == 1) seconds = (time_t) SvIV( ST(0) );
+        else            seconds = time(NULL);
+        if (DateCalc_localtime(&year,&month,&day,
+                               &hour,&min,&sec,
+                               &doy,&dow,&dst,
+                               seconds))
+        {
+            EXTEND(sp,9);
+            PUSHs(sv_2mortal(newSViv((IV)year)));
+            PUSHs(sv_2mortal(newSViv((IV)month)));
+            PUSHs(sv_2mortal(newSViv((IV)day)));
+            PUSHs(sv_2mortal(newSViv((IV)hour)));
+            PUSHs(sv_2mortal(newSViv((IV)min)));
+            PUSHs(sv_2mortal(newSViv((IV)sec)));
+            PUSHs(sv_2mortal(newSViv((IV)doy)));
+            PUSHs(sv_2mortal(newSViv((IV)dow)));
+            PUSHs(sv_2mortal(newSViv((IV)dst)));
+        }
+        else DATECALC_TIME_RANGE_ERROR("Localtime");
+    }
+    else croak("Usage: Date::Calc::Localtime([time])");
+}
+
+
+void
+DateCalc_Mktime(year,month,day, hour,min,sec)
+    Z_int	year
+    Z_int	month
+    Z_int	day
+    Z_int	hour
+    Z_int	min
+    Z_int	sec
+PPCODE:
+{
+    time_t seconds;
+
+    if (DateCalc_mktime(&seconds, year,month,day, hour,min,sec, -1,-1,-1))
+    {
+        EXTEND(sp,1);
+        PUSHs(sv_2mortal(newSViv((IV)seconds)));
+    }
+    else DATECALC_DATE_RANGE_ERROR("Mktime");
+}
+
+
+void
+DateCalc_Timezone(...)
+PPCODE:
+{
+    time_t  when;
+    Z_int   year;
+    Z_int   month;
+    Z_int   day;
+    Z_int   hour;
+    Z_int   min;
+    Z_int   sec;
+    Z_int   dst;
+
+    if ((items == 0) or (items == 1))
+    {
+        if (items == 1) when = (time_t) SvIV( ST(0) );
+        else            when = time(NULL);
+        if (DateCalc_timezone(&year,&month,&day,
+                              &hour,&min,&sec,
+                              &dst,when))
+        {
+            EXTEND(sp,7);
+            PUSHs(sv_2mortal(newSViv((IV)year)));
+            PUSHs(sv_2mortal(newSViv((IV)month)));
+            PUSHs(sv_2mortal(newSViv((IV)day)));
+            PUSHs(sv_2mortal(newSViv((IV)hour)));
+            PUSHs(sv_2mortal(newSViv((IV)min)));
+            PUSHs(sv_2mortal(newSViv((IV)sec)));
+            PUSHs(sv_2mortal(newSViv((IV)dst)));
+        }
+        else DATECALC_TIME_RANGE_ERROR("Timezone");
+    }
+    else croak("Usage: Date::Calc::Timezone([time])");
+}
+
+
+void
+DateCalc_Date_to_Time(year,month,day, hour,min,sec)
+    Z_int	year
+    Z_int	month
+    Z_int	day
+    Z_int	hour
+    Z_int	min
+    Z_int	sec
+PPCODE:
+{
+    time_t seconds;
+
+    if (DateCalc_date2time(&seconds, year,month,day, hour,min,sec))
+    {
+        EXTEND(sp,1);
+        PUSHs(sv_2mortal(newSViv((IV)seconds)));
+    }
+    else DATECALC_DATE_RANGE_ERROR("Date_to_Time");
+}
+
+
+void
+DateCalc_Time_to_Date(...)
+PPCODE:
+{
+    time_t  seconds;
+    Z_int   year;
+    Z_int   month;
+    Z_int   day;
+    Z_int   hour;
+    Z_int   min;
+    Z_int   sec;
+
+    if ((items == 0) or (items == 1))
+    {
+        if (items == 1) seconds = (time_t) SvIV( ST(0) );
+        else            seconds = time(NULL);
+        if (DateCalc_time2date(&year,&month,&day, &hour,&min,&sec, seconds))
+        {
+            EXTEND(sp,6);
+            PUSHs(sv_2mortal(newSViv((IV)year)));
+            PUSHs(sv_2mortal(newSViv((IV)month)));
+            PUSHs(sv_2mortal(newSViv((IV)day)));
+            PUSHs(sv_2mortal(newSViv((IV)hour)));
+            PUSHs(sv_2mortal(newSViv((IV)min)));
+            PUSHs(sv_2mortal(newSViv((IV)sec)));
+        }
+        else DATECALC_TIME_RANGE_ERROR("Time_to_Date");
+    }
+    else croak("Usage: Date::Calc::Time_to_Date([time])");
 }
 
 
@@ -856,6 +1126,16 @@ PPCODE:
     }
     /* else return empty list */
 }
+
+
+Z_int
+DateCalc_Fixed_Window(year)
+    Z_int	year
+
+
+Z_int
+DateCalc_Moving_Window(year)
+    Z_int	year
 
 
 Z_int

@@ -1,20 +1,25 @@
+#!perl -w
 
 ###############################################################################
 ##                                                                           ##
-##    Typemap for module "Date::Calc" version 5.0.                           ##
-##                                                                           ##
-##    Copyright (c) 1995 - 2001 by Steffen Beyer.                            ##
+##    Copyright (c) 2001 by Steffen Beyer.                                   ##
 ##    All rights reserved.                                                   ##
 ##                                                                           ##
-##    This package is free software; you can redistribute it                 ##
+##    This program is free software; you can redistribute it                 ##
 ##    and/or modify it under the same terms as Perl itself.                  ##
 ##                                                                           ##
 ###############################################################################
 
-TYPEMAP
+use Date::Calendar::Profiles qw( $Profiles );
+use Date::Calendar;
 
-boolean	T_IV
-Z_int	T_IV
-Z_long	T_IV
-charptr	T_PV
+$cal = Date::Calendar->new( $Profiles->{'DE-NW'} );
+
+$year = $cal->year( 2002 );
+
+$delta = $year->delta_workdays( 2002,1,1, 2002,2,3, 1,1 );
+
+print "$delta\n";
+
+__END__
 

@@ -1,8 +1,8 @@
-#!perl
+#!perl -w
 
 ###############################################################################
 ##                                                                           ##
-##    Copyright (c) 1998 - 2001 by Steffen Beyer.                            ##
+##    Copyright (c) 2001 by Steffen Beyer.                                   ##
 ##    All rights reserved.                                                   ##
 ##                                                                           ##
 ##    This program is free software; you can redistribute it                 ##
@@ -10,29 +10,26 @@
 ##                                                                           ##
 ###############################################################################
 
-use Config;
+use Date::Calc::Object qw(:all);
 
-$self = $0;
-$self =~ s!^.*/!!;
+Date::Calc->date_format(2);
 
-unless (@ARGV)
-{
-    die "Usage:  perl  $self  <main>[.c]  [ <other.c> ]*\n";
-}
+$time = time;
 
-$main = shift;
-$main =~ s/\.c$//;
+$date = Date::Calc->new(Today_and_Now(0));
+print "Today_and_Now(0)          = $date\n";
 
-unless (-f "$main.c")
-{
-    die "$self: file '$main.c' does not exist!\n";
-}
+$date = Date::Calc->new(Today_and_Now(1));
+print "Today_and_Now(1)          = $date\n";
 
-$cc = $Config{'cc'};
+$date = Date::Calc->new( 0, Add_Delta_DHMS( 1970,1,1, 0,0,0, 0,0,0,$time ) );
+print "Add_Delta_DHMS($time) = $date\n";
 
-$flags = $Config{'ccflags'};
+$date = Date::Calc->gmtime(time);
+print "gmtime($time)         = $date\n";
 
-@ARGV = map("\"$_\"",@ARGV);
+$date->localtime(time);
+print "localtime($time)      = $date\n";
 
-system("$cc $flags -o $main $main.c @ARGV");
+__END__
 

@@ -1,7 +1,7 @@
 
 ###############################################################################
 ##                                                                           ##
-##    Copyright (c) 2000 by Steffen Beyer.                                   ##
+##    Copyright (c) 2000, 2001 by Steffen Beyer.                             ##
 ##    All rights reserved.                                                   ##
 ##                                                                           ##
 ##    This package is free software; you can redistribute it                 ##
@@ -24,77 +24,121 @@ require Exporter;
 
 $VERSION = '5.0';
 
-#use Bit::Vector;
-#use Date::Calc::Object qw(:all);
 use Carp::Clan qw(^Date::);
+use Date::Calc::Object qw(:ALL);
 use Date::Calendar::Year qw( check_year empty_period );
 
 sub new
 {
-    my($class,$profile) = @_;
+    my($class)    = shift;
+    my($profile)  = shift;
+    my($language) = shift || 0;
     my($self);
 
     $self = [ ];
-    $class = ref($class) || $class || __PACKAGE__;
+    $class = ref($class) || $class || 'Date::Calendar';
     bless($self, $class);
-    $self->[0] = $profile;
-    $self->[1] = { };
+    $self->[0] = { };
+    $self->[1] = $profile;
+    $self->[2] = $language;
     return $self;
 }
 
 sub year
 {
     my($self) = shift;
-    my($year);
-
-    if (ref($_[0]) and ref($_[0]) !~ /^[A-Z]+$/) { $year = $_[0]->year(); }
-    else                                         { $year = $_[0]; }
+    my($year) = shift_year(\@_);
 
     &check_year($year);
-    unless (defined $self->[1]{$year})
+    if (defined $self->[0]{$year})
     {
-        $self->[1]{$year} =
-            Date::Calendar::Year->new( $year, $self->[0] );
+        return $self->[0]{$year};
     }
-    return $self->[1]{$year};
+    else
+    {
+        return $self->[0]{$year} =
+            Date::Calendar::Year->new( $year, $self->[1], $self->[2] );
+    }
+}
+
+sub cache_keys
+{
+    my($self) = shift;
+
+    return( sort {$a<=>$b} keys(%{$self->[0]}) );
+}
+
+sub cache_vals
+{
+    my($self) = shift;
+    local($_);
+
+    return( map $self->[0]{$_}, sort {$a<=>$b} keys(%{$self->[0]}) );
+}
+
+sub cache_clr
+{
+    my($self) = shift;
+
+    $self->[0] = { };
+}
+
+sub cache_add
+{
+    my($self) = shift;
+    my($year);
+
+    while (@_)
+    {
+        $year = shift_year(\@_);
+        $self->year($year);
+    }
+}
+
+sub cache_del
+{
+    my($self) = shift;
+    my($year);
+
+    while (@_)
+    {
+        $year = shift_year(\@_);
+        if (exists $self->[0]{$year})
+        {
+            delete $self->[0]{$year};
+        }
+    }
 }
 
 sub date2index
 {
     my($self) = shift;
+    my(@date) = shift_date(\@_);
 
-    @_ = $_[0]->date() if (ref($_[0]) and ref($_[0]) !~ /^[A-Z]+$/);
-
-    return $self->year($_[0])->date2index(@_);
+    return $self->year($date[0])->date2index(@date);
 }
 
 sub labels
 {
     my($self) = shift;
     my($year);
+    my(@date);
     my(%result);
 
     if (@_)
     {
-        @_ = $_[0]->date() if (ref($_[0]) and ref($_[0]) !~ /^[A-Z]+$/);
-        return $self->year($_[0])->labels(@_);
+        @date = shift_date(\@_);
+        return $self->year($date[0])->labels(@date);
     }
     else
     {
         local($_);
         %result = ();
-        foreach $year (keys(%{$self->[1]}))
+        foreach $year (keys(%{$self->[0]}))
         {
             grep( $result{$_} = 0, $self->year($year)->labels() );
         }
-        if (defined wantarray and wantarray)
-        {
-            return( keys %result );
-        }
-        else
-        {
-            return scalar( keys %result );
-        }
+        return wantarray ? (keys %result) : scalar(keys %result);
     }
 }
 
@@ -105,31 +149,20 @@ sub search
     my(@result);
 
     @result = ();
-    foreach $year (sort {$a<=>$b} keys(%{$self->[1]}))
+    foreach $year (sort {$a<=>$b} keys(%{$self->[0]}))
     {
         push( @result, $self->year($year)->search($pattern) );
     }
-    if (defined wantarray and wantarray)
-    {
-        return(@result);
-    }
-    else
-    {
-        return scalar(@result);
-    }
+    return wantarray ? (@result) : scalar(@result);
 }
 
 sub delta_workdays
 {
-    my($self) = shift;
-    my($yy1,$mm1,$dd1,$yy2,$mm2,$dd2,$including1,$including2);
+    my($self)                   =  shift;
+    my($yy1,$mm1,$dd1)          =  shift_date(\@_);
+    my($yy2,$mm2,$dd2)          =  shift_date(\@_);
+    my($including1,$including2) = (shift,shift);
     my($days,$empty,$year);
-
-    if (ref($_[0]) and ref($_[0]) !~ /^[A-Z]+$/) { ($yy1,$mm1,$dd1) = shift->date(); }
-    else                                         { ($yy1,$mm1,$dd1) = (shift,shift,shift); }
-    if (ref($_[0]) and ref($_[0]) !~ /^[A-Z]+$/) { ($yy2,$mm2,$dd2) = shift->date(); }
-    else                                         { ($yy2,$mm2,$dd2) = (shift,shift,shift); }
-    ($including1,$including2) = (shift,shift);
 
     $days = 0;
     $empty = 1;
@@ -186,42 +219,54 @@ sub delta_workdays
 
 sub add_delta_workdays
 {
-    my($self) = shift;
-    my($yy,$mm,$dd,$days);
-    my($date);
+    my($self)       = shift;
+    my($yy,$mm,$dd) = shift_date(\@_);
+    my($days)       = shift;
+    my($date,$rest,$sign);
 
-    if (ref($_[0]) and ref($_[0]) !~ /^[A-Z]+$/) { ($yy,$mm,$dd) = shift->date(); }
-    else                                         { ($yy,$mm,$dd) = (shift,shift,shift); }
-    $days = shift;
-
-    ($date,$days) = $self->year($yy)->add_delta_workdays($yy,$mm,$dd,$days);
-    while (abs($days) > 0.5)
+    if ($days == 0)
     {
-        ($date,$days) = $self->year($date)->add_delta_workdays($date,$days);
+        $rest = $self->year($yy)->date2index($yy,$mm,$dd); # check date
+        $date = Date::Calc->new($yy,$mm,$dd);
+        return wantarray ? ($date,$days) : $date;
     }
-    return($date,$days);
+    else
+    {
+        $sign = ($days > 0) ? +1 : -1;
+        ($date,$rest,$sign) = $self->year($yy)->add_delta_workdays($yy,$mm,$dd,$days,$sign);
+        while ($sign)
+        {
+            ($date,$rest,$sign) = $self->year($date)->add_delta_workdays($date,$rest,$sign);
+        }
+        return wantarray ? ($date,$rest) : $date;
+    }
 }
 
 sub is_full
 {
     my($self) = shift;
-    my($year);
+    my(@date) = shift_date(\@_);
+    my($year) = $self->year($date[0]);
 
-    @_ = $_[0]->date() if (ref($_[0]) and ref($_[0]) !~ /^[A-Z]+$/);
-
-    $year = $self->year($_[0]);
-    return $year->vec_full->bit_test( $year->date2index(@_) );
+    return $year->vec_full->bit_test( $year->date2index(@date) );
 }
 
 sub is_half
 {
     my($self) = shift;
-    my($year);
+    my(@date) = shift_date(\@_);
+    my($year) = $self->year($date[0]);
 
-    @_ = $_[0]->date() if (ref($_[0]) and ref($_[0]) !~ /^[A-Z]+$/);
+    return $year->vec_half->bit_test( $year->date2index(@date) );
+}
 
-    $year = $self->year($_[0]);
-    return $year->vec_half->bit_test( $year->date2index(@_) );
+sub is_work
+{
+    my($self) = shift;
+    my(@date) = shift_date(\@_);
+    my($year) = $self->year($date[0]);
+
+    return $year->vec_work->bit_test( $year->date2index(@date) );
 }
 
 1;

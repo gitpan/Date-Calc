@@ -35,12 +35,46 @@ interface) with overloaded operators, and a set of modules for calculations
 which take local holidays into account (both additions in Perl only, however).
 
 
+New features in version 5.0:
+----------------------------
+
+ *  Many new functions in Date::Calc
+    (but the module continues to be small, fast and simple)
+
+ *  Optionally, Date::Calc objects with overloaded operators
+    for more ease of use (when speed is not so critical)
+
+ *  An optional module for performing date calculations which
+    take holidays into account, e.g., today plus 60 workdays,
+    what date gives that?  Or how many workdays are there
+    between two dates?
+
+ *  A library containing profiles for a large number of countries
+    with all their legal holidays (i.e., you get a day off) and
+    many commemorative days (you don't)
+
+ *  The possibility to create your own profiles for any special
+    needs you may have, for instance for schools, banks, stock
+    market, birthdays of relatives and friends, ...
+
+ *  It is easy to generate calendars for any of these profiles
+    and any year you like - there is a script to do so on the
+    command line, and a CGI script for doing so on the web
+
+ *  A couple of new example scripts to illustrate the use of
+    the various modules
+
+ *  Modularized, tailor-made components to assist you in particular
+    tasks, instead of one bulky application larger than your own
+    costing lots of overhead for features you do not need or want
+
+
 Legal issues:
 -------------
 
 This package with all its parts is
 
-Copyright (c) 1995 - 2000 by Steffen Beyer.
+Copyright (c) 1995 - 2001 by Steffen Beyer.
 All rights reserved.
 
 This package is free software; you can use, modify and redistribute
@@ -69,7 +103,7 @@ Otherwise you may safely ignore the warning message
 "Warning: prerequisite Bit::Vector 5.7 not found at ..."
 when running "perl Makefile.PL".
 
-And you can always install "Bit::Vector" later if you
+You can install "Bit::Vector" at any time later if you
 change your mind.
 
 If you compile under Windows, note that you will need
@@ -77,16 +111,17 @@ exactly the same compiler your Perl itself was compiled
 with! (This is also true for Unix, but rarely a problem.)
 
 Moreover, you usually cannot build any modules under
-Windows 95/98, the Win 95/98 command shell is too dumb.
-You will need the Windows NT command shell ("command.com")
-or the "4DOS" shell.
+Windows 95/98, the Win 95/98 command shell doesn't
+grok the "&&" operator. You will need the Windows NT
+command shell ("cmd.exe") or the "4DOS" shell.
 
 Note that ActiveState provides precompiled binaries of
 both modules (Date::Calc and Bit::Vector) for their
 Win32 port of Perl ("ActivePerl") on their web site,
 which you should be able to install simply by typing
 "ppm install Bit-Vector" and "ppm install Date-Calc"
-in your MS-DOS command shell. This also works under
+in your MS-DOS command shell (but note the "-" instead
+of "::" in the package name!). This also works under
 Windows 95/98.
 
 If your firewall prevents "ppm" from downloading these
@@ -101,6 +136,36 @@ Note also that a "plain Perl" version of "Date::Calc" called
 should be able to download it from the same place where
 you found this package, or from David's web site at
 http://catcode.com/date/pcalc.html.
+
+
+Note to CPAN Testers:
+---------------------
+
+Version 5.0 of this module has already been tested successfully
+during development with the following configurations:
+
+  Perl 5.003     -  Solaris 2.6 (SunOS 5.6)
+  Perl 5.003_07  -  Solaris 2.6 (SunOS 5.6)
+  Perl 5.004_04  -  Solaris 2.6 (SunOS 5.6)
+  Perl 5.004_05  -  Solaris 2.6 (SunOS 5.6)
+  Perl 5.005_03  -  FreeBSD 4.1.1-RELEASE (with "dlopen() relative paths" patch)
+  Perl 5.005_03  -  Windows NT 4.0 & MS VC++ 6.0 (native Perl build)
+  Perl 5.6.0     -  FreeBSD 4.1.1-RELEASE
+  Perl 5.6.1     -  FreeBSD 4.1.1-RELEASE
+  Perl 5.6.1     -  Windows NT 4.0 & ActivePerl 5.6.1.626 (multi-thread)
+  Perl 5.7.0     -  FreeBSD 4.1.1-RELEASE
+  Perl 5.7.1     -  FreeBSD 4.1.1-RELEASE
+  Perl 5.7.2     -  FreeBSD 4.1.1-RELEASE
+
+Note: You can safely ignore the failing tests in module Bit::Vector 6.0
+(Bit::Vector::Overload, to be precise) in file "t/30_overloaded.t" under
+Perl 5.7.1 and Perl 5.7.2. The same applies to older versions of
+Bit::Vector.
+
+The failing tests are due to a change in Perl's core module "overload.pm"
+which attempts to modify a read-only value when an exception is thrown
+in the handler of an overloaded operator. This just causes a different
+error message to be printed than the intended one.
 
 
 Installation:
@@ -124,8 +189,8 @@ distribution for detailed instructions on how to add other languages.
 Changes over previous versions:
 -------------------------------
 
-Please refer to the file "CHANGES.txt" in this distribution for a detailed
-version history.
+Please refer to the file "CHANGES.txt" in this distribution for a more
+detailed version history log.
 
 
 Documentation:
@@ -139,8 +204,8 @@ documentation.
 By building this package, this documentation will automatically be
 converted into man pages, which will automatically be installed in
 your Perl tree for further reference through the installation process,
-where they can be accessed by the commands "man Date::Calc" (UNIX)
-and "perldoc Date::Calc" (UNIX and Win32), for example.
+where they can be accessed by the commands "man Date::Calc" (Unix)
+and "perldoc Date::Calc" (Unix and Win32 alike), for example.
 
 Available man pages:
 
@@ -265,7 +330,7 @@ let me know!
 Please do send feedback, this is essential for improving this module
 according to your needs!
 
-I hope you will find this module beneficial.
+I hope you will find this module useful. Enjoy!
 
 Yours,
 --

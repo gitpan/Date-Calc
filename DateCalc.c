@@ -24,16 +24,6 @@
 #define DateCalc_nth_weekday_of_month_year DateCalc_nth_weekday
 #endif
 
-// ###TOM added
-// The SC compiler warns, if stdio.h is not included: "function 'sprintf' has no
-// prototype".
-// Later on, the linker complains an unresolved reference to sprintf. Thus it's
-// better to include stdio.h here. 
-#ifdef CFM68K
-#include <stdio.h>
-#endif
-// END ###TOM added
-
 boolean
 DateCalc_leap_year                     (Z_int   year);
 
@@ -242,7 +232,72 @@ DateCalc_system_clock                  (Z_int  *year,       /*   O   */
                                         Z_int  *sec,        /*   O   */
                                         Z_int  *doy,        /*   O   */
                                         Z_int  *dow,        /*   O   */
-                                        Z_int  *dst);       /*   O   */
+                                        Z_int  *dst,        /*   O   */
+                                        boolean gmt);       /*   I   */
+
+boolean
+DateCalc_gmtime                        (Z_int  *year,       /*   O   */
+                                        Z_int  *month,      /*   O   */
+                                        Z_int  *day,        /*   O   */
+                                        Z_int  *hour,       /*   O   */
+                                        Z_int  *min,        /*   O   */
+                                        Z_int  *sec,        /*   O   */
+                                        Z_int  *doy,        /*   O   */
+                                        Z_int  *dow,        /*   O   */
+                                        Z_int  *dst,        /*   O   */
+                                        time_t  seconds);   /*   I   */
+
+boolean
+DateCalc_localtime                     (Z_int  *year,       /*   O   */
+                                        Z_int  *month,      /*   O   */
+                                        Z_int  *day,        /*   O   */
+                                        Z_int  *hour,       /*   O   */
+                                        Z_int  *min,        /*   O   */
+                                        Z_int  *sec,        /*   O   */
+                                        Z_int  *doy,        /*   O   */
+                                        Z_int  *dow,        /*   O   */
+                                        Z_int  *dst,        /*   O   */
+                                        time_t  seconds);   /*   I   */
+
+boolean
+DateCalc_mktime                        (time_t *seconds,    /*   O   */
+                                        Z_int   year,       /*   I   */
+                                        Z_int   month,      /*   I   */
+                                        Z_int   day,        /*   I   */
+                                        Z_int   hour,       /*   I   */
+                                        Z_int   min,        /*   I   */
+                                        Z_int   sec,        /*   I   */
+                                        Z_int   doy,        /*   I   */
+                                        Z_int   dow,        /*   I   */
+                                        Z_int   dst);       /*   I   */
+
+boolean
+DateCalc_timezone                      (Z_int  *year,       /*   O   */
+                                        Z_int  *month,      /*   O   */
+                                        Z_int  *day,        /*   O   */
+                                        Z_int  *hour,       /*   O   */
+                                        Z_int  *min,        /*   O   */
+                                        Z_int  *sec,        /*   O   */
+                                        Z_int  *dst,        /*   O   */
+                                        time_t when);       /*   I   */
+
+boolean
+DateCalc_date2time                     (time_t *seconds,    /*   O   */
+                                        Z_int   year,       /*   I   */
+                                        Z_int   month,      /*   I   */
+                                        Z_int   day,        /*   I   */
+                                        Z_int   hour,       /*   I   */
+                                        Z_int   min,        /*   I   */
+                                        Z_int   sec);       /*   I   */
+
+boolean
+DateCalc_time2date                     (Z_int  *year,       /*   O   */
+                                        Z_int  *month,      /*   O   */
+                                        Z_int  *day,        /*   O   */
+                                        Z_int  *hour,       /*   O   */
+                                        Z_int  *min,        /*   O   */
+                                        Z_int  *sec,        /*   O   */
+                                        time_t  seconds);   /*   I   */
 
 boolean
 DateCalc_easter_sunday                 (Z_int  *year,       /*  I/O  */
@@ -272,6 +327,12 @@ DateCalc_decode_date_us                (charptr buffer,     /*   I   */
                                         Z_int  *year,       /*   O   */
                                         Z_int  *month,      /*   O   */
                                         Z_int  *day);       /*   O   */
+
+Z_int
+DateCalc_Fixed_Window                  (Z_int   year);
+
+Z_int
+DateCalc_Moving_Window                 (Z_int   year);
 
 Z_int
 DateCalc_Compress                      (Z_int   year,
@@ -506,7 +567,7 @@ const N_char DateCalc_Date_Long_Format_[DateCalc_LANGUAGES+1][64] =
 {
     "%s, %d %s %d",                     /*  0  Default     */
     "%s, %s %s %d",                     /*  1  English     */
-    "%s, le %d %s %d",                  /*  2  Français    */
+    "%s %d %s %d",                      /*  2  Français    */
     "%s, den %d. %s %d",                /*  3  Deutsch     */
     "%s, %d de %s de %d",               /*  4  Español     */
     "%s, dia %d de %s de %d",           /*  5  Português   */
@@ -1092,16 +1153,49 @@ boolean DateCalc_add_delta_ymdhms(Z_int *year, Z_int *month, Z_int *day,
     return( DateCalc_add_delta_dhms(year,month,day,hour,min,sec,D_d,Dh,Dm,Ds) );
 }
 
-boolean DateCalc_system_clock(Z_int *year, Z_int *month, Z_int *day,
-                              Z_int *hour, Z_int *min,   Z_int *sec,
-                              Z_int *doy,  Z_int *dow,   Z_int *dst)
+boolean DateCalc_system_clock(Z_int  *year, Z_int *month, Z_int *day,
+                              Z_int  *hour, Z_int *min,   Z_int *sec,
+                              Z_int  *doy,  Z_int *dow,   Z_int *dst,
+                              boolean gmt)
 {
     time_t seconds;
     struct tm *date;
 
-    if (time(&seconds) > 0)
+    if (time(&seconds) >= 0)
     {
-        date   = localtime(&seconds);
+        if (gmt) date = gmtime(&seconds);
+        else     date = localtime(&seconds);
+        if (date != NULL)
+        {
+            *year  = (*date).tm_year + 1900;
+            *month = (*date).tm_mon + 1;
+            *day   = (*date).tm_mday;
+            *hour  = (*date).tm_hour;
+            *min   = (*date).tm_min;
+            *sec   = (*date).tm_sec;
+            *doy   = (*date).tm_yday + 1;
+            *dow   = (*date).tm_wday; if (*dow == 0) *dow = 7;
+            *dst   = (*date).tm_isdst;
+            if (*dst != 0)
+            {
+                if (*dst < 0) *dst = -1;
+                else          *dst =  1;
+            }
+            return(true);
+        }
+    }
+    return(false);
+}
+
+boolean DateCalc_gmtime(Z_int  *year, Z_int *month, Z_int *day,
+                        Z_int  *hour, Z_int *min,   Z_int *sec,
+                        Z_int  *doy,  Z_int *dow,   Z_int *dst,
+                        time_t  seconds)
+{
+    struct tm *date;
+
+    if ((seconds >= 0) and ((date = gmtime(&seconds)) != NULL))
+    {
         *year  = (*date).tm_year + 1900;
         *month = (*date).tm_mon + 1;
         *day   = (*date).tm_mday;
@@ -1119,6 +1213,167 @@ boolean DateCalc_system_clock(Z_int *year, Z_int *month, Z_int *day,
         return(true);
     }
     return(false);
+}
+
+boolean DateCalc_localtime(Z_int  *year, Z_int *month, Z_int *day,
+                           Z_int  *hour, Z_int *min,   Z_int *sec,
+                           Z_int  *doy,  Z_int *dow,   Z_int *dst,
+                           time_t  seconds)
+{
+    struct tm *date;
+
+    if ((seconds >= 0) and ((date = localtime(&seconds)) != NULL))
+    {
+        *year  = (*date).tm_year + 1900;
+        *month = (*date).tm_mon + 1;
+        *day   = (*date).tm_mday;
+        *hour  = (*date).tm_hour;
+        *min   = (*date).tm_min;
+        *sec   = (*date).tm_sec;
+        *doy   = (*date).tm_yday + 1;
+        *dow   = (*date).tm_wday; if (*dow == 0) *dow = 7;
+        *dst   = (*date).tm_isdst;
+        if (*dst != 0)
+        {
+            if (*dst < 0) *dst = -1;
+            else          *dst =  1;
+        }
+        return(true);
+    }
+    return(false);
+}
+
+boolean DateCalc_mktime(time_t *seconds,
+                        Z_int year, Z_int month, Z_int day,
+                        Z_int hour, Z_int min,   Z_int sec,
+                        Z_int doy,  Z_int dow,   Z_int dst)
+{
+    struct tm date;
+
+    year -= 1900;
+    month--;
+    if (doy >  1) doy--;    else
+    if (doy <  0) doy = -1;
+    if (dow <  0) dow = -1; else
+    if (dow == 7) dow =  0;
+    if (dst != 0)
+    {
+        if (dst < 0) dst = -1;
+        else         dst =  1;
+    }
+    date.tm_year  = year;
+    date.tm_mon   = month;
+    date.tm_mday  = day;
+    date.tm_hour  = hour;
+    date.tm_min   = min;
+    date.tm_sec   = sec;
+    date.tm_yday  = doy;
+    date.tm_wday  = dow;
+    date.tm_isdst = dst;
+    *seconds = mktime(&date);
+    return(*seconds >= 0);
+}
+
+boolean DateCalc_timezone(Z_int *year, Z_int *month, Z_int *day,
+                          Z_int *hour, Z_int *min,   Z_int *sec,
+                          Z_int *dst,  time_t when)
+{
+    struct tm *date;
+    Z_int  year1;
+    Z_int  month1;
+    Z_int  day1;
+    Z_int  hour1;
+    Z_int  min1;
+    Z_int  sec1;
+    Z_int  year2;
+    Z_int  month2;
+    Z_int  day2;
+    Z_int  hour2;
+    Z_int  min2;
+    Z_int  sec2;
+
+    if (when >= 0)
+    {
+        if ((date = gmtime(&when)) == NULL) return(false);
+        year1  = (*date).tm_year + 1900;
+        month1 = (*date).tm_mon + 1;
+        day1   = (*date).tm_mday;
+        hour1  = (*date).tm_hour;
+        min1   = (*date).tm_min;
+        sec1   = (*date).tm_sec;
+        if ((date = localtime(&when)) == NULL) return(false);
+        year2  = (*date).tm_year + 1900;
+        month2 = (*date).tm_mon + 1;
+        day2   = (*date).tm_mday;
+        hour2  = (*date).tm_hour;
+        min2   = (*date).tm_min;
+        sec2   = (*date).tm_sec;
+        if (DateCalc_delta_ymdhms(year, month, day,  hour, min, sec,
+                                  year1,month1,day1, hour1,min1,sec1,
+                                  year2,month2,day2, hour2,min2,sec2))
+        {
+            *dst = (*date).tm_isdst;
+            if (*dst != 0)
+            {
+                if (*dst < 0) *dst = -1;
+                else          *dst =  1;
+            }
+            return(true);
+        }
+    }
+    return(false);
+}
+
+/* Substitute for BSD's timegm(3) function: */
+
+/* <719163.0>     = Thu  1-Jan-1970 00:00:00 (time=0x00000000) */
+/* <744018.11647> = Tue 19-Jan-2038 03:14:07 (time=0x7FFFFFFF) */
+
+boolean DateCalc_date2time(time_t *seconds,
+                           Z_int year, Z_int month, Z_int day,
+                           Z_int hour, Z_int min,   Z_int sec)
+{
+    Z_long days;
+    Z_long secs;
+
+    days = DateCalc_Date_to_Days(year,month,day);
+    secs = (((hour * 60L) + min) * 60L) + sec;
+    if ((days < 719163L) or (secs < 0L) or
+        (days > 744018L) or ((days == 744018L) and (secs > 11647L)))
+    {
+        *seconds = (time_t) -1;
+        return(false);
+    }
+    *seconds = (time_t) (((days - 719163L) * 86400L) + secs);
+    return(true);
+}
+
+/* Substitute for POSIX's gmtime(3) function: */
+
+boolean DateCalc_time2date(Z_int *year, Z_int *month, Z_int *day,
+                           Z_int *hour, Z_int *min,   Z_int *sec,
+                           time_t seconds)
+{
+    Z_long ss = (Z_long) seconds;
+    Z_long mm;
+    Z_long hh;
+    Z_long dd;
+
+    if (ss < 0L) return(false);
+    dd = (Z_long) (ss / 86400L);
+    ss -= dd * 86400L;
+    mm = (Z_long) (ss / 60L);
+    ss -= mm * 60L;
+    hh = (Z_long) (mm / 60L);
+    mm -= hh * 60L;
+    dd += 719162L;
+    *sec   = (Z_int) ss;
+    *min   = (Z_int) mm;
+    *hour  = (Z_int) hh;
+    *day   = (Z_int) 1;
+    *month = (Z_int) 1;
+    *year  = (Z_int) 1;
+    return( DateCalc_add_delta_days(year,month,day,dd) );
 }
 
 boolean DateCalc_easter_sunday(Z_int *year, Z_int *month, Z_int *day)
@@ -1290,8 +1545,8 @@ Z_int DateCalc_Decode_Language(charptr buffer, Z_int length) /* 0 = error */
 boolean DateCalc_decode_date_eu(charptr buffer,
                                 Z_int *year, Z_int *month, Z_int *day)
 {
-    Z_int   i,j;
-    Z_int   length;
+    Z_int i,j;
+    Z_int length;
 
     *year = *month = *day = 0;
     length = strlen((char *)buffer);
@@ -1381,19 +1636,15 @@ boolean DateCalc_decode_date_eu(charptr buffer,
         else return(false); /* less than 3 chars in buffer */
     }
     else return(false); /* length <= 0 */
-    if (*year < 100)
-    {
-        if (*year < DateCalc_YEAR_OF_EPOCH) *year += 100;
-        *year += DateCalc_CENTURY_OF_EPOCH;
-    }
+    *year = DateCalc_Moving_Window(*year);
     return( DateCalc_check_date(*year,*month,*day) );
 }
 
 boolean DateCalc_decode_date_us(charptr buffer,
                                 Z_int *year, Z_int *month, Z_int *day)
 {
-    Z_int   i,j,k;
-    Z_int   length;
+    Z_int i,j,k;
+    Z_int length;
 
     *year = *month = *day = 0;
     length = strlen((char *)buffer);
@@ -1553,12 +1804,42 @@ boolean DateCalc_decode_date_us(charptr buffer,
         else return(false); /* less than 3 chars in buffer */
     }
     else return(false); /* length <= 0 */
-    if (*year < 100)
-    {
-        if (*year < DateCalc_YEAR_OF_EPOCH) *year += 100;
-        *year += DateCalc_CENTURY_OF_EPOCH;
-    }
+    *year = DateCalc_Moving_Window(*year);
     return( DateCalc_check_date(*year,*month,*day) );
+}
+
+Z_int DateCalc_Fixed_Window(Z_int year)
+{
+    if (year < 0) return(0);
+    if (year < 100)
+    {
+        if (year < DateCalc_YEAR_OF_EPOCH) year += 100;
+        year += DateCalc_CENTURY_OF_EPOCH;
+    }
+    return(year);
+}
+
+Z_int DateCalc_Moving_Window(Z_int year)
+{
+    time_t seconds;
+    struct tm *date;
+    Z_int  current;
+    Z_int  century;
+
+    if (year < 0) return(0);
+    if (year < 100)
+    {
+        if ((time(&seconds) >= 0) and ((date = gmtime(&seconds)) != NULL))
+        {
+            current = (*date).tm_year + 1900;
+            century = (Z_int)(current / 100);
+            year += century * 100;
+            if      (year <  current - 50) year += 100;
+            else if (year >= current + 50) year -= 100;
+        }
+        else year = DateCalc_Fixed_Window(year);
+    }
+    return(year);
 }
 
 Z_int DateCalc_Compress(Z_int year, Z_int month, Z_int day)
@@ -1832,7 +2113,7 @@ charptr DateCalc_Version(void)
 /*  VERSION HISTORY:                                                         */
 /*****************************************************************************/
 /*                                                                           */
-/*    Version 5.0   08.10.00  New YMD/HMS functions, replaced <ctype.h>.     */
+/*    Version 5.0   10.10.01  New YMD/HMS functions, replaced <ctype.h>, ... */
 /*    Version 4.3   08.01.00  decode_date_??: (yy < 70 ? 20yy : 19yy)        */
 /*    Version 4.2   07.09.98  No changes.                                    */
 /*    Version 4.1   08.06.98  Fixed bug in "add_delta_ymd()".                */
@@ -1860,10 +2141,6 @@ charptr DateCalc_Version(void)
 /*****************************************************************************/
 /*                                                                           */
 /*    Steffen Beyer                                                          */
-/*    Ainmillerstr. 5 / App. 513                                             */
-/*    D-80801 Munich                                                         */
-/*    Germany                                                                */
-/*                                                                           */
 /*    mailto:sb@engelschall.com                                              */
 /*    http://www.engelschall.com/u/sb/download/                              */
 /*                                                                           */
@@ -1871,7 +2148,7 @@ charptr DateCalc_Version(void)
 /*  COPYRIGHT:                                                               */
 /*****************************************************************************/
 /*                                                                           */
-/*    Copyright (c) 1993 - 2000 by Steffen Beyer.                            */
+/*    Copyright (c) 1993 - 2001 by Steffen Beyer.                            */
 /*    All rights reserved.                                                   */
 /*                                                                           */
 /*****************************************************************************/

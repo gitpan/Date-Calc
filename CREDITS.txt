@@ -3,7 +3,7 @@
                      ====================================
 
 
-                  Copyright (c) 1995 - 2000 by Steffen Beyer.
+                  Copyright (c) 1995 - 2001 by Steffen Beyer.
                              All rights reserved.
 
 
@@ -53,7 +53,7 @@ for calculating easter monday in news:comp.lang.perl.modules and thereby
 triggering my writing of the new "Date::CalcLib" module which has been
 added in version 3.0 of the "Date::Calc" distribution.
 
-Also many thanks to Claus Tondering <c-t@pip.dknet.dk> for his excellent
+Also many thanks to Claus Tondering <claus@tondering.dk> for his excellent
 web pages and FAQ in news:news.answers about calendars and how to calcu-
 late easter sunday.
 
@@ -212,5 +212,106 @@ testing my modifications in order to satisfy the VMS linker (which was
 complaining about identifiers which were longer than 30 characters) and
 for his confirmation that now everything works (not counting some
 innocuous warnings from xsubpp)!
+
+Thanks a lot to Ramiro Morales <morales@siscard.com.ar> for correcting
+my errors in Spanish (and for sending a patch)!
+
+And last but not least, many very special thanks for his tremendous
+work to J. David Eisenberg <david@catcode.com> for writing a plain
+Perl version of Date::Calc 4.3, available from his home page at
+http://catcode.com/date/pcalc.html! (And also from my web site at
+http://www.engelschall.com/u/sb/download/ and my CPAN directory at
+http://www.perl.com/CPAN/authors/id/S/ST/STBEY/.)
+
+Many extra thanks to Bianca Taylor <bianca@unisolve.com.au> for exploring
+the mysteries of (and phoning up a lot of astounded state officials!) the
+australian holidays for me, as well as for sending me a list with the
+holidays of New Zealand; and many thanks also to her friend John Bolland
+<jbolland@mainzeal.co.nz> for compiling this list for New Zealand in the
+first place!
+
+Many thanks to ??? ??? <digitaproc@netscape.net> for sending me excellent
+feedback and suggestions. He for instance suggested the possibility to
+have individual formatting for different date objects, and the ability
+to import/export Unix "time" values.
+
+Many special thanks (k) to my girlfriend Ana Maria Lopes Monteiro
+<anamaria_l@hotmail.com> for investigating the brazilian holidays
+and commemorative days for me!
+
+Very special thanks to the following people for helping in compiling
+and verifying the calendar profiles in Date::Calendar::Profiles:
+
+Abe Timmerman <abe@ztreet.demon.nl>
+Abigail <abigail@foad.org>
+Aldo Calpini <dada@perl.it>
+Andie Posey <andie@posey.org>
+Arnaud Calvo <arnaud@calvo-france.com>
+Arturo Valdes <arturovaldes@usa.net>
+Bart Lateur <bart.lateur@skynet.be>
+Brian Graham <brian.graham@nec.com.au>
+Bruno Tavares <bat@ip.pt> <bat@dustpuppy.ip.pt>
+Cas Tuyn <Cas.Tuyn@asml.nl>
+Cedric Bouvier <Cedric.Bouvier@ctp.com>
+David Landgren <dlandgre@bpinet.com>
+Dietmar Rietsch <d.rietsch@prokom.com>
+Don Simonetta <don.simonetta@tequinox.com>
+Elizabeth Mattijsen <liz@dijkmat.nl>
+Erland Sommarskog <sommar@algonet.se>
+Flemming Mahler Larsen <mahler@dk.net>
+Francois Desarmenien <francois@fdesar.net>
+Gordon Fletcher <G.Fletcher@mailbox.gu.edu.au>
+H. Merijn Brand <h.m.brand@hccnet.nl>
+Hendrik Van Belleghem <beatnik@quickndirty.org>
+Herbert Liechti <herbert.liechti@thinx.ch>
+Jean Forget <ponder.stibbons@wanadoo.fr>
+Jigal van Hemert <jigal.van.hemert@iquip.nl>
+Johan Vromans <jvromans@squirrel.nl>
+Julien Quint <julien.quint@imag.fr>
+Lars Ole <ma-karl2@online.no>
+Magnus Bodin <magnus@bodin.org>
+Marco Hunn <m_hunn@blue-design.ch>
+Mark Keehn <mark.keehn@bigpond.com.au>
+Michele Beltrame <mb@io.com>
+Pat Waters <pat.waters@dir.qld.gov.au>
+Paul Fenwick <pjf@cpan.org> <pjf@mukc.org.au>
+Peter G. Martin <pmartin1@bigpond.net.au> <peterm@zeta.org.au>
+Remco B. Brink <remco@solbors.no>
+Robert McArthur <mcarthur@dstc.edu.au>
+Stefaan Colson <stefaan.colson@sitel.com>
+Stephane Rondal <rondal@usa.net>
+Wim Verhaegen <wim.verhaegen@esat.kuleuven.ac.be>
+Jabu Virginia Duma, Giant's Castle Lodge, Drakensberg,
+3310 Estcourt, KwaZulu-Natal, South Africa
+Dirk Swart <dirk@clickshare.com> <dirk@tristar.co.za>
+Hilda de Jager <Hildadj@gcis.pwv.gov.za>
+Hennie Meyer <Henniem@dbs1.pwv.gov.za>
+Pe. Amancio <catedral@lkn.com.br>
+Inez Hiltrop <inez@hiltrop.de>
+Stephen Riehm <Stephen.Riehm@gmx.net>
+Graham Crookham <graham.crookham2@sbs.siemens.co.uk>
+Philip Newton <pne@writeme.com>
+
+Many thanks to Sunny Paris <sun@weborama.fr> for correcting the french
+date format in function "Date_to_Text_Long()"!
+
+Many grateful thanks to Nathaniel Irons <ndi@bumppo.net> for reporting a
+problem and for testing a possible solution on his machine regarding the
+inclusion of the file "patchlevel.h"!
+
+Many thanks to Daniel Crown <daniel@mailgratis.com.ar> for providing me
+with a list of argentinian holidays!
+
+Many thanks to Morten Sickel <Morten.Sickel@nrpa.no> for reporting why
+Excel (erroneously) regards 1900 as a leap year, and why therefore one
+should use 31-Dec-1899 as the epoch for converting Excel date values.
+
+Many thanks to Georg Mavridis <GM@mavridis.net> for providing me with
+the list of greek holidays.
+
+Many thanks also to Guenther Degenfelder <guenther.degenfelder@datev.de>
+for showing me his "Karl" calendar display program, which inspired me
+to write the example script "anniversaries.pl" (in the "examples"
+subdirectory of this distribution).
 
 

@@ -1,7 +1,7 @@
 
 ###############################################################################
 ##                                                                           ##
-##    Copyright (c) 1995 - 2000 by Steffen Beyer.                            ##
+##    Copyright (c) 1995 - 2001 by Steffen Beyer.                            ##
 ##    All rights reserved.                                                   ##
 ##                                                                           ##
 ##    This package is free software; you can redistribute it                 ##
@@ -52,12 +52,21 @@ require DynaLoader;
     Today
     Now
     Today_and_Now
+    This_Year
+    Gmtime
+    Localtime
+    Mktime
+    Timezone
+    Date_to_Time
+    Time_to_Date
     Easter_Sunday
     Decode_Month
     Decode_Day_of_Week
     Decode_Language
     Decode_Date_EU
     Decode_Date_US
+    Fixed_Window
+    Moving_Window
     Compress
     Uncompress
     check_compressed
@@ -157,13 +166,7 @@ sub Decode_Date_EU2
         ($day,$month,$year) = ($1,$2,$3);
     }
     else { return(); } # no match at all!
-
-    if ($year < 100)
-    {
-        if ($year < 70) { $year += 100; }
-        $year += 1900;
-    }
-
+    $year = Moving_Window($year);
     if (check_date($year,$month,$day))
     {
         return($year,$month,$day);
@@ -271,13 +274,7 @@ sub Decode_Date_US2
         ($month,$day,$year) = ($1,$2,$3);
     }
     else { return(); } # no match at all!
-
-    if ($year < 100)
-    {
-        if ($year < 70) { $year += 100; }
-        $year += 1900;
-    }
-
+    $year = Moving_Window($year);
     if (check_date($year,$month,$day))
     {
         return($year,$month,$day);

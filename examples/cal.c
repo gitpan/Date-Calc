@@ -1,7 +1,7 @@
 
 /*****************************************************************************/
 /*                                                                           */
-/*    Copyright (c) 1998 - 2000 by Steffen Beyer.                            */
+/*    Copyright (c) 1998 - 2001 by Steffen Beyer.                            */
 /*    All rights reserved.                                                   */
 /*                                                                           */
 /*    This program is free software; you can redistribute it                 */
@@ -63,7 +63,7 @@ int main(int argc, char *argv[])
             }
             else
             {
-                fprintf(stdout,"%s", DateCalc_Calendar(year,month));
+                fprintf(stdout,"%s", DateCalc_Calendar(year,month,false));
                 code = 0;
             }
         }

@@ -34,7 +34,7 @@ require Exporter;
     &Advent
 );
 
-$VERSION = '5.1';
+$VERSION = '5.2';
 
 use Date::Calc qw(:all);
 use Carp::Clan qw(^Date::);
@@ -813,44 +813,44 @@ $Profiles->{'MX'} = # Mexico
 };
 
 # Thanks to:
-# S³awek Szmyd <slawek@msstudio.com.pl>
-# Marcin Wlaz³owski <marcin@msstudio.com.pl>
+# Slawek Szmyd <slawek@msstudio.com.pl>
+# Marcin Wlazlowski <marcin@msstudio.com.pl>
 
 $Profiles->{'PL'} = # Polska
 {
     "Nowy Rok"                             => "01.01.",
-    "Trzech Króli"                         => "#06.01.",
-    "Dzieñ Babci"                          => "#21.01.",
-    "Dzieñ Dziadka"                        => "#22.01.",
+    "Trzech Kroli"                         => "#06.01.",
+    "Dzien Babci"                          => "#21.01.",
+    "Dzien Dziadka"                        => "#22.01.",
     "Walentynki"                           => "#14.02.",
-    "Dzieñ Kobiet"                         => "#08.03.",
+    "Dzien Kobiet"                         => "#08.03.",
 
-    "T³usty Czwartek"                      => "#-52",
+    "Tlusty Czwartek"                      => "#-52",
     "Ostatki"                              => "#-47",
-    "¦roda Polpielcowa"                    => "#-46",
+    "Sroda Popielcowa"                     => "#-46",
     "Niedziela Palmowa"                    => "#-7",
     "Wielkanoc"                            => "+0",
-    "Poniedzia³ek Wielkanocny"             => "+1",
-    "Zielone ¦wi±tki"                      => "#+49",
-    "Bo¿e Cia³o"                           => "+60",
+    "Poniedzialek Wielkanocny"             => "+1",
+    "Zielone Swiatki"                      => "#+49",
+    "Boze Cialo"                           => "+60",
 
     "Prima Aprilis"                        => "#01.04.",
-    "¦wiêto Pracy"                         => "01.05.",
-    "¦wiêto Narodowe 3 Maja"               => "03.05.",
-    "Dzieñ Matki"                          => "#26.05.",
-    "Dzieñ Dziecka"                        => "#01.06.",
-    "Dzieñ Ojca"                           => "#23.06.",
-    "Wniebowziêcie NMP"                    => "15.08.",
-    "Dzieñ Nauczyciela"                    => "#14.10.",
+    "Swieto Pracy"                         => "01.05.",
+    "Swieto Narodowe 3 Maja"               => "03.05.",
+    "Dzien Matki"                          => "#26.05.",
+    "Dzien Dziecka"                        => "#01.06.",
+    "Dzien Ojca"                           => "#23.06.",
+    "Wniebowziecie NMP"                    => "15.08.",
+    "Dzien Nauczyciela"                    => "#14.10.",
     "Halloween"                            => "#Oct/31",
-    "Wszystkich ¦wiêtych"                  => "01.11.",
-    "Dzieñ Zaduszny"                       => "#02.11",
-    "Narodowe ¦wiêto Niepodleg³o¶ci"       => "11.11.",
+    "Wszystkich Swietych"                  => "01.11.",
+    "Dzien Zaduszny"                       => "#02.11",
+    "Narodowe Swieto Niepodleglosci"       => "11.11.",
     "Andrzejki"                            => "#30.11.",
-    "Miko³ajki"                            => "#06.12.",
+    "Mikolajki"                            => "#06.12.",
     "Wigilia"                              => "#24.12.",
-    "Bo¿e Narodzenie pierwszy dzieñ ¦wi±t" => "25.12.",
-    "Bo¿e Narodzenie drugi dzieñ ¦wi±t"    => "26.12.",
+    "Boze Narodzenie pierwszy dzien Swiat" => "25.12.",
+    "Boze Narodzenie drugi dzien Swiat"    => "26.12.",
     "Sylwester"                            => "#31.12."
 };
 
@@ -858,10 +858,63 @@ $Profiles->{'PL-SW'} = # kalendarz z wieksza iloscia Swiat
 {
     %{$Profiles->{'PL'}},
     "Wielki Czwartek"                      => "#-3",
-    "Wielki Pi±tek"                        => "#-2",
-    "Pocz±tek Adwentu"                     => \&Advent1,
-    "¦wiêto Dziêkczynienia"                => "#4/Thu/Nov"
+    "Wielki Piatek"                        => "#-2",
+    "Poczatek Adwentu"                     => \&Advent1,
+    "Swieto Dziekczynienia"                => "#4/Thu/Nov"
 };
+
+## ISO-Latin-2:
+#
+## Thanks to:
+## S³awek Szmyd <slawek@msstudio.com.pl>
+## Marcin Wlaz³owski <marcin@msstudio.com.pl>
+#
+#$Profiles->{'PL'} = # Polska
+#{
+#    "Nowy Rok"                             => "01.01.",
+#    "Trzech Króli"                         => "#06.01.",
+#    "Dzieñ Babci"                          => "#21.01.",
+#    "Dzieñ Dziadka"                        => "#22.01.",
+#    "Walentynki"                           => "#14.02.",
+#    "Dzieñ Kobiet"                         => "#08.03.",
+#
+#    "T³usty Czwartek"                      => "#-52",
+#    "Ostatki"                              => "#-47",
+#    "¦roda Polpielcowa"                    => "#-46",
+#    "Niedziela Palmowa"                    => "#-7",
+#    "Wielkanoc"                            => "+0",
+#    "Poniedzia³ek Wielkanocny"             => "+1",
+#    "Zielone ¦wi±tki"                      => "#+49",
+#    "Bo¿e Cia³o"                           => "+60",
+#
+#    "Prima Aprilis"                        => "#01.04.",
+#    "¦wiêto Pracy"                         => "01.05.",
+#    "¦wiêto Narodowe 3 Maja"               => "03.05.",
+#    "Dzieñ Matki"                          => "#26.05.",
+#    "Dzieñ Dziecka"                        => "#01.06.",
+#    "Dzieñ Ojca"                           => "#23.06.",
+#    "Wniebowziêcie NMP"                    => "15.08.",
+#    "Dzieñ Nauczyciela"                    => "#14.10.",
+#    "Halloween"                            => "#Oct/31",
+#    "Wszystkich ¦wiêtych"                  => "01.11.",
+#    "Dzieñ Zaduszny"                       => "#02.11",
+#    "Narodowe ¦wiêto Niepodleg³o¶ci"       => "11.11.",
+#    "Andrzejki"                            => "#30.11.",
+#    "Miko³ajki"                            => "#06.12.",
+#    "Wigilia"                              => "#24.12.",
+#    "Bo¿e Narodzenie pierwszy dzieñ ¦wi±t" => "25.12.",
+#    "Bo¿e Narodzenie drugi dzieñ ¦wi±t"    => "26.12.",
+#    "Sylwester"                            => "#31.12."
+#};
+#
+#$Profiles->{'PL-SW'} = # kalendarz z wieksza iloscia Swiat
+#{
+#    %{$Profiles->{'PL'}},
+#    "Wielki Czwartek"                      => "#-3",
+#    "Wielki Pi±tek"                        => "#-2",
+#    "Pocz±tek Adwentu"                     => \&Advent1,
+#    "¦wiêto Dziêkczynienia"                => "#4/Thu/Nov"
+#};
 
 $Profiles->{'AT'} = # Österreich
 {

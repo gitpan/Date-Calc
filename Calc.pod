@@ -153,11 +153,11 @@ please let me know! (See e-mail address at the end of this document.)
       $dow = Day_of_Week($year,$month,$day);
 
   Week_Number
-      $week = Week_Number($year,$month,$day);
+      $week = Week_Number($year,$month,$day);          # DEPRECATED
 
   Week_of_Year
-      ($week,$year) = Week_of_Year($year,$month,$day);
-      $week = Week_of_Year($year,$month,$day); # BEWARE! DANGEROUS!
+      ($week,$year) = Week_of_Year($year,$month,$day); # RECOMMENDED
+      $week = Week_of_Year($year,$month,$day);         # DANGEROUS
 
   Monday_of_Week
       ($year,$month,$day) = Monday_of_Week($week,$year);
@@ -2690,6 +2690,11 @@ For example in U.S. american format: "S<April 12th, 1998>"
                 English_Ordinal($day),
                 $year);
 
+For example in one of the possible formats as specified by S<ISO 8601>:
+
+  @date = ($year,$month,$day,$hour,$min,$sec);
+  $date = sprintf("%d-%02d-%02d %02d:%02d:%02d", @date);
+
 (See also L<perlfunc(1)/printf> and/or L<perlfunc(1)/sprintf>!)
 
 =item 14)
@@ -2828,7 +2833,7 @@ threads as well).
 
 =head1 VERSION
 
-This man page documents "Date::Calc" version 5.1.
+This man page documents "Date::Calc" version 5.2.
 
 =head1 AUTHOR
 

@@ -524,7 +524,7 @@ Date::Calc::Object(3), Date::Calc(3).
 
 =head1 VERSION
 
-This man page documents "Date::Calendar::Profiles" version 5.1.
+This man page documents "Date::Calendar::Profiles" version 5.2.
 
 =head1 AUTHOR
 

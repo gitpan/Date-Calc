@@ -1,5 +1,5 @@
                      ====================================
-                       Package "Date::Calc" Version 5.1
+                       Package "Date::Calc" Version 5.2
                      ====================================
 
 
@@ -62,7 +62,7 @@ Edit the file "Makefile.PL" and change the line
 
     'VERSION_FROM'      => 'Calc.pm',
 to
-    'VERSION'           => '5.1',
+    'VERSION'           => '5.2',
 
 Then edit the file "Calc.pm" and change the line
 
@@ -72,7 +72,7 @@ to
 
 Also edit the file "t/f000.t" and change all lines of the kind
 
-    use Date::Calc 5.1;
+    use Date::Calc 5.2;
 
 into just
 
@@ -264,7 +264,7 @@ Detailed installation guide:
 ----------------------------
 
  1) Change directory to the directory that has been created by unpacking this
-    package ("cd Date-Calc-5.1").
+    package ("cd Date-Calc-5.2").
 
  2) Type "perl Makefile.PL" (or whatever the name and path of your Perl 5
     binary is).
@@ -380,8 +380,8 @@ Detailed installation guide:
     t/m010..............ok
     t/m011..............ok
     All tests successful.
-    Files=48,  Tests=2960, 30 wallclock secs
-    (26.33 cusr +  1.36 csys = 27.69 CPU)
+    Files=48,  Tests=2716, 28 wallclock secs
+    (26.12 cusr +  1.29 csys = 27.41 CPU)
 
  5) At last, type "make install" (or "dmake install", "nmake install").
 

@@ -463,8 +463,10 @@ const N_char DateCalc_Month_to_Text_[DateCalc_LANGUAGES+1][13][32] =
         "Július", "Augusztus", "Szeptember", "Október", "November", "December"
     },
     {
-        "???", "Styczeñ", "Luty", "Marzec", "Kwiecieñ", "Maj", "Czerwiec",
-        "Lipiec", "Sierpieñ", "Wrzesieñ", "Pa¼dziernik", "Listopad", "Grudzieñ"
+        "???", "Styczen", "Luty", "Marzec", "Kwiecien", "Maj", "Czerwiec",
+        "Lipiec", "Sierpien", "Wrzesien", "Pazdziernik", "Listopad", "Grudzien"
+     /* "???", "Styczeñ", "Luty", "Marzec", "Kwiecieñ", "Maj", "Czerwiec", */ /* ISO-Latin-2 */
+     /* "Lipiec", "Sierpieñ", "Wrzesieñ", "Pa¼dziernik", "Listopad", "Grudzieñ" */
     }
 };
 
@@ -523,8 +525,10 @@ const N_char DateCalc_Day_of_Week_to_Text_[DateCalc_LANGUAGES+1][8][32] =
         "csütörtök", "péntek", "szombat", "vasárnap"
     },
     {
-        "???", "Poniedzia³ek", "Wtorek", "¦roda",
-        "Czwartek", "Pi±tek", "Sobota", "Niedziela"
+        "???", "Poniedzialek", "Wtorek", "Sroda",
+        "Czwartek", "Piatek", "Sobota", "Niedziela"
+     /* "???", "Poniedzia³ek", "Wtorek", "¦roda", */ /* ISO-Latin-2 */
+     /* "Czwartek", "Pi±tek", "Sobota", "Niedziela" */
     }
 };
 
@@ -573,7 +577,8 @@ const N_char DateCalc_Day_of_Week_Abbreviation_[DateCalc_LANGUAGES+1][8][4] =
         "", "", "", "", "", "", "", ""    /* 12 */
     },
     {
-        "???", "Pn", "Wt", "¦r", "Cz", "Pt", "So", "Ni"    /* 13 */
+        "???", "Pn", "Wt", "Sr", "Cz", "Pt", "So", "Ni"    /* 13 */
+     /* "???", "Pn", "Wt", "¦r", "Cz", "Pt", "So", "Ni" */ /* 13 */ /* ISO-Latin-2 */
     }
 };
 
@@ -2214,15 +2219,16 @@ void DateCalc_Dispose(charptr string)
 
 charptr DateCalc_Version(void)
 {
-    return( (charptr) "5.1" );
+    return( (charptr) "5.2" );
 }
 
 /*****************************************************************************/
-/*  VERSION:  5.1                                                            */
+/*  VERSION:  5.2                                                            */
 /*****************************************************************************/
 /*  VERSION HISTORY:                                                         */
 /*****************************************************************************/
 /*                                                                           */
+/*    Version 5.2   18.09.02  No changes.                                    */
 /*    Version 5.1   08.09.02  Added conditional changes for MacOS/MacPerl.   */
 /*    Version 5.0   10.10.01  New YMD/HMS functions, replaced <ctype.h>, ... */
 /*    Version 4.3   08.01.00  decode_date_??: (yy < 70 ? 20yy : 19yy)        */

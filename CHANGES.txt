@@ -1,5 +1,5 @@
                      ====================================
-                       Package "Date::Calc" Version 5.1
+                       Package "Date::Calc" Version 5.2
                      ====================================
 
 
@@ -10,16 +10,22 @@
 Version history:
 ----------------
 
+Version 5.2   18.09.2002
+
+ +  Changed the Polish profiles from ISO-Latin-2 to ISO-Latin-1.
+ +  Fixed the broken tests in "t/f034.t" and "t/m006.t".
+ +  Synchronized "Carp::Clan" and "ToolBox.h" with "Bit::Vector" 6.2.
+
 Version 5.1   08.09.2002
 
- +  Integrated modifications needed for MacOS / MacPerl
- +  Added new method "normalize()" (Date::Calc::Object)
- +  Added a new test script "t/m011.t" for "normalize()"
- +  Added a calendar profile for Mexico (Date::Calendar::Profiles)
- +  Little additions to and corrections of the documentation (Date::Calc)
- +  Added Polish (Date::Calc) and a calendar profile for Poland
- +  Added Hungarian (Date::Calc)
- +  Added some more commemorative days to the profile of Brazil
+ +  Integrated modifications needed for MacOS / MacPerl.
+ +  Added new method "normalize()" (Date::Calc::Object).
+ +  Added a new test script "t/m011.t" for "normalize()".
+ +  Added a calendar profile for Mexico (Date::Calendar::Profiles).
+ +  Little additions to and corrections of the documentation (Date::Calc).
+ +  Added Polish (Date::Calc) and a calendar profile for Poland.
+ +  Added Hungarian (Date::Calc).
+ +  Added some more commemorative days to the profile of Brazil.
 
 Version 5.0   10.10.2001
 

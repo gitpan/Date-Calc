@@ -1,5 +1,5 @@
                      ====================================
-                       Package "Date::Calc" Version 5.1
+                       Package "Date::Calc" Version 5.2
                      ====================================
 
 
@@ -35,19 +35,12 @@ interface) with overloaded operators, and a set of modules for calculations
 which take local holidays into account (both additions in Perl only, however).
 
 
-What's new in version 5.1:
+What's new in version 5.2:
 --------------------------
 
-This package can now be used under MacOS/MacPerl without requiring porting.
-
- +  Integrated modifications needed for MacOS / MacPerl
- +  Added new method "normalize()" (Date::Calc::Object)
- +  Added a new test script "t/m011.t" for "normalize()"
- +  Added a calendar profile for Mexico (Date::Calendar::Profiles)
- +  Little additions to and corrections of the documentation (Date::Calc)
- +  Added Polish (Date::Calc) and a calendar profile for Poland
- +  Added Hungarian (Date::Calc)
- +  Added some more commemorative days to the profile of Brazil
+ +  Changed the Polish profiles from ISO-Latin-2 to ISO-Latin-1.
+ +  Fixed the broken tests in "t/f034.t" and "t/m006.t".
+ +  Synchronized "Carp::Clan" and "ToolBox.h" with "Bit::Vector" 6.2.
 
 
 New features in version 5.0:
@@ -156,7 +149,7 @@ http://catcode.com/date/pcalc.html.
 Note to CPAN Testers:
 ---------------------
 
-After completion, version 5.1 of this module has already
+After completion, version 5.2 of this module has already
 been tested successfully with the following configurations:
 
   Perl 5.005_03  -  FreeBSD 4.1.1-RELEASE (with "dlopen() relative paths" patch)

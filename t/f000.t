@@ -45,7 +45,7 @@ else
 {
     print "ok $n\n";
     $n++;
-    if ($Carp::Clan::VERSION eq '5.1')
+    if ($Carp::Clan::VERSION eq '5.0')
     {print "ok $n\n";} else {print "not ok $n\n";}
 }
 $n++;
@@ -67,10 +67,10 @@ else
 {
     print "ok $n\n";
     $n++;
-    if ($Date::Calc::VERSION eq '5.1')
+    if ($Date::Calc::VERSION eq '5.2')
     {print "ok $n\n";} else {print "not ok $n\n";}
     $n++;
-    if (&Date::Calc::Version() eq '5.1')
+    if (&Date::Calc::Version() eq '5.2')
     {print "ok $n\n";} else {print "not ok $n\n";}
 }
 $n++;
@@ -90,7 +90,7 @@ else
 {
     print "ok $n\n";
     $n++;
-    if ($Date::Calc::Object::VERSION eq '5.1')
+    if ($Date::Calc::Object::VERSION eq '5.2')
     {print "ok $n\n";} else {print "not ok $n\n";}
 }
 $n++;
@@ -110,7 +110,7 @@ else
 {
     print "ok $n\n";
     $n++;
-    if ($Date::Calendar::Profiles::VERSION eq '5.1')
+    if ($Date::Calendar::Profiles::VERSION eq '5.2')
     {print "ok $n\n";} else {print "not ok $n\n";}
 }
 $n++;
@@ -132,7 +132,7 @@ else
 {
     print "ok $n\n";
     $n++;
-    if ($Date::Calendar::Year::VERSION eq '5.1')
+    if ($Date::Calendar::Year::VERSION eq '5.2')
     {print "ok $n\n";} else {print "not ok $n\n";}
 }
 $n++;
@@ -152,7 +152,7 @@ else
 {
     print "ok $n\n";
     $n++;
-    if ($Date::Calendar::VERSION eq '5.1')
+    if ($Date::Calendar::VERSION eq '5.2')
     {print "ok $n\n";} else {print "not ok $n\n";}
 }
 $n++;

@@ -2,7 +2,7 @@
 
 ###############################################################################
 ##                                                                           ##
-##    Copyright (c) 2000 - 2002 by Steffen Beyer.                            ##
+##    Copyright (c) 2000 - 2004 by Steffen Beyer.                            ##
 ##    All rights reserved.                                                   ##
 ##                                                                           ##
 ##    This program is free software; you can redistribute it                 ##
@@ -10,6 +10,7 @@
 ##                                                                           ##
 ###############################################################################
 
+BEGIN { eval { require bytes; }; }
 use strict;
 use Date::Calc qw(:all);
 

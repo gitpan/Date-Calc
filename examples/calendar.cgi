@@ -2,7 +2,7 @@
 
 ###############################################################################
 ##                                                                           ##
-##    Copyright (c) 2001, 2002 by Steffen Beyer.                             ##
+##    Copyright (c) 2001 - 2004 by Steffen Beyer.                            ##
 ##    All rights reserved.                                                   ##
 ##                                                                           ##
 ##    This program is free software; you can redistribute it                 ##
@@ -17,6 +17,7 @@
            ##                                                     ##
            #########################################################
 
+BEGIN { eval { require bytes; }; }
 use strict;
 
 use Date::Calc qw(:all);
@@ -25,8 +26,12 @@ use Date::Calendar;
 
 my $filler   = '<P>&nbsp;</P>';
 
-my $language = 3;
-my $country  = 'DE-BW';
+my $RED      = '<FONT COLOR="#FF0000">';
+my $PINK     = '<FONT COLOR="#CC00CC">';
+my $END      = '</FONT>';
+
+my $language = 6;
+my $country  = 'NL';
 my $select   = 0;
 my $fullyear = 0;
 
@@ -427,7 +432,7 @@ sub print_page()
     my($i,$key);
 
     print <<"VERBATIM";
-Content-type: text/html
+Content-type: text/html; charset="iso-8859-1"
 
 <HTML>
 <HEAD>
@@ -495,7 +500,7 @@ VERBATIM
 </TR><TR>
 <TD ALIGN="center" COLSPAN="3"><INPUT TYPE="submit" VALUE="Display"></TD>
 </TR><TR>
-<TD ALIGN="center" COLSPAN="3"><FONT COLOR="#FF0000">Note: Historical irregularities are (usually) not taken into account!</FONT></TD>
+<TD ALIGN="center" COLSPAN="3">${RED}Note: Historical irregularities are (usually) not taken into account!${END}</TD>
 </TR></TABLE>
 </FORM>
 
@@ -555,15 +560,15 @@ $filler
 <HR NOSHADE SIZE="2">
 <P>
 
-<FONT COLOR="#FF0000">Please
+${RED}Please
 <A HREF="mailto:sb\@engelschall.com?subject=Error%20in%20calendar%20web%20page">report</A>
-any errors you find on this page!</FONT>
+any errors you find on this page!${END}
 
 <P>
 <HR NOSHADE SIZE="2">
 <P>
 
-<A HREF="http://www.engelschall.com/u/sb/download/pkg/Date-Calc-5.3.tar.gz">Download</A>
+<A HREF="http://www.engelschall.com/u/sb/download/pkg/Date-Calc-5.4.tar.gz">Download</A>
 the Perl software that does all this!
 
 <P>
@@ -584,7 +589,7 @@ sub print_calendar()
     my $oweek = 0;
     my $omonth = 0;
     my($calendar,$full,$half,$C,$N,$cell,$week,$dow);
-    my(@date,@tags);
+    my(@date,$tags);
     local $_;
 
     $calendar = Date::Calendar->new( $Profiles->{$country} );
@@ -616,13 +621,13 @@ VERBATIM
                 $half  = $calendar->year($year)->vec_half();
             }
             if ( ($fullyear == 0) or
-                (($fullyear == 2) and ((@tags = $calendar->labels(@date)) > 1)) or
+                (($fullyear == 2) and (keys(%{$tags = $calendar->year($year)->tags($index)}))) or
                 (($fullyear == 1) and ($full->bit_test($index) or $half->bit_test($index)) and (Day_of_Week(@date) < 6)))
             {
                 print "<TR>\n";
-                if    ($full->bit_test($index)) { $C = '<FONT COLOR="#FF0000">'; $N = '</FONT>'; }
-                elsif ($half->bit_test($index)) { $C = '<FONT COLOR="#CC00CC">'; $N = '</FONT>'; }
-                else                            { $C = '';                       $N = '';        }
+                if    ($full->bit_test($index)) { $C =  $RED; $N = $END; }
+                elsif ($half->bit_test($index)) { $C = $PINK; $N = $END; }
+                else                            { $C =    ''; $N =   ''; }
                 if ($oyear != $date[0])
                 {
                     $oyear = $date[0];
@@ -638,8 +643,8 @@ VERBATIM
                 }
                 else { $cell = $filler; }
                 print qq(<TD ALIGN="right">$cell</TD>\n);         # Week Number
-                @tags = $calendar->labels(@date) unless ($fullyear == 2);
-                $dow = html(shift(@tags));
+                $tags = $calendar->year($year)->tags($index) unless ($fullyear == 2);
+                $dow = html(Day_of_Week_to_Text(Day_of_Week(@date)));
                 print qq(<TD ALIGN="left" >$C$dow$N</TD>\n);      # Day of Week
                 if ($omonth != $date[1])
                 {
@@ -649,11 +654,21 @@ VERBATIM
                 else { $cell = $filler; }
                 print qq(<TD ALIGN="left" >$cell</TD>\n);         # Month
                 print qq(<TD ALIGN="right">$C$date[2]$N</TD>\n);  # Day
-                if (@tags)
+                if (keys(%$tags))
                 {
                     print
-                        qq(<TD ALIGN="left" >\n),
-                        join( "<BR>\n", map( html($_), @tags ) ), # Name
+                        qq(<TD ALIGN="left" >\n),                 # Name
+                        join
+                        (
+                            "<BR>\n",
+                            map
+                            {
+                                if    ($tags->{$_} & 2) { $RED  . html($_) . $END; }
+                                elsif ($tags->{$_} & 1) { $PINK . html($_) . $END; }
+                                else                    {         html($_)         }
+                            }
+                            keys(%$tags)
+                        ),
                         qq(\n</TD>\n);
                 }
                 else

@@ -1,0 +1,21 @@
+                     ====================================
+                       Package "Date::Calc" Version 4.0
+                     ====================================
+
+
+            Copyright (c) 1995, 1996, 1997, 1998 by Steffen Beyer.
+                             All rights reserved.
+
+
+Tools:
+------
+
+You will find various tools in the "tools/" subdirectory of this
+distribution:
+
+                            tools/compile.pl
+                            tools/compile.sh
+                            tools/iso2pc.c
+                            tools/pc2iso.c
+                            tools/upgrade_DC40.pl
+

@@ -1,0 +1,68 @@
+                     ====================================
+                       Package "Date::Calc" Version 4.0
+                     ====================================
+
+
+            Copyright (c) 1995, 1996, 1997, 1998 by Steffen Beyer.
+                             All rights reserved.
+
+
+Example applications:
+---------------------
+
+Perl and C programmers alike will find some example applications in the
+"examples/" subdirectory in this distribution:
+
+                        examples/age_in_days_eu.pl
+                        examples/age_in_days_us.pl
+                        examples/cal.c
+                        examples/nth_weekday.pl
+
+"age_in_days_eu.pl" and "age_in_days_us.pl" are a demonstration of the
+multi-lingual capabilities of this package, as well as of its scanning
+capabilities for dates.
+
+They first ask you to choose a language; any uniquely identifying abbre-
+viation for one of the six languages provided (English, French, German,
+Spanish, Portuguese, Dutch) will suffice, like "en" for English, "es"
+for "Espanol" (Spanish), "f" for "Francais" (French), and so on.
+
+These applications then ask you to enter the date of your birthday.
+
+The two applications only differ in the expected format for dates:
+In "age_in_days_eu.pl", the order day-month-year is assumed, whereas
+"age_in_days_us.pl" assumes the order month-day-year.
+
+For the month you can (at your option) either enter the corresponding
+number, or any uniquely identifying abbreviation of the month's name
+(or the name of the month in full length) IN THE CHOSEN LANGUAGE.
+
+Moreover, virtually any format for writing a date is supported:
+
+Examples include "03/01/64", "3.1.1964", "January 3rd 1964", "030164",
+and so on.
+
+Note that the scanning itself is actually performed by two powerful
+routines written in C, and not using the regular expressions from Perl
+(which make this task rather trivial in Perl, but which wouldn't be
+easily accessible to C developers).
+
+
+
+
+If you have the GNU C compiler ("gcc") available on your system, you
+can also do this using the command "./tools/compile.sh cal.c DateCalc.c",
+or use "perl tools/compile.pl cal.c DateCalc.c".
+
+If you are running this program on a PC (e.g., Linux or FreeBSD) on
+the console (as opposed to the X windows system), then it might be
+useful to pipe its output through the "iso2pc" utility from the
+"tools/" subdirectory (compile it with "./compile.sh iso2pc.c" first,
+for example), as follows:
+
+    % cal Port Mar 1998 | iso2pc
+
+(See the file "TOOLS" in this distribution for more details about
+the programs in the "tools/" subdirectory!)
+
+

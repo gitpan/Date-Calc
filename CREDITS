@@ -1,0 +1,78 @@
+                     ====================================
+                       Package "Date::Calc" Version 4.0
+                     ====================================
+
+
+            Copyright (c) 1995, 1996, 1997, 1998 by Steffen Beyer.
+                             All rights reserved.
+
+
+Credits:
+--------
+
+Many thanks to Andreas Koenig for his efforts as upload-manager for the
+CPAN, his patience, and lots of very good advice and suggestions! Thank
+you for doing such a tremendous (and very time-consuming) job!!
+
+Also many thanks to David Jenkins for reviewing the first version of this
+README file and the english man page.
+
+Thanks to Jarkko Hietaniemi for suggesting the "days_in_month" function.
+
+Many thanks to Christian <chrisi@vm.akh-wien.ac.at> for reporting the bug
+fixed in version 1.4, which showed up on an HP E55 running HP-UX 10.01 and
+Perl 5.001m with the c89 Ansi 89 compiler from HP.
+
+Also many thanks to David Thompson <dlt@dewey.csun.edu> for reporting a
+problem he encountered concerning the inclusion of the Perl distribution
+("Unable to find include file ...") and for suggesting a solution for this
+problem. (That's the most pleasant kind of problem report, of course! ;-) )
+
+Many thanks to Tom Limoncelli <tal@plts.org> for raising the question of
+how to calculate the 2nd Thursday of a given month and year!
+
+Many thanks to Bart Robinson <lomew@cs.utah.edu> for suggesting the "all"
+export option and the "decode_day" and "decode_month" functions.
+
+Also many thanks to Ron Savage <Ron.Savage@datacraft.com.au> for suggesting
+the incorporation of time calculations into this module. (Sorry that I
+didn't include the handling of time zones, which can be taken care of
+more easily by adding/subtracting the appropriate time value in an extra,
+preliminary step!)
+
+Many thanks to Jonathan Lemon <jlemon@americantv.com> for reporting
+the bug (and how to fix it!) concerning arrays as parameters, fixed
+in version 2.2!
+
+Many thanks to Tim Zingelman <zingelman@fnal.gov> for reporting the problem
+fixed in version 2.3 and for testing an intermediate new version of this
+module on his machine!
+
+Many thanks to Jonas Liljegren <jonas@cultcom.se> for posting a subroutine
+for calculating easter monday in news:comp.lang.perl.modules and thereby
+triggering my writing of the new "Date::CalcLib" module which has been
+added in version 3.0 of the "Date::Calc" distribution.
+
+Also many thanks to Claus Tondering <c-t@pip.dknet.dk> for his excellent
+web pages and FAQ in news:news.answers about calendars and how to calcu-
+late easter sunday.
+
+Thanks to Reinhold Stansich <dynaconsult@netway.at> for posting a list
+of christian feast days and their offsets from easter sunday in news:
+comp.databases.ms-access and to Tammo Schnieder <schniede@hh.sdm.de>
+for sending me his posting.
+
+Many thanks to Max Ruffert <mor@mpa-garching.mpg.de> at the Max Planck
+Institute for Astrophysics in Garching for looking up Gauss' Rule for
+calculating easter sunday (the algorithm which is implemented in the
+"Date::CalcLib" module) for me and dictating it to me over the
+phone!
+
+Many thanks to Chris Halverson <cdh@CompleteIS.com> for asking me
+"is there a "standard" way to create a calendar similar to the output
+of cal(1)?", which gave me the idea to write the function "calendar"
+which has been added to the module "DateCalcLib" in version 3.1, and
+also for the C code demonstrating how to use the C library "lib_date.c"
+stand-alone, because that was what he needed to do as well.
+
+

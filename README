@@ -1,0 +1,116 @@
+                     ====================================
+                       Package "Date::Calc" Version 4.0
+                     ====================================
+
+
+This package is available for download either from my web site at
+
+                  http://www.engelschall.com/u/sb/download/
+
+or from any CPAN (= "Comprehensive Perl Archive Network") mirror server:
+
+                  http://www.perl.com/CPAN/authors/id/STBEY/
+
+The package consists of a C library (useful for C developers) which is the
+core of a Perl (wrapper) module (for easy access to the library from Perl).
+
+The C library is specifically designed so that it can be used stand-alone,
+without Perl.
+
+
+Legal issues:
+-------------
+
+This package with all its parts is
+
+Copyright (c) 1995, 1996, 1997, 1998 by Steffen Beyer.
+All rights reserved.
+
+This package is free software; you can redistribute it and/or
+modify it under the same terms as Perl itself, i.e., under the
+terms of the "Artistic License" or the "GNU General Public License".
+
+The C library at the core of this Perl module can additionally
+be redistributed and/or modified under the terms of the "GNU
+Library General Public License".
+
+Please refer to the files "Artistic", "GNU_GPL" and "GNU_LGPL"
+in this distribution for details!
+
+
+Prerequisites:
+--------------
+
+Perl version 5.000 or higher, and an ANSI C compiler (!)
+                                     ======
+
+Installation:
+-------------
+
+Please see the file "INSTALL" in this distribution for instructions on
+how to install this package.
+
+
+Changes over previous versions:
+-------------------------------
+
+Please refer to the file "CHANGES" in this distribution for a detailed
+version history and instructions on how to upgrade existing applications.
+
+
+What does it do:
+----------------
+
+
+
+Important note to C developers:
+-------------------------------
+
+Note again that the C library at the core of this module can also be
+used stand-alone (i.e., it contains no inter-dependencies whatsoever
+with Perl).
+
+The library itself consists of three files: "DateCalc.c", "DateCalc.h"
+and "ToolBox.h".
+
+Just compile "DateCalc.c" (which automatically includes "ToolBox.h")
+and link the resulting output file "DateCalc.o" with your application,
+which in turn should include "ToolBox.h" and "DateCalc.h" (in this order).
+
+
+Example applications:
+---------------------
+
+Please refer to the file "EXAMPLES" in this distribution for details
+about the example applications in the "examples/" subdirectory.
+
+
+Tools:
+------
+
+Please refer to the file "TOOLS" in this distribution for details
+about the various tools to be found in the "tools/" subdirectory.
+
+
+Credits:
+--------
+
+Please refer to the file "CREDITS" in this distribution for a list of
+contributors.
+
+
+Author's note:
+--------------
+
+If you have any questions, suggestions or need any assistance, please
+let me know!
+
+I would be glad to receive any kind of feedback from you!
+
+I hope you will find this module beneficial.
+
+Yours,
+--
+  Steffen Beyer <sb@engelschall.com> http://www.engelschall.com/u/sb/
+       "There is enough for the need of everyone in this world,
+         but not for the greed of everyone." - Mahatma Gandhi

@@ -1,0 +1,140 @@
+                     ====================================
+                       Package "Date::Calc" Version 4.0
+                     ====================================
+
+
+            Copyright (c) 1995, 1996, 1997, 1998 by Steffen Beyer.
+                             All rights reserved.
+
+
+Prerequisites:
+--------------
+
+Perl version 5.000 or higher, and an ANSI C compiler (!)
+                              ^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+
+Preliminary steps for use with Perl prior to version 5.002:
+-----------------------------------------------------------
+
+Edit the file "Makefile.PL" and change the line
+
+    'VERSION_FROM'      => 'Calc.pm',
+to
+    'VERSION'           => '4.0',
+
+Then edit the file "Calc.pm" and change the line
+
+    bootstrap Date::Calc $VERSION;
+to
+    bootstrap Date::Calc;
+
+Also edit the file "t/f000.t" and change the line
+
+    use Date::Calc 4.0;
+to
+    use Date::Calc;
+
+Finally, edit the file "Calc.xs" and delete the line
+
+    PROTOTYPES: DISABLE
+
+
+Installation:
+-------------
+
+=============================================================================
+ALWAYS unpack and build Perl modules OUTSIDE the Perl source and installation
+tree! (You might otherwise inadvertently corrupt your Perl installation!)
+=============================================================================
+
+Note that installation under Windows NT/95 is easiest with the "native"
+"Perl for Win32" port by Perl developer Gurusamy Sarathy, available from:
+
+                http://www.perl.com/CPAN/authors/id/GSAR/
+
+Quick installation guide for experienced users:
+
+    UNIX:                 Win32/Borland C++:      Win32/MS Visual C++:
+    =====                 ==================      ====================
+
+    % perl Makefile.PL    > perl Makefile.PL      > perl Makefile.PL
+    % make                > dmake                 > nmake
+    % make test           > dmake test            > nmake test
+    % make install        > dmake install         > nmake install
+
+Detailed installation guide:
+
+ 1) Change directory to the directory that has been created by unpacking this
+    package ("cd Date-Calc-4.0/").
+
+ 2) Type "perl Makefile.PL" (or whatever the name and path of your Perl 5
+    binary is).
+
+    This will create a "Makefile" with the appropriate parameters for your
+    system (for instance, where the install directories are, and so on).
+
+ 3) Type "make".
+
+    (For installation under Windows NT/95, use "dmake" (Borland C++) or
+    "nmake" (MS Visual C++) instead!)
+
+    This will create a dynamically linkable library file that will be linked
+    to Perl later, at runtime, provided your system supports dynamic linking.
+
+    Please refer to the MakeMaker documentation for instructions on how
+    to build a new Perl with statically linked libraries (invoke "perldoc
+    ExtUtils::MakeMaker" for this), if your system does NOT support dynamic
+    linking!
+
+    Should you encounter any compiler warnings or errors (like the redefi-
+    nition of certain types already defined by your system), please contact
+    me via email at <sb@engelschall.com>, sending me your compiler output
+    (both STDOUT and STDERR). Thank you!
+
+    ======================================================================
+       BEWARE that you need an ANSI C compiler in order to successfully
+       compile this package!
+    ======================================================================
+
+    Also note that problems may arise with the c89 compiler of HP, although
+    it allegedly supports ANSI C!
+
+    I recommend the GNU C compiler ("gcc"), which is freely available on
+    the Internet (see ftp://ftp.gnu.org/pub/gnu/ and mirror sites thereof).
+
+    (HP users are strongly recommended to install the GNU assembler "gas"
+    first before installing the GNU C compiler "gcc", according to GNU.)
+
+    Should you get the error messages
+
+    Calc.c: 15: Unable to find include file 'EXTERN.h'.
+    Calc.c: 16: Unable to find include file 'perl.h'.
+    Calc.c: 17: Unable to find include file 'XSUB.h'.
+
+    then edit the file "Makefile.PL" and change the line
+
+    'INC'       => '',     # e.g., '-I/usr/include/other'
+
+    in such a way that it points to your Perl 5 distribution tree, e.g.,
+
+    'INC'       => '-I/usr/ctr/dlt/private/perl/perl5.003',
+
+    or the like, and start over with the generation of the "Makefile" at 2).
+
+ 4) Now issue "make test" (or "dmake test" or "nmake test", respectively).
+
+    The output should look somewhat like this:
+
+
+ 5) At last, type "make install" (or "dmake install", "nmake install").
+
+ 6) Now you can run the example applications from the "examples/"
+    subdirectory in this distribution.
+
+    Please refer to the file "EXAMPLES" in this distribution for
+    more details!
+
+ 7) Share and enjoy!
+
+

@@ -90,10 +90,10 @@ Quick installation guide for experienced users:
     UNIX:                 Win32/Borland C++:      Win32/MS Visual C++:
     =====                 ==================      ====================
 
-    % perl Makefile.PL    > perl Makefile.PL      > perl Makefile.PL
-    % make                > dmake                 > nmake
-    % make test           > dmake test            > nmake test
-    % make install        > dmake install         > nmake install
+    > perl Makefile.PL    > perl Makefile.PL      > perl Makefile.PL
+    > make                > dmake                 > nmake
+    > make test           > dmake test            > nmake test
+    > make install        > dmake install         > nmake install
 
 Detailed installation guide:
 ----------------------------

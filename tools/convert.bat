@@ -28,51 +28,51 @@ goto cont2
 
 cd ..
 
-if exist DateCalc.co goto warn3
-    echo %0: renaming 'DateCalc.c' to 'DateCalc.co'...
-    ren DateCalc.c DateCalc.co
+if exist DateCalc.c_ goto warn3
+    echo %0: renaming 'DateCalc.c' to 'DateCalc.c_'...
+    ren DateCalc.c DateCalc.c_
 goto cont3
 :warn3
-    echo %0: skipping renaming of 'DateCalc.c': 'DateCalc.co' exists!
+    echo %0: skipping renaming of 'DateCalc.c': 'DateCalc.c_' exists!
 :cont3
 
-if exist DateCalc.ho goto warn4
-    echo %0: renaming 'DateCalc.h' to 'DateCalc.ho'...
-    ren DateCalc.h DateCalc.ho
+if exist DateCalc.h_ goto warn4
+    echo %0: renaming 'DateCalc.h' to 'DateCalc.h_'...
+    ren DateCalc.h DateCalc.h_
 goto cont4
 :warn4
-    echo %0: skipping renaming of 'DateCalc.h': 'DateCalc.ho' exists!
+    echo %0: skipping renaming of 'DateCalc.h': 'DateCalc.h_' exists!
 :cont4
 
-echo %0: converting 'DateCalc.co' to 'DateCalc.c'...
-tools\iso2pc.exe -win <DateCalc.co >DateCalc.c
+echo %0: converting 'DateCalc.c_' to 'DateCalc.c'...
+tools\iso2pc.exe -win <DateCalc.c_ >DateCalc.c
 
-echo %0: converting 'DateCalc.ho' to 'DateCalc.h'...
-tools\iso2pc.exe -win <DateCalc.ho >DateCalc.h
+echo %0: converting 'DateCalc.h_' to 'DateCalc.h'...
+tools\iso2pc.exe -win <DateCalc.h_ >DateCalc.h
 
 cd examples
 
-if exist age_in_days_eu.plo goto warn5
-    echo %0: renaming 'age_in_days_eu.pl' to 'age_in_days_eu.plo'...
-    ren age_in_days_eu.pl age_in_days_eu.plo
+if exist age_in_days_eu.pl_ goto warn5
+    echo %0: renaming 'age_in_days_eu.pl' to 'age_in_days_eu.pl_'...
+    ren age_in_days_eu.pl age_in_days_eu.pl_
 goto cont5
 :warn5
-    echo %0: skipping renaming of 'age_in_days_eu.pl': 'age_in_days_eu.plo' exists!
+    echo %0: skipping renaming of 'age_in_days_eu.pl': 'age_in_days_eu.pl_' exists!
 :cont5
 
-if exist age_in_days_us.plo goto warn6
-    echo %0: renaming 'age_in_days_us.pl' to 'age_in_days_us.plo'...
-    ren age_in_days_us.pl age_in_days_us.plo
+if exist age_in_days_us.pl_ goto warn6
+    echo %0: renaming 'age_in_days_us.pl' to 'age_in_days_us.pl_'...
+    ren age_in_days_us.pl age_in_days_us.pl_
 goto cont6
 :warn6
-    echo %0: skipping renaming of 'age_in_days_us.pl': 'age_in_days_us.plo' exists!
+    echo %0: skipping renaming of 'age_in_days_us.pl': 'age_in_days_us.pl_' exists!
 :cont6
 
-echo %0: converting 'age_in_days_eu.plo' to 'age_in_days_eu.pl'...
-..\tools\iso2pc.exe -win <age_in_days_eu.plo >age_in_days_eu.pl
+echo %0: converting 'age_in_days_eu.pl_' to 'age_in_days_eu.pl'...
+..\tools\iso2pc.exe -win <age_in_days_eu.pl_ >age_in_days_eu.pl
 
-echo %0: converting 'age_in_days_us.plo' to 'age_in_days_us.pl'...
-..\tools\iso2pc.exe -win <age_in_days_us.plo >age_in_days_us.pl
+echo %0: converting 'age_in_days_us.pl_' to 'age_in_days_us.pl'...
+..\tools\iso2pc.exe -win <age_in_days_us.pl_ >age_in_days_us.pl
 
 cd ..\tools
 

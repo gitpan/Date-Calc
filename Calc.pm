@@ -19,18 +19,49 @@ require DynaLoader;
 @EXPORT = qw();
 
 @EXPORT_OK = qw(
-Days_in_Year Days_in_Month Weeks_in_Year
-leap_year check_date Day_of_Year Date_to_Days Day_of_Week
-Week_Number Week_of_Year Monday_of_Week Nth_Weekday_of_Month_Year
-Delta_Days Delta_DHMS Add_Delta_Days Add_Delta_DHMS Add_Delta_YMD
-System_Clock Today Now Today_and_Now Easter_Sunday
-Decode_Month Decode_Day_of_Week Decode_Language
-Decode_Date_EU Decode_Date_US
-Compress Uncompress check_compressed Compressed_to_Text
-Date_to_Text Date_to_Text_Long Calendar
-Month_to_Text Day_of_Week_to_Text Day_of_Week_Abbreviation
-Language_to_Text Language Languages
-Decode_Date_EU2 Decode_Date_US2 Parse_Date
+    Days_in_Year
+    Days_in_Month
+    Weeks_in_Year
+    leap_year
+    check_date
+    Day_of_Year
+    Date_to_Days
+    Day_of_Week
+    Week_Number
+    Week_of_Year
+    Monday_of_Week
+    Nth_Weekday_of_Month_Year
+    Delta_Days
+    Delta_DHMS
+    Add_Delta_Days
+    Add_Delta_DHMS
+    Add_Delta_YMD
+    System_Clock
+    Today
+    Now
+    Today_and_Now
+    Easter_Sunday
+    Decode_Month
+    Decode_Day_of_Week
+    Decode_Language
+    Decode_Date_EU
+    Decode_Date_US
+    Compress
+    Uncompress
+    check_compressed
+    Compressed_to_Text
+    Date_to_Text
+    Date_to_Text_Long
+    Calendar
+    Month_to_Text
+    Day_of_Week_to_Text
+    Day_of_Week_Abbreviation
+    Language_to_Text
+    Language
+    Languages
+    Decode_Date_EU2
+    Decode_Date_US2
+    Parse_Date
 );
 
 %EXPORT_TAGS = (all => [@EXPORT_OK]);
@@ -271,7 +302,32 @@ __END__
 
 Date::Calc - Gregorian calendar date calculations
 
-in compliance with ISO/R 2015-1971 and DIN 1355 standards.
+This package consists of a C library and a Perl module (which uses
+the C library, internally) for all kinds of date calculations based
+on the Gregorian calendar (the one used in all western countries today),
+thereby complying with all relevant norms and standards: S<ISO/R 2015-1971>,
+S<DIN 1355> and S<ISO 8601> (where applicable).
+
+(See also http://www.engelschall.com/u/sb/download/Date-Calc/DIN1355/
+for a scan of part of the "S<DIN 1355>" document (in German)).
+
+The module of course handles year numbers of 2000 and above correctly
+("Year 2000" or "Y2K" compliance) -- actually all year numbers from 1
+to the largest positive integer representable on your system (which
+is at least 32767) can be dealt with.
+
+In other words, this package B<EXTRAPOLATES> the Gregorian calendar B<BACK>
+until the year 1 -- even though the Gregorian calendar was only adopted
+in 1582 by most (not all) European countries, in obedience to the
+corresponding decree of catholic pope S<Gregor I> in that year.
+
+Some (mainly protestant) countries actually continued to use the Julian
+calendar used until then until as late as the beginning of the 20th century.
+
+Note that this package is not intended to do everything you could ever
+imagine automatically for you, it is rather intended to serve as a toolbox
+(in the best of UNIX spirit and traditions) which should, however, always
+get you where you want to go.
 
 =head1 SYNOPSIS
 
@@ -425,7 +481,7 @@ in a variable of the C type "int" on your system, which is at least
 32767, according to the ANSI C standard (exceptions see below).
 
 In order to simplify calculations, this module B<EXTRAPOLATES>
-the gregorian calendar B<BACK> until the year 1 A.D. - i.e.,
+the gregorian calendar B<BACK> until the year 1 A.D. -- i.e.,
 back B<BEYOND> the year 1582 when this calendar was first decreed
 by the catholic pope S<Gregor I>!
 

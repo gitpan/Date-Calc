@@ -60,7 +60,7 @@ useful to pipe its output through the "iso2pc" utility from the
 "tools" subdirectory (compile it with "./compile.sh iso2pc.c" first,
 for example), as follows:
 
-    % cal Port Mar 1998 | iso2pc
+    > cal Port Mar 1998 | iso2pc
 
 (See the file "TOOLS.txt" in this distribution for more details about
 the programs in the "tools" subdirectory!)

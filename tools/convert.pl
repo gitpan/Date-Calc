@@ -59,7 +59,7 @@ sub convert
     my($target);
 
     $target = $source;
-    $target .= 'o';  #  "o" for "original"
+    $target .= '_';
 
     if (-f $target)
     {

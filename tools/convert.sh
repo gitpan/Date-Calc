@@ -28,7 +28,7 @@ compile () \
 convert () \
 { \
     source=$1; \
-    target="${source}o"; \
+    target="${source}_"; \
     if [ -f "$target" ]; \
     then \
         echo "$self: skipping renaming of '$source': '$target' exists!" >&2; \

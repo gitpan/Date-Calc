@@ -17,7 +17,7 @@ you for doing such a tremendous (and very time-consuming) job!!
 Also many thanks to David Jenkins for reviewing the first version of this
 README file and the english man page.
 
-Thanks to Jarkko Hietaniemi for suggesting the "days_in_month" function.
+Thanks to Jarkko Hietaniemi for suggesting the "days_in_month()" function.
 
 Many thanks to Christian <chrisi@vm.akh-wien.ac.at> for reporting the bug
 fixed in version 1.4, which showed up on an HP E55 running HP-UX 10.01 and
@@ -32,7 +32,7 @@ Many thanks to Tom Limoncelli <tal@plts.org> for raising the question of
 how to calculate the 2nd Thursday of a given month and year!
 
 Many thanks to Bart Robinson <lomew@cs.utah.edu> for suggesting the "all"
-export option and the "decode_day" and "decode_month" functions.
+export option and the "decode_day()" and "decode_month()" functions.
 
 Also many thanks to Ron Savage <Ron.Savage@datacraft.com.au> for suggesting
 the incorporation of time calculations into this module. (Sorry that I

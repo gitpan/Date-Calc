@@ -1,7 +1,7 @@
 #ifndef MODULE_ISO_TO_PC
 #define MODULE_ISO_TO_PC
 /*****************************************************************************/
-/*  MODULE NAME:  iso2pc.c                              MODULE TYPE:  (lib)  */
+/*  MODULE NAME:  iso2pc.c                              MODULE TYPE:  (app)  */
 /*****************************************************************************/
 /*  MODULE IMPORTS:                                                          */
 /*****************************************************************************/
@@ -49,9 +49,11 @@
 
         -v     reverse the conversion (use inverse translation table)
         -d     use "dos" character set (used by older MS-DOS versions
-               and the FreeBSD "SCO" console, for instance)
+               and the FreeBSD "SCO" console, for instance) (DEFAULT)
         -w     use "win" character set (used by newer MS-DOS versions
-               and the Win32 MS-DOS command shell)
+               and the Windows NT/95 MS-DOS command shell)
+        -n     "neutral" or "no operation" - simply pass through all
+               characters (overrides "-v", "-d" and "-w")
 
         -vd    use "dos" character set, reverse conversion
         -dv    use "dos" character set, reverse conversion
@@ -59,12 +61,13 @@
         -wv    use "win" character set, reverse conversion
 
         -rev   reverse the conversion
-        -dos   use "dos" character set
+        -dos   use "dos" character set (DEFAULT)
         -win   use "win" character set
+        -nop   simply pass through all characters
 
         -dump  dump the internal translation table (can be combined
                with "-v" or "-rev" to dump the inverse translation
-               table) instead of performing any conversion
+               table) instead of performing any conversion (override)
         -init  initialize the translation table first before dumping
                it (this option has no effect if "-dump" is not present)
 
@@ -88,8 +91,10 @@
 #define CHARSETS 2
 
 /*
-    Character set #0: e.g. FreeBSD SCO-like console
-    Character set #1: e.g. MSWin32 MS-DOS command shell
+    Character set #0:
+            older versions of MS-DOS, FreeBSD SCO-like console (DEFAULT)
+    Character set #1:
+            newer versions of MS-DOS, Windows NT/95 MS-DOS command shell
 */
 
 static int iso2pc[CHARSETS][0x80] =
@@ -249,6 +254,7 @@ int main(int argc, char *argv[])
     char *option;
     int   reverse = 0;
     int   charset = 0;
+    int   neutral = 0;
     int   dump = 0;
     int   init = 0;
     int   err = 0;
@@ -267,6 +273,7 @@ int main(int argc, char *argv[])
                     if      (*option == 'v') reverse = ! reverse;
                     else if (*option == 'd') charset = 0;
                     else if (*option == 'w') charset = 1;
+                    else if (*option == 'n') neutral = 1;
                     else err = 1;
                   break;
                 case 2:
@@ -284,6 +291,7 @@ int main(int argc, char *argv[])
                     if      (strcmp(option,"rev") == 0) reverse = ! reverse;
                     else if (strcmp(option,"dos") == 0) charset = 0;
                     else if (strcmp(option,"win") == 0) charset = 1;
+                    else if (strcmp(option,"nop") == 0) neutral = 1;
                     else err = 1;
                   break;
                 case 4:
@@ -304,6 +312,10 @@ int main(int argc, char *argv[])
         }
     }
     if (dump) dump_table(init,reverse);
+    else if (neutral)
+    {
+        while ((c = getchar()) != EOF) putchar(c);
+    }
     else
     {
         initialize(charset);
@@ -321,11 +333,12 @@ int main(int argc, char *argv[])
 }
 
 /*****************************************************************************/
-/*  VERSION:  2.0                                                            */
+/*  VERSION:  2.1                                                            */
 /*****************************************************************************/
 /*  VERSION HISTORY:                                                         */
 /*****************************************************************************/
 /*                                                                           */
+/*    21.04.98    Version 2.1  added "neutral" behaviour                     */
 /*    19.04.98    Version 2.0  support for multiple target charsets added    */
 /*    10.04.98    Version 1.0                                                */
 /*                                                                           */
@@ -352,22 +365,22 @@ int main(int argc, char *argv[])
 /*  LICENSE:                                                                 */
 /*****************************************************************************/
 /*                                                                           */
-/*    This library is free software; you can redistribute it and/or          */
-/*    modify it under the terms of the GNU Library General Public            */
-/*    License as published by the Free Software Foundation; either           */
-/*    version 2 of the License, or (at your option) any later version.       */
+/*    This program is free software; you can redistribute it and/or          */
+/*    modify it under the terms of the GNU General Public License            */
+/*    as published by the Free Software Foundation; either version 2         */
+/*    of the License, or (at your option) any later version.                 */
 /*                                                                           */
-/*    This library is distributed in the hope that it will be useful,        */
+/*    This program is distributed in the hope that it will be useful,        */
 /*    but WITHOUT ANY WARRANTY; without even the implied warranty of         */
-/*    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU       */
-/*    Library General Public License for more details.                       */
+/*    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the           */
+/*    GNU General Public License for more details.                           */
 /*                                                                           */
-/*    You should have received a copy of the GNU Library General Public      */
-/*    License along with this library; if not, write to the                  */
+/*    You should have received a copy of the GNU General Public License      */
+/*    along with this program; if not, write to the                          */
 /*    Free Software Foundation, Inc.,                                        */
 /*    59 Temple Place, Suite 330, Boston, MA 02111-1307 USA                  */
 /*                                                                           */
-/*    or download a copy from ftp://ftp.gnu.org/pub/gnu/COPYING.LIB-2.0      */
+/*    or download a copy from ftp://ftp.gnu.org/pub/gnu/COPYING-2.0          */
 /*                                                                           */
 /*****************************************************************************/
 #endif

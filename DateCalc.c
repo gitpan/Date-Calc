@@ -1274,12 +1274,24 @@ charptr DateCalc_Version(void)
 /*  VERSION HISTORY:                                                         */
 /*****************************************************************************/
 /*                                                                           */
-/*    18.04.98    Version 4.0                                                */
-/*    15.06.97    Version 3.2                                                */
-/*    16.02.97    Version 3.0                                                */
-/*    ??.??.??    ???                                                        */
-/*    29.11.95    First version under UNIX (for Perl module)                 */
-/*    01.11.93    Created (MS C Compiler on PC with DOS)                     */
+/*    Version 4.0   26.04.98  Major rework. Added multi-language support.    */
+/*    Version 3.2   15.06.97  Added "week_of_year()".                        */
+/*    Version 3.1   12.06.97  No significant changes.                        */
+/*    Version 3.0   16.02.97  Changed conventions for unsuccessful returns.  */
+/*    Version 2.3   22.11.96  Fixed unbalanced "malloc" and "free".          */
+/*    Version 2.2   26.05.96  No significant changes.                        */
+/*    Version 2.1   26.05.96  Fixed HH MM SS parameter checks.               */
+/*    Version 2.0   25.05.96  Added time calculations. Major rework.         */
+/*    Version 1.6   20.04.96  Not published.                                 */
+/*    Version 1.5   14.03.96  No significant changes.                        */
+/*    Version 1.4   11.02.96  No significant changes.                        */
+/*    Version 1.3   10.12.95  Added "days_in_month()".                       */
+/*    Version 1.2b  27.11.95  No significant changes.                        */
+/*    Version 1.2a  21.11.95  Fix for type name clashes.                     */
+/*    Version 1.1   18.11.95  Fix for type name clashes.                     */
+/*    Version 1.01  16.11.95  Improved compliance w/ programming standards.  */
+/*    Version 1.0   14.11.95  First version under UNIX (with Perl module).   */
+/*    Version 0.9   01.11.93  First version of C library under MS-DOS.       */
 /*                                                                           */
 /*****************************************************************************/
 /*  AUTHOR:                                                                  */

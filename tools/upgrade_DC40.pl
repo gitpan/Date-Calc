@@ -32,15 +32,14 @@ foreach $file (@ARGV)
         warn "$self: unable to find \"$file\"!\n";
         next FILE;
     }
-    unless (open(INPUT, "<$file"))
-    {
-        warn "$self: unable to read \"$file\": $!\n";
-        next FILE;
-    }
     unless (rename($file,"$file.bak"))
     {
         warn "$self: unable to rename \"$file\" to \"$file.bak\": $!\n";
-        close(INPUT);
+        next FILE;
+    }
+    unless (open(INPUT, "<$file.bak"))
+    {
+        warn "$self: unable to read \"$file.bak\": $!\n";
         next FILE;
     }
     unless (open(OUTPUT, ">$file"))
@@ -54,6 +53,7 @@ foreach $file (@ARGV)
     {
         s!\bDate::DateCalcLib\b!Date::Calc!g;
         s!\bDate::DateCalc\b!Date::Calc!g;
+        s!\buse\s+Date::Calc\s+3\.\d\b!use Date::Calc 4.0!g;
         s!\bleap\b!leap_year!g;
         s!\bcompress\b!Compress!g;
         s!\buncompress\b!Uncompress!g;

@@ -17,12 +17,16 @@ $self =~ s!^.*/!!;
 
 unless (@ARGV)
 {
-    die "Usage:  perl  $self  <main>.c  [  <other>.c  ...  ]\n"
+    die "Usage:  perl  $self  <main>[.c]  [ <other.c> ]*\n";
 }
 
 $main = shift;
-
 $main =~ s/\.c$//;
+
+unless (-f "$main.c")
+{
+    die "$self: file '$main.c' does not exist!\n";
+}
 
 $cc = $Config{'cc'};
 

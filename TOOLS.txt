@@ -16,10 +16,154 @@ distribution:
                             tools/compile.bat
                             tools/compile.pl
                             tools/compile.sh
+
                             tools/convert.bat
                             tools/convert.pl
                             tools/convert.sh
+
                             tools/iso2pc.c
                             tools/pc2iso.c
+
                             tools/upgrade_DC40.pl
+
+
+compile.bat, compile.pl, compile.sh:
+------------------------------------
+
+These tools are simple shortcuts to reduce the amount of typing required
+to compile one or more C sources where the use of a "Makefile" would be
+an overkill.
+
+They are an ideal place to lay down often-used compiler options, in order
+to make manual compiles a little less cumbersome.
+
+The first parameter of these tools is always the name of the source file
+to be compiled, which will also be the name of the resulting output file.
+
+This is usually the C source containing the "main()" function.
+
+In the case of "compile.pl" and "compile.sh", the filename extension ".c"
+is optional for this first parameter.
+
+In the case of "compile.bat", the filename extension ".c" must NOT be
+specified for this first parameter.
+
+All other parameters are optional and are simply passed through to the
+compiler, exactly as they are.
+
+Usually, these parameters will be additional C sources to be compiled
+and linked with the resulting output file, or additional compiler
+options.
+
+(The filename extension ".c" is mandatory for these additional source
+file names!)
+
+When invoked without parameters, all three tools print a usage and exit.
+
+Note that "compile.bat" assumes "cl" to be your (ANSI) C compiler,
+"compile.pl" will use the same compiler as the one Perl itself has
+been compiled with (or which Perl has been configured to use), and
+"compile.sh" assumes "gcc".
+
+If this is not what you have, adapt these little scripts accordingly!
+
+You will most probably want to use these tools in order to compile the
+program "cal.c" from the "examples" subdirectory of this distribution
+(see the file "EXAMPLES.txt" in this distribution for details) or to
+compile the "iso2pc.c" and "pc2iso.c" pair of filters (see the
+corresponding section further below in this document for details).
+
+
+convert.bat, convert.pl, convert.sh:
+------------------------------------
+
+These three tools are designed to automatically convert the special
+international characters used throughout this package from the
+ISO-Latin-1 (= ISO-8859-1) character set to (the right) one of
+the two most common PC "CP 850" character sets.
+
+Please see the section "Preliminary steps for console users" in the
+file "INSTALL.txt" in this distribution for details about how to
+use them.
+
+Note that these tools also automatically compile the "iso2pc.c" and
+"pc2iso.c" pair of filters (see the corresponding section after this
+one for details) from the "tools" subdirectory of this distribution.
+
+Note further that "convert.bat" thereby assumes "cl" to be your (ANSI)
+C compiler, "convert.pl" will use the same compiler as the one Perl
+itself has been compiled with (or which Perl has been configured to
+use), and "convert.sh" assumes "gcc".
+
+If this is not what you have, adapt these tools accordingly!
+
+Note also that these three tools do not have any parameters.
+
+Finally, note that these three tools are completely interchangeable
+and that you can call them as many times as you want, without any
+harmful effects.
+
+To undo this conversion, simply rename all files whose names end
+in an underscore ("_") (in the main directory and in the "examples"
+subdirectory of this distribution) to the same name WITHOUT the
+trailing underscore, and rebuild the package as described in the
+file "INSTALL.txt" in this distribution.
+
+
+iso2pc.c, pc2iso.c:
+-------------------
+
+This pair of tools is a complementary set of filters designed to convert
+special characters (with ASCII codes ranging from 0x80 to 0xFF) from the
+"ISO-Latin-1" (= "ISO-8859-1") character set to one of the "CP 850" PC
+character sets (and vice-versa) in a REVERSIBLE way and WITHOUT LOSSES
+of information.
+
+This is useful on systems (such as MS-DOS or the FreeBSD console,
+to name just two) which cannot display the ISO-Latin-1 character set.
+
+Please look into these two files themselves for a more complete
+documentation and a description of their various command line options.
+
+In order to compile these two programs, you can use the "compile.*"
+scripts from the "tools" subdirectory of this distribution (for a
+description of these tools, see the first section in this document
+above).
+
+Simply change directory to the "tools" subdirectory and enter one
+pair of the following commands:
+
+                    > perl compile.pl iso2pc     (UNIX or Win32)
+                    > perl compile.pl pc2iso     (UNIX or Win32)
+
+                    > ./compile.sh iso2pc        (UNIX only)
+                    > ./compile.sh pc2iso        (UNIX only)
+
+                    > compile iso2pc             (MSDOS/Windows only)
+                    > compile pc2iso             (MSDOS/Windows only)
+
+Note that these two filters are not confined to UNIX or Windows NT/95
+platforms, they also compile and run perfectly well on pure MS-DOS or
+other Windows systems (or wherever a standard ANSI C compiler and
+redirection of standard input and output are available)!
+
+In order to be able to use these filters later more easily, you should
+copy the resulting executables ("iso2pc" and "pc2iso" or "iso2pc.exe"
+and "pc2iso.exe") to some directory in your search path; for example
+to "/usr/local/bin" (UNIX) or "C:\DOS" (MSDOS/Windows).
+
+
+upgrade_DC40.pl:
+----------------
+
+This tool can be used to automatically upgrade your existing Perl
+applications which use "Date::DateCalc" version 3.x to the current
+version, i.e., "Date::Calc" version 4.0.
+
+Please see the section "Migration strategy to version 4.0" in the
+file "CHANGES.txt" in this distribution for details about how to
+use it.
+
+The tool also prints a usage and exits when called without parameters.
+
 

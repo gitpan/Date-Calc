@@ -3,7 +3,8 @@
 /*****************************************************************************/
 /*  MODULE NAME:  DateCalc.h                            MODULE TYPE:  (lib)  */
 /*****************************************************************************/
-/*  Date calculations complying with ISO/R 2015-1971 and DIN 1355 standards  */
+/*          Gregorian calendar date calculations in compliance with          */
+/*          ISO/R 2015-1971, DIN 1355 and (to some extent) ISO 8601.         */
 /*****************************************************************************/
 /*  MODULE IMPORTS:                                                          */
 /*****************************************************************************/
@@ -16,93 +17,204 @@
 /*  MODULE INTERFACE:                                                        */
 /*****************************************************************************/
 
-boolean DateCalc_leap_year          (Z_int year);
+boolean
+DateCalc_leap_year                     (Z_int   year);
 
-boolean DateCalc_check_date         (Z_int year,  Z_int mm,  Z_int dd);
+boolean
+DateCalc_check_date                    (Z_int   year,
+                                        Z_int   month,
+                                        Z_int   day);
 
-Z_int   DateCalc_Day_of_Year        (Z_int year,  Z_int mm,  Z_int dd);
+boolean
+DateCalc_check_business_date           (Z_int   year,
+                                        Z_int   week,
+                                        Z_int   dow);
 
-Z_long  DateCalc_Date_to_Days       (Z_int year,  Z_int mm,  Z_int dd);
+Z_int
+DateCalc_Day_of_Year                   (Z_int   year,
+                                        Z_int   month,
+                                        Z_int   day);
 
-Z_int   DateCalc_Day_of_Week        (Z_int year,  Z_int mm,  Z_int dd);
+Z_long
+DateCalc_Date_to_Days                  (Z_int   year,
+                                        Z_int   month,
+                                        Z_int   day);
 
-Z_int   DateCalc_Weeks_in_Year      (Z_int year);
+Z_int
+DateCalc_Day_of_Week                   (Z_int   year,
+                                        Z_int   month,
+                                        Z_int   day);
 
-Z_int   DateCalc_Week_Number        (Z_int year,  Z_int mm,  Z_int dd);
+Z_int
+DateCalc_Weeks_in_Year                 (Z_int   year);
 
-boolean DateCalc_week_of_year       (Z_int *week,
-                                     Z_int *year, Z_int mm,  Z_int dd);
+Z_int
+DateCalc_Week_Number                   (Z_int   year,
+                                        Z_int   month,
+                                        Z_int   day);
 
-boolean DateCalc_monday_of_week     (Z_int week,
-                                     Z_int *year, Z_int *mm, Z_int *dd);
+boolean
+DateCalc_week_of_year                  (Z_int  *week,       /*   O   */
+                                        Z_int  *year,       /*  I/O  */
+                                        Z_int   month,      /*   I   */
+                                        Z_int   day);       /*   I   */
 
-boolean DateCalc_nth_weekday_of_month_year
-                                    (Z_int *year, Z_int *mm, Z_int *dd,
-                                     Z_int dow,   Z_int n);
+boolean
+DateCalc_monday_of_week                (Z_int   week,       /*   I   */
+                                        Z_int  *year,       /*  I/O  */
+                                        Z_int  *month,      /*   O   */
+                                        Z_int  *day);       /*   O   */
 
-Z_long  DateCalc_Delta_Days         (Z_int year1, Z_int mm1, Z_int dd1,
-                                     Z_int year2, Z_int mm2, Z_int dd2);
+boolean
+DateCalc_nth_weekday_of_month_year     (Z_int  *year,       /*  I/O  */
+                                        Z_int  *month,      /*  I/O  */
+                                        Z_int  *day,        /*   O   */
+                                        Z_int   dow,        /*   I   */
+                                        Z_int   n);         /*   I   */
 
-boolean DateCalc_delta_dhms
-(
-    Z_long *Dd,
-    Z_int  *Dh,   Z_int *Dm,  Z_int *Ds,
-    Z_int  year1, Z_int mm1,  Z_int dd1,
-    Z_int  h1,    Z_int m1,   Z_int s1,
-    Z_int  year2, Z_int mm2,  Z_int dd2,
-    Z_int  h2,    Z_int m2,   Z_int s2
-);
+boolean
+DateCalc_standard_to_business          (Z_int  *year,       /*  I/O  */
+                                        Z_int  *week,       /*   O   */
+                                        Z_int  *dow,        /*   O   */
+                                        Z_int   month,      /*   I   */
+                                        Z_int   day);       /*   I   */
 
-boolean DateCalc_add_delta_days     (Z_int *year, Z_int *mm, Z_int *dd,
-                                     Z_long Dd);
+boolean
+DateCalc_business_to_standard          (Z_int  *year,       /*  I/O  */
+                                        Z_int  *month,      /*   O   */
+                                        Z_int  *day,        /*   O   */
+                                        Z_int   week,       /*   I   */
+                                        Z_int   dow);       /*   I   */
 
-boolean DateCalc_add_delta_dhms
-(
-    Z_int *year, Z_int *mm,  Z_int *dd,
-    Z_int *h,    Z_int *m,   Z_int *s,
-    Z_long Dd,
-    Z_long Dh,   Z_long Dm,  Z_long Ds
-);
+Z_long
+DateCalc_Delta_Days                    (Z_int   year1,
+                                        Z_int   month1,
+                                        Z_int   day1,
+                                        Z_int   year2,
+                                        Z_int   month2,
+                                        Z_int   day2);
 
-boolean DateCalc_add_delta_ymd      (Z_int *year, Z_int *mm, Z_int *dd,
-                                     Z_long Dy,   Z_long Dm, Z_long Dd);
+boolean
+DateCalc_delta_dhms                    (Z_long *Dd,         /*   O   */
+                                        Z_int  *Dh,         /*   O   */
+                                        Z_int  *Dm,         /*   O   */
+                                        Z_int  *Ds,         /*   O   */
+                                        Z_int   year1,      /*   I   */
+                                        Z_int   month1,     /*   I   */
+                                        Z_int   day1,       /*   I   */
+                                        Z_int   hour1,      /*   I   */
+                                        Z_int   min1,       /*   I   */
+                                        Z_int   sec1,       /*   I   */
+                                        Z_int   year2,      /*   I   */
+                                        Z_int   month2,     /*   I   */
+                                        Z_int   day2,       /*   I   */
+                                        Z_int   hour2,      /*   I   */
+                                        Z_int   min2,       /*   I   */
+                                        Z_int   sec2);      /*   I   */
 
-boolean DateCalc_system_clock       (Z_int *year, Z_int *mm, Z_int *dd,
-                                     Z_int *h,    Z_int *m,  Z_int *s,
-                                     Z_int *doy,  Z_int *dow,Z_int *dst);
+boolean
+DateCalc_add_delta_days                (Z_int  *year,       /*  I/O  */
+                                        Z_int  *month,      /*  I/O  */
+                                        Z_int  *day,        /*  I/O  */
+                                        Z_long  Dd);        /*   I   */
 
-boolean DateCalc_easter_sunday      (Z_int *year, Z_int *mm, Z_int *dd);
+boolean
+DateCalc_add_delta_dhms                (Z_int  *year,       /*  I/O  */
+                                        Z_int  *month,      /*  I/O  */
+                                        Z_int  *day,        /*  I/O  */
+                                        Z_int  *hour,       /*  I/O  */
+                                        Z_int  *min,        /*  I/O  */
+                                        Z_int  *sec,        /*  I/O  */
+                                        Z_long  Dd,         /*   I   */
+                                        Z_long  Dh,         /*   I   */
+                                        Z_long  Dm,         /*   I   */
+                                        Z_long  Ds);        /*   I   */
 
-Z_int   DateCalc_Decode_Month       (charptr buffer, Z_int len);
+boolean
+DateCalc_add_delta_ymd                 (Z_int  *year,       /*  I/O  */
+                                        Z_int  *month,      /*  I/O  */
+                                        Z_int  *day,        /*  I/O  */
+                                        Z_long  Dy,         /*   I   */
+                                        Z_long  Dm,         /*   I   */
+                                        Z_long  Dd);        /*   I   */
 
-Z_int   DateCalc_Decode_Day_of_Week (charptr buffer, Z_int len);
+boolean
+DateCalc_system_clock                  (Z_int  *year,       /*   O   */
+                                        Z_int  *month,      /*   O   */
+                                        Z_int  *day,        /*   O   */
+                                        Z_int  *hour,       /*   O   */
+                                        Z_int  *min,        /*   O   */
+                                        Z_int  *sec,        /*   O   */
+                                        Z_int  *doy,        /*   O   */
+                                        Z_int  *dow,        /*   O   */
+                                        Z_int  *dst);       /*   O   */
 
-Z_int   DateCalc_Decode_Language    (charptr buffer, Z_int len);
+boolean
+DateCalc_easter_sunday                 (Z_int  *year,       /*  I/O  */
+                                        Z_int  *month,      /*   O   */
+                                        Z_int  *day);       /*   O   */
 
-boolean DateCalc_decode_date_eu     (charptr buffer,
-                                     Z_int *year, Z_int *mm, Z_int *dd);
+Z_int
+DateCalc_Decode_Month                  (charptr buffer,
+                                        Z_int   length);
 
-boolean DateCalc_decode_date_us     (charptr buffer,
-                                     Z_int *year, Z_int *mm, Z_int *dd);
+Z_int
+DateCalc_Decode_Day_of_Week            (charptr buffer,
+                                        Z_int   length);
 
-Z_int   DateCalc_Compress           (Z_int yy,    Z_int mm,  Z_int dd);
+Z_int
+DateCalc_Decode_Language               (charptr buffer,
+                                        Z_int   length);
 
-boolean DateCalc_uncompress         (Z_int date,  Z_int *cc,
-                                     Z_int *yy,   Z_int *mm, Z_int *dd);
+boolean
+DateCalc_decode_date_eu                (charptr buffer,     /*   I   */
+                                        Z_int  *year,       /*   O   */
+                                        Z_int  *month,      /*   O   */
+                                        Z_int  *day);       /*   O   */
 
-boolean DateCalc_check_compressed   (Z_int date);
+boolean
+DateCalc_decode_date_us                (charptr buffer,     /*   I   */
+                                        Z_int  *year,       /*   O   */
+                                        Z_int  *month,      /*   O   */
+                                        Z_int  *day);       /*   O   */
 
-charptr DateCalc_Compressed_to_Text (Z_int date);
+Z_int
+DateCalc_Compress                      (Z_int   year,
+                                        Z_int   month,
+                                        Z_int   day);
 
-charptr DateCalc_Date_to_Text       (Z_int year,  Z_int mm,  Z_int dd);
+boolean
+DateCalc_uncompress                    (Z_int   date,       /*   I   */
+                                        Z_int  *century,    /*   O   */
+                                        Z_int  *year,       /*   O   */
+                                        Z_int  *month,      /*   O   */
+                                        Z_int  *day);       /*   O   */
 
-charptr DateCalc_Date_to_Text_Long  (Z_int year,  Z_int mm,  Z_int dd);
+boolean
+DateCalc_check_compressed              (Z_int   date);
 
-charptr DateCalc_Calendar           (Z_int year,  Z_int mm);
+charptr
+DateCalc_Compressed_to_Text            (Z_int   date);
 
-void    DateCalc_Dispose            (charptr string);
+charptr
+DateCalc_Date_to_Text                  (Z_int   year,
+                                        Z_int   month,
+                                        Z_int   day);
 
-charptr DateCalc_Version            (void);
+charptr
+DateCalc_Date_to_Text_Long             (Z_int   year,
+                                        Z_int   month,
+                                        Z_int   day);
+
+charptr
+DateCalc_Calendar                      (Z_int   year,
+                                        Z_int   month);
+
+void
+DateCalc_Dispose                       (charptr string);
+
+charptr
+DateCalc_Version                       (void);
 
 /*****************************************************************************/
 /*  MODULE RESOURCES:                                                        */
@@ -233,7 +345,8 @@ extern N_char DateCalc_Day_of_Week_Abbreviation_[DateCalc_LANGUAGES+1][8][4];
 extern N_char DateCalc_Language_to_Text_[DateCalc_LANGUAGES+1][32];
 /*
 {
-    "???", "English", "Français", "Deutsch", "Español", "Português", "Nederlands"
+    "???", "English", "Français", "Deutsch", "Español",
+    "Português", "Nederlands"
 };
 */
 
@@ -247,7 +360,7 @@ extern N_char DateCalc_Language_to_Text_[DateCalc_LANGUAGES+1][32];
 /*  VERSION HISTORY:                                                         */
 /*****************************************************************************/
 /*                                                                           */
-/*    Version 4.0   26.04.98  Major rework. Added multi-language support.    */
+/*    Version 4.0   12.05.98  Major rework. Added multi-language support.    */
 /*    Version 3.2   15.06.97  Added "week_of_year()".                        */
 /*    Version 3.1   12.06.97  No significant changes.                        */
 /*    Version 3.0   16.02.97  Changed conventions for unsuccessful returns.  */

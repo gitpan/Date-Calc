@@ -106,12 +106,13 @@ The substitutions performed by this upgrade utility are the following:
 Version history:
 ----------------
 
-Version 4.0   26.04.98
+Version 4.0   12.05.98
 
     Complete rewrite of the XS file.
     Extensive rewrite of the C library at the core.
     Changed the naming conventions for function names from all lower case
     to mixed upper- and lower case.
+    Added systematic exception handling.
     Renamed the package from "Date::DateCalc" to simply "Date::Calc".
     Renamed the corresponding files as well as the files of the C core.
     Added a new Perl function "Week_of_Year()" (replacing "week_number()").
@@ -119,6 +120,8 @@ Version 4.0   26.04.98
     "Week_Number()".
     Added new functions System_Clock()", "Today()", "Now()" and
     "Today_and_Now()".
+    Added "check_business_date()", "Standard_to_Business()" and
+    "Business_to_Standard()".
     Ported the functions from "Date::DateCalcLib" from Perl to C.
     Dropped the module "Date::DateCalcLib".
     Added multi-language support.

@@ -233,8 +233,7 @@ $n++;
 
 Language(Decode_Language("Portug"));
 
-if ((($year,$mm,$dd) = Decode_Date_EU2(
-"_dia_tres_3_janeiro_1964_mil_novecentos_sessenta_e_seis_")) &&
+if ((($year,$mm,$dd) = Decode_Date_EU2("_dia_tres_3_janeiro_1964_mil_novecentos_sessenta_e_seis_")) &&
 ($year==1964) && ($mm==1) && ($dd==3))
 {print "ok $n\n";} else {print "not ok $n\n";}
 $n++;

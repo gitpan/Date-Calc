@@ -14,13 +14,17 @@ self=`basename $0`
 
 if [ $# = 0 ]
 then
-    echo "Usage:  $self  <main>.c  [  <other>.c  ...  ]"
+    echo "Usage:  $self  <main>[.c]  [ <other.c> ]*"
     exit 0
 fi
 
 main=`basename $1 .c`
 
-shift
-
-gcc -ansi -O2 -o $main $main.c "$@"
+if [ -f "$main.c" ]
+then
+    shift
+    gcc -ansi -O2 -o $main $main.c "$@"
+else
+    echo "$self: file '$main.c' does not exist!"
+fi
 

@@ -23,7 +23,7 @@ use Date::Calc qw( Decode_Month Month_to_Text Nth_Weekday_of_Month_Year
 
 if (@ARGV != 4)
 {
-    die "Usage:  $self  <nth>  <weekday>  <month>  <year>\n";
+    die "Usage:  perl  $self  <nth>  <weekday>  <month>  <year>\n";
 }
 
 $n = $ARGV[0];

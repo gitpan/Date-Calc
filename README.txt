@@ -53,11 +53,34 @@ Please see the file "INSTALL.txt" in this distribution for instructions
 on how to install this package.
 
 
+Adding more languages:
+----------------------
+
+Please see the corresponding section in the file "INSTALL.txt" in this
+distribution for detailed instructions on how to add other languages.
+
+
 Changes over previous versions:
 -------------------------------
 
 Please refer to the file "CHANGES.txt" in this distribution for a detailed
 version history and instructions on how to upgrade existing applications.
+
+
+Documentation:
+--------------
+
+The documentation to this package is included in POD format (= "Plain Old
+Documentation") in the file "Calc.pm" in this distribution, the human-
+readable markup-language standard for Perl documentation.
+
+By building this package, this documentation will automatically be converted
+into a man page, which will automatically be installed in your Perl tree for
+further reference in this process, where it can be accessed via the command
+"man Date::Calc" (UNIX) or "perldoc Date::Calc" (UNIX and Win32).
+
+If Perl is not available on your system, you can also read this documentation
+directly.
 
 
 What does it do:
@@ -67,7 +90,7 @@ This package consists of a C library and a Perl module (which uses
 the C library, internally) for all kinds of date calculations based
 on the Gregorian calendar (the one used in all western countries today),
 thereby complying with all relevant norms and standards: ISO/R 2015-1971,
-DIN 1355 and ISO 8601 (where applicable).
+DIN 1355 and, to some extent, ISO 8601 (where applicable).
 
 (See also http://www.engelschall.com/u/sb/download/Date-Calc/DIN1355/
 for a scan of part of the "DIN 1355" document (in German)).
@@ -77,18 +100,21 @@ The module of course handles year numbers of 2000 and above correctly
 to the largest positive integer representable on your system (which
 is at least 32767) can be dealt with.
 
-In other words, this package EXTRAPOLATES the Gregorian calendar BACK
-until the year 1 -- even though the Gregorian calendar was only adopted
-in 1582 by most (not all) European countries, in obedience to the
-corresponding decree of catholic pope Gregor I in that year.
+Note that this package EXTRAPOLATES the Gregorian calendar BACK
+until the year 1 A.D. -- even though the Gregorian calendar was only
+adopted in 1582 by most (not all) European countries, in obedience to
+the corresponding decree of catholic pope Gregor I in that year.
 
-Some (mainly protestant) countries actually continued to use the Julian
-calendar used until then until as late as the beginning of the 20th century.
+Some (mainly protestant) countries continued to use the Julian calendar
+(used until then) until as late as the beginning of the 20th century.
 
-Note that this package is not intended to do everything you could ever
-imagine automatically for you, it is rather intended to serve as a toolbox
-(in the best of UNIX spirit and traditions) which should, however, always
-get you where you want to go.
+Finally, note that this package is not intended to do everything you could
+ever imagine automagically for you; it is rather intended to serve as a
+toolbox (in the best of UNIX spirit and traditions) which should, however,
+always get you where you want to go.
+
+If nevertheless you can't figure out how to solve a particular problem,
+please let me know! (See e-mail address at the bottom of this document.)
 
 
 Important note to C developers:

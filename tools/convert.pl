@@ -22,6 +22,7 @@ $charset = ($Config{'archname'} =~ /MSWin32/i) ? "-win" : "-dos";
 &compile('iso2pc.c');
 &compile('pc2iso.c');
 
+&convert('../Calc.pm');
 &convert('../DateCalc.c');
 &convert('../DateCalc.h');
 &convert('../examples/age_in_days_eu.pl');
@@ -47,9 +48,8 @@ sub compile
         if ($rc >> 8)
         {
             warn "$self: unable to compile '$source'!\n";
-            die  "Please compile manually and re-run $self.\n";
+            die  "Please fix problem (or compile manually) and re-run $self.\n";
         }
-        print "$self: compilation of '$source' seems to have succeeded.\n";
     }
 }
 
@@ -79,10 +79,6 @@ sub convert
     if ($rc >> 8)
     {
         warn "$self: unable to convert '$target' to '$source'!\n";
-    }
-    else
-    {
-        print "$self: conversion of '$source' seems to have succeeded.\n";
     }
 }
 

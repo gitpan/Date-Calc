@@ -60,17 +60,17 @@ PROTOTYPES: DISABLE
 
 
 void
-DateCalc_Days_in_Year(year,mm)
+DateCalc_Days_in_Year(year,month)
     Z_int	year
-    Z_int	mm
+    Z_int	month
 PPCODE:
 {
     if (year > 0)
     {
-        if ((mm >= 1) and (mm <= 12))
+        if ((month >= 1) and (month <= 12))
         {
             EXTEND(sp,1);
-            PUSHs(sv_2mortal(newSViv((IV)DateCalc_Days_in_Year_[DateCalc_leap_year(year)][mm+1])));
+            PUSHs(sv_2mortal(newSViv((IV)DateCalc_Days_in_Year_[DateCalc_leap_year(year)][month+1])));
         }
         else DATECALC_MONTH_ERROR("Days_in_Year");
     }
@@ -79,17 +79,17 @@ PPCODE:
 
 
 void
-DateCalc_Days_in_Month(year,mm)
+DateCalc_Days_in_Month(year,month)
     Z_int	year
-    Z_int	mm
+    Z_int	month
 PPCODE:
 {
     if (year > 0)
     {
-        if ((mm >= 1) and (mm <= 12))
+        if ((month >= 1) and (month <= 12))
         {
             EXTEND(sp,1);
-            PUSHs(sv_2mortal(newSViv((IV)DateCalc_Days_in_Month_[DateCalc_leap_year(year)][mm])));
+            PUSHs(sv_2mortal(newSViv((IV)DateCalc_Days_in_Month_[DateCalc_leap_year(year)][month])));
         }
         else DATECALC_MONTH_ERROR("Days_in_Month");
     }
@@ -128,20 +128,27 @@ RETVAL
 
 
 boolean
-DateCalc_check_date(year,mm,dd)
+DateCalc_check_date(year,month,day)
     Z_int	year
-    Z_int	mm
-    Z_int	dd
+    Z_int	month
+    Z_int	day
+
+
+boolean
+DateCalc_check_business_date(year,week,dow)
+    Z_int	year
+    Z_int	week
+    Z_int	dow
 
 
 Z_int
-DateCalc_Day_of_Year(year,mm,dd)
+DateCalc_Day_of_Year(year,month,day)
     Z_int	year
-    Z_int	mm
-    Z_int	dd
+    Z_int	month
+    Z_int	day
 CODE:
 {
-    RETVAL = DateCalc_Day_of_Year(year,mm,dd);
+    RETVAL = DateCalc_Day_of_Year(year,month,day);
     if (RETVAL == 0) DATECALC_DATE_ERROR("Day_of_Year");
 }
 OUTPUT:
@@ -149,13 +156,13 @@ RETVAL
 
 
 Z_long
-DateCalc_Date_to_Days(year,mm,dd)
+DateCalc_Date_to_Days(year,month,day)
     Z_int	year
-    Z_int	mm
-    Z_int	dd
+    Z_int	month
+    Z_int	day
 CODE:
 {
-    RETVAL = DateCalc_Date_to_Days(year,mm,dd);
+    RETVAL = DateCalc_Date_to_Days(year,month,day);
     if (RETVAL == 0) DATECALC_DATE_ERROR("Date_to_Days");
 }
 OUTPUT:
@@ -163,13 +170,13 @@ RETVAL
 
 
 Z_int
-DateCalc_Day_of_Week(year,mm,dd)
+DateCalc_Day_of_Week(year,month,day)
     Z_int	year
-    Z_int	mm
-    Z_int	dd
+    Z_int	month
+    Z_int	day
 CODE:
 {
-    RETVAL = DateCalc_Day_of_Week(year,mm,dd);
+    RETVAL = DateCalc_Day_of_Week(year,month,day);
     if (RETVAL == 0) DATECALC_DATE_ERROR("Day_of_Week");
 }
 OUTPUT:
@@ -177,15 +184,15 @@ RETVAL
 
 
 Z_int
-DateCalc_Week_Number(year,mm,dd)
+DateCalc_Week_Number(year,month,day)
     Z_int	year
-    Z_int	mm
-    Z_int	dd
+    Z_int	month
+    Z_int	day
 CODE:
 {
-    if (DateCalc_check_date(year,mm,dd))
+    if (DateCalc_check_date(year,month,day))
     {
-        RETVAL = DateCalc_Week_Number(year,mm,dd);
+        RETVAL = DateCalc_Week_Number(year,month,day);
     }
     else DATECALC_DATE_ERROR("Week_Number");
 }
@@ -194,15 +201,15 @@ RETVAL
 
 
 void
-DateCalc_Week_of_Year(year,mm,dd)
+DateCalc_Week_of_Year(year,month,day)
     Z_int	year
-    Z_int	mm
-    Z_int	dd
+    Z_int	month
+    Z_int	day
 PPCODE:
 {
     Z_int week;
 
-    if (DateCalc_week_of_year(&week,&year,mm,dd))
+    if (DateCalc_week_of_year(&week,&year,month,day))
     {
         EXTEND(sp,2);
         PUSHs(sv_2mortal(newSViv((IV)week)));
@@ -218,19 +225,19 @@ DateCalc_Monday_of_Week(week,year)
     Z_int	year
 PPCODE:
 {
-    Z_int mm;
-    Z_int dd;
+    Z_int month;
+    Z_int day;
 
     if (year > 0)
     {
         if ((week > 0) and (week <= DateCalc_Weeks_in_Year(year)))
         {
-            if (DateCalc_monday_of_week(week,&year,&mm,&dd))
+            if (DateCalc_monday_of_week(week,&year,&month,&day))
             {
                 EXTEND(sp,3);
                 PUSHs(sv_2mortal(newSViv((IV)year)));
-                PUSHs(sv_2mortal(newSViv((IV)mm)));
-                PUSHs(sv_2mortal(newSViv((IV)dd)));
+                PUSHs(sv_2mortal(newSViv((IV)month)));
+                PUSHs(sv_2mortal(newSViv((IV)day)));
             }
             else DATECALC_DATE_ERROR("Monday_of_Week");
         }
@@ -241,29 +248,29 @@ PPCODE:
 
 
 void
-DateCalc_Nth_Weekday_of_Month_Year(year,mm,dow,n)
+DateCalc_Nth_Weekday_of_Month_Year(year,month,dow,n)
     Z_int	year
-    Z_int	mm
+    Z_int	month
     Z_int	dow
     Z_int	n
 PPCODE:
 {
-    Z_int dd;
+    Z_int day;
 
     if (year > 0)
     {
-        if ((mm >= 1) and (mm <= 12))
+        if ((month >= 1) and (month <= 12))
         {
             if ((dow >= 1) and (dow <= 7))
             {
                 if ((n >= 1) and (n <= 5))
                 {
-                    if (DateCalc_nth_weekday_of_month_year(&year,&mm,&dd,dow,n))
+                    if (DateCalc_nth_weekday_of_month_year(&year,&month,&day,dow,n))
                     {
                         EXTEND(sp,3);
                         PUSHs(sv_2mortal(newSViv((IV)year)));
-                        PUSHs(sv_2mortal(newSViv((IV)mm)));
-                        PUSHs(sv_2mortal(newSViv((IV)dd)));
+                        PUSHs(sv_2mortal(newSViv((IV)month)));
+                        PUSHs(sv_2mortal(newSViv((IV)day)));
                     }
                     /* else return empty list */
                 }
@@ -277,19 +284,62 @@ PPCODE:
 }
 
 
+void
+DateCalc_Standard_to_Business(year,month,day)
+    Z_int	year
+    Z_int	month
+    Z_int	day
+PPCODE:
+{
+    Z_int week;
+    Z_int dow;
+
+    if (DateCalc_standard_to_business(&year,&week,&dow,month,day))
+    {
+        EXTEND(sp,3);
+        PUSHs(sv_2mortal(newSViv((IV)year)));
+        PUSHs(sv_2mortal(newSViv((IV)week)));
+        PUSHs(sv_2mortal(newSViv((IV)dow)));
+    }
+    else DATECALC_DATE_ERROR("Standard_to_Business");
+}
+
+
+void
+DateCalc_Business_to_Standard(year,week,dow)
+    Z_int	year
+    Z_int	week
+    Z_int	dow
+PPCODE:
+{
+    Z_int month;
+    Z_int day;
+
+    if (DateCalc_business_to_standard(&year,&month,&day,week,dow))
+    {
+        EXTEND(sp,3);
+        PUSHs(sv_2mortal(newSViv((IV)year)));
+        PUSHs(sv_2mortal(newSViv((IV)month)));
+        PUSHs(sv_2mortal(newSViv((IV)day)));
+    }
+    else DATECALC_DATE_ERROR("Business_to_Standard");
+}
+
+
 Z_long
-DateCalc_Delta_Days(year1,mm1,dd1, year2,mm2,dd2)
+DateCalc_Delta_Days(year1,month1,day1, year2,month2,day2)
     Z_int	year1
-    Z_int	mm1
-    Z_int	dd1
+    Z_int	month1
+    Z_int	day1
     Z_int	year2
-    Z_int	mm2
-    Z_int	dd2
+    Z_int	month2
+    Z_int	day2
 CODE:
 {
-    if (DateCalc_check_date(year1,mm1,dd1) and DateCalc_check_date(year2,mm2,dd2))
+    if (DateCalc_check_date(year1,month1,day1) and
+        DateCalc_check_date(year2,month2,day2))
     {
-        RETVAL = DateCalc_Delta_Days(year1,mm1,dd1, year2,mm2,dd2);
+        RETVAL = DateCalc_Delta_Days(year1,month1,day1, year2,month2,day2);
     }
     else DATECALC_DATE_ERROR("Delta_Days");
 }
@@ -298,19 +348,19 @@ RETVAL
 
 
 void
-DateCalc_Delta_DHMS(year1,mm1,dd1, h1,m1,s1, year2,mm2,dd2, h2,m2,s2)
+DateCalc_Delta_DHMS(year1,month1,day1, hour1,min1,sec1, year2,month2,day2, hour2,min2,sec2)
     Z_int	year1;
-    Z_int	mm1;
-    Z_int	dd1;
-    Z_int	h1;
-    Z_int	m1;
-    Z_int	s1;
+    Z_int	month1;
+    Z_int	day1;
+    Z_int	hour1;
+    Z_int	min1;
+    Z_int	sec1;
     Z_int	year2;
-    Z_int	mm2;
-    Z_int	dd2;
-    Z_int	h2;
-    Z_int	m2;
-    Z_int	s2;
+    Z_int	month2;
+    Z_int	day2;
+    Z_int	hour2;
+    Z_int	min2;
+    Z_int	sec2;
 PPCODE:
 {
     Z_long Dd;
@@ -318,16 +368,17 @@ PPCODE:
     Z_int  Dm;
     Z_int  Ds;
 
-    if (DateCalc_check_date(year1,mm1,dd1) and DateCalc_check_date(year2,mm2,dd2))
+    if (DateCalc_check_date(year1,month1,day1) and
+        DateCalc_check_date(year2,month2,day2))
     {
-        if ((h1 >= 0) and (m1 >= 0) and (s1 >= 0) and
-            (h2 >= 0) and (m2 >= 0) and (s2 >= 0) and
-            (h1 < 24) and (m1 < 60) and (s1 < 60) and
-            (h2 < 24) and (m2 < 60) and (s2 < 60))
+        if ((hour1 >= 0) and (min1 >= 0) and (sec1 >= 0) and
+            (hour2 >= 0) and (min2 >= 0) and (sec2 >= 0) and
+            (hour1 < 24) and (min1 < 60) and (sec1 < 60) and
+            (hour2 < 24) and (min2 < 60) and (sec2 < 60))
         {
             if (DateCalc_delta_dhms(&Dd,&Dh,&Dm,&Ds,
-                                    year1,mm1,dd1, h1,m1,s1,
-                                    year2,mm2,dd2, h2,m2,s2))
+                                    year1,month1,day1, hour1,min1,sec1,
+                                    year2,month2,day2, hour2,min2,sec2))
             {
                 EXTEND(sp,4);
                 PUSHs(sv_2mortal(newSViv((IV)Dd)));
@@ -344,52 +395,54 @@ PPCODE:
 
 
 void
-DateCalc_Add_Delta_Days(year,mm,dd, Dd)
+DateCalc_Add_Delta_Days(year,month,day, Dd)
     Z_int	year
-    Z_int	mm
-    Z_int	dd
+    Z_int	month
+    Z_int	day
     Z_long	Dd
 PPCODE:
 {
-    if (DateCalc_add_delta_days(&year,&mm,&dd, Dd))
+    if (DateCalc_add_delta_days(&year,&month,&day, Dd))
     {
         EXTEND(sp,3);
         PUSHs(sv_2mortal(newSViv((IV)year)));
-        PUSHs(sv_2mortal(newSViv((IV)mm)));
-        PUSHs(sv_2mortal(newSViv((IV)dd)));
+        PUSHs(sv_2mortal(newSViv((IV)month)));
+        PUSHs(sv_2mortal(newSViv((IV)day)));
     }
     else DATECALC_DATE_ERROR("Add_Delta_Days");
 }
 
 
 void
-DateCalc_Add_Delta_DHMS(year,mm,dd, h,m,s, Dd,Dh,Dm,Ds)
+DateCalc_Add_Delta_DHMS(year,month,day, hour,min,sec, Dd,Dh,Dm,Ds)
     Z_int	year;
-    Z_int	mm;
-    Z_int	dd;
-    Z_int	h;
-    Z_int	m;
-    Z_int	s;
+    Z_int	month;
+    Z_int	day;
+    Z_int	hour;
+    Z_int	min;
+    Z_int	sec;
     Z_long	Dd;
     Z_long	Dh;
     Z_long	Dm;
     Z_long	Ds;
 PPCODE:
 {
-    if (DateCalc_check_date(year,mm,dd))
+    if (DateCalc_check_date(year,month,day))
     {
-        if ((h >= 0) and (m >= 0) and (s >= 0) and
-            (h < 24) and (m < 60) and (s < 60))
+        if ((hour >= 0) and (min >= 0) and (sec >= 0) and
+            (hour < 24) and (min < 60) and (sec < 60))
         {
-            if (DateCalc_add_delta_dhms(&year,&mm,&dd, &h,&m,&s, Dd,Dh,Dm,Ds))
+            if (DateCalc_add_delta_dhms(&year,&month,&day,
+                                        &hour,&min,&sec,
+                                        Dd,Dh,Dm,Ds))
             {
                 EXTEND(sp,6);
                 PUSHs(sv_2mortal(newSViv((IV)year)));
-                PUSHs(sv_2mortal(newSViv((IV)mm)));
-                PUSHs(sv_2mortal(newSViv((IV)dd)));
-                PUSHs(sv_2mortal(newSViv((IV)h)));
-                PUSHs(sv_2mortal(newSViv((IV)m)));
-                PUSHs(sv_2mortal(newSViv((IV)s)));
+                PUSHs(sv_2mortal(newSViv((IV)month)));
+                PUSHs(sv_2mortal(newSViv((IV)day)));
+                PUSHs(sv_2mortal(newSViv((IV)hour)));
+                PUSHs(sv_2mortal(newSViv((IV)min)));
+                PUSHs(sv_2mortal(newSViv((IV)sec)));
             }
             else DATECALC_DATE_ERROR("Add_Delta_DHMS");
         }
@@ -400,21 +453,21 @@ PPCODE:
 
 
 void
-DateCalc_Add_Delta_YMD(year,mm,dd, Dy,Dm,Dd)
+DateCalc_Add_Delta_YMD(year,month,day, Dy,Dm,Dd)
     Z_int	year
-    Z_int	mm
-    Z_int	dd
+    Z_int	month
+    Z_int	day
     Z_int	Dy
     Z_int	Dm
     Z_int	Dd
 PPCODE:
 {
-    if (DateCalc_add_delta_ymd(&year,&mm,&dd, Dy,Dm,Dd))
+    if (DateCalc_add_delta_ymd(&year,&month,&day, Dy,Dm,Dd))
     {
         EXTEND(sp,3);
         PUSHs(sv_2mortal(newSViv((IV)year)));
-        PUSHs(sv_2mortal(newSViv((IV)mm)));
-        PUSHs(sv_2mortal(newSViv((IV)dd)));
+        PUSHs(sv_2mortal(newSViv((IV)month)));
+        PUSHs(sv_2mortal(newSViv((IV)day)));
     }
     else DATECALC_DATE_ERROR("Add_Delta_YMD");
 }
@@ -425,24 +478,26 @@ DateCalc_System_Clock()
 PPCODE:
 {
     Z_int year;
-    Z_int mm;
-    Z_int dd;
-    Z_int h;
-    Z_int m;
-    Z_int s;
+    Z_int month;
+    Z_int day;
+    Z_int hour;
+    Z_int min;
+    Z_int sec;
     Z_int doy;
     Z_int dow;
     Z_int dst;
 
-    if (DateCalc_system_clock(&year,&mm,&dd, &h,&m,&s, &doy,&dow,&dst))
+    if (DateCalc_system_clock(&year,&month,&day,
+                              &hour,&min,&sec,
+                              &doy,&dow,&dst))
     {
         EXTEND(sp,9);
         PUSHs(sv_2mortal(newSViv((IV)year)));
-        PUSHs(sv_2mortal(newSViv((IV)mm)));
-        PUSHs(sv_2mortal(newSViv((IV)dd)));
-        PUSHs(sv_2mortal(newSViv((IV)h)));
-        PUSHs(sv_2mortal(newSViv((IV)m)));
-        PUSHs(sv_2mortal(newSViv((IV)s)));
+        PUSHs(sv_2mortal(newSViv((IV)month)));
+        PUSHs(sv_2mortal(newSViv((IV)day)));
+        PUSHs(sv_2mortal(newSViv((IV)hour)));
+        PUSHs(sv_2mortal(newSViv((IV)min)));
+        PUSHs(sv_2mortal(newSViv((IV)sec)));
         PUSHs(sv_2mortal(newSViv((IV)doy)));
         PUSHs(sv_2mortal(newSViv((IV)dow)));
         PUSHs(sv_2mortal(newSViv((IV)dst)));
@@ -456,21 +511,23 @@ DateCalc_Today()
 PPCODE:
 {
     Z_int year;
-    Z_int mm;
-    Z_int dd;
-    Z_int h;
-    Z_int m;
-    Z_int s;
+    Z_int month;
+    Z_int day;
+    Z_int hour;
+    Z_int min;
+    Z_int sec;
     Z_int doy;
     Z_int dow;
     Z_int dst;
 
-    if (DateCalc_system_clock(&year,&mm,&dd, &h,&m,&s, &doy,&dow,&dst))
+    if (DateCalc_system_clock(&year,&month,&day,
+                              &hour,&min,&sec,
+                              &doy,&dow,&dst))
     {
         EXTEND(sp,3);
         PUSHs(sv_2mortal(newSViv((IV)year)));
-        PUSHs(sv_2mortal(newSViv((IV)mm)));
-        PUSHs(sv_2mortal(newSViv((IV)dd)));
+        PUSHs(sv_2mortal(newSViv((IV)month)));
+        PUSHs(sv_2mortal(newSViv((IV)day)));
     }
     else DATECALC_SYSTEM_ERROR("Today");
 }
@@ -481,21 +538,23 @@ DateCalc_Now()
 PPCODE:
 {
     Z_int year;
-    Z_int mm;
-    Z_int dd;
-    Z_int h;
-    Z_int m;
-    Z_int s;
+    Z_int month;
+    Z_int day;
+    Z_int hour;
+    Z_int min;
+    Z_int sec;
     Z_int doy;
     Z_int dow;
     Z_int dst;
 
-    if (DateCalc_system_clock(&year,&mm,&dd, &h,&m,&s, &doy,&dow,&dst))
+    if (DateCalc_system_clock(&year,&month,&day,
+                              &hour,&min,&sec,
+                              &doy,&dow,&dst))
     {
         EXTEND(sp,3);
-        PUSHs(sv_2mortal(newSViv((IV)h)));
-        PUSHs(sv_2mortal(newSViv((IV)m)));
-        PUSHs(sv_2mortal(newSViv((IV)s)));
+        PUSHs(sv_2mortal(newSViv((IV)hour)));
+        PUSHs(sv_2mortal(newSViv((IV)min)));
+        PUSHs(sv_2mortal(newSViv((IV)sec)));
     }
     else DATECALC_SYSTEM_ERROR("Now");
 }
@@ -506,24 +565,26 @@ DateCalc_Today_and_Now()
 PPCODE:
 {
     Z_int year;
-    Z_int mm;
-    Z_int dd;
-    Z_int h;
-    Z_int m;
-    Z_int s;
+    Z_int month;
+    Z_int day;
+    Z_int hour;
+    Z_int min;
+    Z_int sec;
     Z_int doy;
     Z_int dow;
     Z_int dst;
 
-    if (DateCalc_system_clock(&year,&mm,&dd, &h,&m,&s, &doy,&dow,&dst))
+    if (DateCalc_system_clock(&year,&month,&day,
+                              &hour,&min,&sec,
+                              &doy,&dow,&dst))
     {
         EXTEND(sp,6);
         PUSHs(sv_2mortal(newSViv((IV)year)));
-        PUSHs(sv_2mortal(newSViv((IV)mm)));
-        PUSHs(sv_2mortal(newSViv((IV)dd)));
-        PUSHs(sv_2mortal(newSViv((IV)h)));
-        PUSHs(sv_2mortal(newSViv((IV)m)));
-        PUSHs(sv_2mortal(newSViv((IV)s)));
+        PUSHs(sv_2mortal(newSViv((IV)month)));
+        PUSHs(sv_2mortal(newSViv((IV)day)));
+        PUSHs(sv_2mortal(newSViv((IV)hour)));
+        PUSHs(sv_2mortal(newSViv((IV)min)));
+        PUSHs(sv_2mortal(newSViv((IV)sec)));
     }
     else DATECALC_SYSTEM_ERROR("Today_and_Now");
 }
@@ -534,15 +595,15 @@ DateCalc_Easter_Sunday(year)
     Z_int	year
 PPCODE:
 {
-    Z_int mm;
-    Z_int dd;
+    Z_int month;
+    Z_int day;
 
-    if ((year > 0) and DateCalc_easter_sunday(&year,&mm,&dd))
+    if ((year > 0) and DateCalc_easter_sunday(&year,&month,&day))
     {
         EXTEND(sp,3);
         PUSHs(sv_2mortal(newSViv((IV)year)));
-        PUSHs(sv_2mortal(newSViv((IV)mm)));
-        PUSHs(sv_2mortal(newSViv((IV)dd)));
+        PUSHs(sv_2mortal(newSViv((IV)month)));
+        PUSHs(sv_2mortal(newSViv((IV)day)));
     }
     else DATECALC_YEAR_ERROR("Easter_Sunday");
 }
@@ -587,15 +648,15 @@ DateCalc_Decode_Date_EU(string)
 PPCODE:
 {
     Z_int year;
-    Z_int mm;
-    Z_int dd;
+    Z_int month;
+    Z_int day;
 
-    if (DateCalc_decode_date_eu(string,&year,&mm,&dd))
+    if (DateCalc_decode_date_eu(string,&year,&month,&day))
     {
         EXTEND(sp,3);
         PUSHs(sv_2mortal(newSViv((IV)year)));
-        PUSHs(sv_2mortal(newSViv((IV)mm)));
-        PUSHs(sv_2mortal(newSViv((IV)dd)));
+        PUSHs(sv_2mortal(newSViv((IV)month)));
+        PUSHs(sv_2mortal(newSViv((IV)day)));
     }
     /* else return empty list */
 }
@@ -607,25 +668,25 @@ DateCalc_Decode_Date_US(string)
 PPCODE:
 {
     Z_int year;
-    Z_int mm;
-    Z_int dd;
+    Z_int month;
+    Z_int day;
 
-    if (DateCalc_decode_date_us(string,&year,&mm,&dd))
+    if (DateCalc_decode_date_us(string,&year,&month,&day))
     {
         EXTEND(sp,3);
         PUSHs(sv_2mortal(newSViv((IV)year)));
-        PUSHs(sv_2mortal(newSViv((IV)mm)));
-        PUSHs(sv_2mortal(newSViv((IV)dd)));
+        PUSHs(sv_2mortal(newSViv((IV)month)));
+        PUSHs(sv_2mortal(newSViv((IV)day)));
     }
     /* else return empty list */
 }
 
 
 Z_int
-DateCalc_Compress(yy,mm,dd)
-    Z_int	yy
-    Z_int	mm
-    Z_int	dd
+DateCalc_Compress(year,month,day)
+    Z_int	year
+    Z_int	month
+    Z_int	day
 
 
 void
@@ -633,18 +694,18 @@ DateCalc_Uncompress(date)
     Z_int	date
 PPCODE:
 {
-    Z_int cc;
-    Z_int yy;
-    Z_int mm;
-    Z_int dd;
+    Z_int century;
+    Z_int year;
+    Z_int month;
+    Z_int day;
 
-    if (DateCalc_uncompress(date,&cc,&yy,&mm,&dd))
+    if (DateCalc_uncompress(date,&century,&year,&month,&day))
     {
         EXTEND(sp,4);
-        PUSHs(sv_2mortal(newSViv((IV)cc)));
-        PUSHs(sv_2mortal(newSViv((IV)yy)));
-        PUSHs(sv_2mortal(newSViv((IV)mm)));
-        PUSHs(sv_2mortal(newSViv((IV)dd)));
+        PUSHs(sv_2mortal(newSViv((IV)century)));
+        PUSHs(sv_2mortal(newSViv((IV)year)));
+        PUSHs(sv_2mortal(newSViv((IV)month)));
+        PUSHs(sv_2mortal(newSViv((IV)day)));
     }
     /* else return empty list */
     /* else DATECALC_DATE_ERROR("Uncompress"); */
@@ -675,17 +736,17 @@ PPCODE:
 
 
 void
-DateCalc_Date_to_Text(year,mm,dd)
+DateCalc_Date_to_Text(year,month,day)
     Z_int	year
-    Z_int	mm
-    Z_int	dd
+    Z_int	month
+    Z_int	day
 PPCODE:
 {
     charptr string;
 
-    if (DateCalc_check_date(year,mm,dd))
+    if (DateCalc_check_date(year,month,day))
     {
-        string = DateCalc_Date_to_Text(year,mm,dd);
+        string = DateCalc_Date_to_Text(year,month,day);
         if (string != NULL)
         {
             EXTEND(sp,1);
@@ -699,17 +760,17 @@ PPCODE:
 
 
 void
-DateCalc_Date_to_Text_Long(year,mm,dd)
+DateCalc_Date_to_Text_Long(year,month,day)
     Z_int	year
-    Z_int	mm
-    Z_int	dd
+    Z_int	month
+    Z_int	day
 PPCODE:
 {
     charptr string;
 
-    if (DateCalc_check_date(year,mm,dd))
+    if (DateCalc_check_date(year,month,day))
     {
-        string = DateCalc_Date_to_Text_Long(year,mm,dd);
+        string = DateCalc_Date_to_Text_Long(year,month,day);
         if (string != NULL)
         {
             EXTEND(sp,1);
@@ -723,18 +784,18 @@ PPCODE:
 
 
 void
-DateCalc_Calendar(year,mm)
+DateCalc_Calendar(year,month)
     Z_int	year
-    Z_int	mm
+    Z_int	month
 PPCODE:
 {
     charptr string;
 
     if (year > 0)
     {
-        if ((mm >= 1) and (mm <= 12))
+        if ((month >= 1) and (month <= 12))
         {
-            string = DateCalc_Calendar(year,mm);
+            string = DateCalc_Calendar(year,month);
             if (string != NULL)
             {
                 EXTEND(sp,1);
@@ -750,14 +811,14 @@ PPCODE:
 
 
 void
-DateCalc_Month_to_Text(mm)
-    Z_int	mm
+DateCalc_Month_to_Text(month)
+    Z_int	month
 PPCODE:
 {
-    if ((mm >= 1) and (mm <= 12))
+    if ((month >= 1) and (month <= 12))
     {
         EXTEND(sp,1);
-        PUSHs(sv_2mortal(newSVpv((char *)DateCalc_Month_to_Text_[DateCalc_Language][mm],0)));
+        PUSHs(sv_2mortal(newSVpv((char *)DateCalc_Month_to_Text_[DateCalc_Language][month],0)));
     }
     else DATECALC_MONTH_ERROR("Month_to_Text");
 }

@@ -51,6 +51,7 @@ t/f029.t
 t/f030.t
 t/f031.t
 t/f032.t
+t/f033.t
 tools/compile.bat
 tools/compile.pl
 tools/compile.sh

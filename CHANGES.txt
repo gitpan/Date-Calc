@@ -1,5 +1,5 @@
                      ====================================
-                       Package "Date::Calc" Version 4.1
+                       Package "Date::Calc" Version 4.2
                      ====================================
 
 
@@ -106,69 +106,78 @@ The substitutions performed by this upgrade utility are the following:
 Version history:
 ----------------
 
+Version 4.2   07.09.98
+
+ +  Added two casts to (char *) in the call of strncpy in Calc.xs line 857
+    to silence the two corresponding warnings.
+ +  Introduced an additional header "Preface" in the POD documentation to
+    avoid clobbering of the information displayed by CPAN.pm et al.
+ +  Added the new attributes to "Makefile.PL" for ActiveState's port
+    of Perl 5.005 to the Win32 platform.
+
 Version 4.1   08.06.98
 
-    Fixed the bug in "Add_Delta_YMD()" involving month offsets with days at
+ +  Fixed the bug in "Add_Delta_YMD()" involving month offsets with days at
     the end of the month, which caused this function to return invalid dates.
 
 Version 4.0   12.05.98
 
-    Complete rewrite of the XS file.
-    Extensive rewrite of the C library at the core.
-    Changed the naming conventions for function names from all lower case
+ +  Complete rewrite of the XS file.
+ +  Extensive rewrite of the C library at the core.
+ +  Changed the naming conventions for function names from all lower case
     to mixed upper- and lower case.
-    Added systematic exception handling.
-    Renamed the package from "Date::DateCalc" to simply "Date::Calc".
-    Renamed the corresponding files as well as the files of the C core.
-    Added a new Perl function "Week_of_Year()" (replacing "week_number()").
-    Changed the Perl function "Week_Number()" to call the C function
+ +  Added systematic exception handling.
+ +  Renamed the package from "Date::DateCalc" to simply "Date::Calc".
+ +  Renamed the corresponding files as well as the files of the C core.
+ +  Added a new Perl function "Week_of_Year()" (replacing "week_number()").
+ +  Changed the Perl function "Week_Number()" to call the C function
     "Week_Number()".
-    Added new functions System_Clock()", "Today()", "Now()" and
+ +  Added new functions System_Clock()", "Today()", "Now()" and
     "Today_and_Now()".
-    Added "check_business_date()", "Standard_to_Business()" and
+ +  Added "check_business_date()", "Standard_to_Business()" and
     "Business_to_Standard()".
-    Ported the functions from "Date::DateCalcLib" from Perl to C.
-    Dropped the module "Date::DateCalcLib".
-    Added multi-language support.
-    Enhanced support for Windows NT/95.
-    Complete rewrite of the demo programs.
-    Complete rewrite of the documentation.
-    Added many new tools (like "upgrade_DC40.pl" and "iso2pc.c").
+ +  Ported the functions from "Date::DateCalcLib" from Perl to C.
+ +  Dropped the module "Date::DateCalcLib".
+ +  Added multi-language support.
+ +  Enhanced support for Windows NT/95.
+ +  Complete rewrite of the demo programs.
+ +  Complete rewrite of the documentation.
+ +  Added many new tools (like "upgrade_DC40.pl" and "iso2pc.c").
 
 Version 3.2   15.06.97
 
-    Added the function "week_of_year()" in the C core because the C function
+ +  Added the function "week_of_year()" in the C core because the C function
     "week_number()" returns the last week of the previous year or the first
     week of the next year in a rather hidden way.
     The Perl function "week_number()" was not affected by this change.
 
 Version 3.1   12.06.97
 
-    Added a new function "calendar()" to the "Date::CalcLib" module.
-    Added a demo program in C named "cal.c_" (imitates the UNIX "cal"
+ +  Added a new function "calendar()" to the "Date::CalcLib" module.
+ +  Added a demo program in C named "cal.c_" (imitates the UNIX "cal"
     command) to demonstrate the use of the C core as a stand-alone library.
 
 Version 3.0   16.02.97
 
-    Added the "Date::DateCalcLib" module as a library of useful functions
+ +  Added the "Date::DateCalcLib" module as a library of useful functions
     that were contained in the various demo files in previous versions.
-    Modified the demo programs to use this library instead.
-    Changed the conventions for unsuccessful returns: Now an empty list
+ +  Modified the demo programs to use this library instead.
+ +  Changed the conventions for unsuccessful returns: Now an empty list
     is returned instead of zeros in all list elements. This makes it
     possible to assign the returned list and to check for success in
     the same statement.
 
 Version 2.3   22.11.96
 
-    Fixed a problem with unbalanced "malloc" and "free" calls that
+ +  Fixed a problem with unbalanced "malloc" and "free" calls that
     only became apparent in Perl version 5.003: Calling "malloc" in
     the C core of my module and "free" in the XS file produced a
     "bad free() ignored" warning.
-    Added a function to call "free" in the C core instead.
+ +  Added a function to call "free" in the C core instead.
 
 Version 2.2   26.05.96
 
-    Bugfix concerning arrays as parameters: Enabling prototypes in
+ +  Bugfix concerning arrays as parameters: Enabling prototypes in
     the XS file caused
         ($year,$mm,$dd) = first_in_week(week_number($year,$mm,$dd));
     to break in the previous version, because "week_number()" passes
@@ -177,93 +186,93 @@ Version 2.2   26.05.96
 
 Version 2.1   26.05.96
 
-    Bugfix: Changed
+ +  Bugfix: Changed
         if ((*ss <= 60) and (*mm <= 60) and (*hh <= 24) and
     to
         if ((*ss < 60) and (*mm < 60) and (*hh < 24) and
-    Applied minor adjustments in orthography and style.
-    Made the necessary adaptations to conform with the new Perl 5.002
+ +  Applied minor adjustments in orthography and style.
+ +  Made the necessary adaptations to conform with the new Perl 5.002
     module standards (mainly concerning $VERSION and prototypes).
-    The man page is no separate file anymore, it is now included in the
+ +  The man page is no separate file anymore, it is now included in the
     file "DateCalc.pm" in POD format, where it will automatically be found
     and installed in your "man" directory by "make install".
 
 Version 2.0   25.05.96
 
-    Added functions "date_time_difference()" and "calc_new_date_time()"
+ +  Added functions "date_time_difference()" and "calc_new_date_time()"
     for date/time calculations (plus some other new functions).
-    The german man page was dropped because it became too costly (i.e.,
+ +  The german man page was dropped because it became too costly (i.e.,
     time consuming) to maintain two man pages.
-    Dropped the functions "day_short_tab()" and "month_short_tab()",
+ +  Dropped the functions "day_short_tab()" and "month_short_tab()",
     because they can be derived from the corresponding full text variants.
-    Renamed the functions "encode()", "decode()", "valid_date()" and
+ +  Renamed the functions "encode()", "decode()", "valid_date()" and
     "date_string()" to "compress()", "uncompress()", "check_compressed()"
     and "compressed_to_short()", respectively, for more consistency.
-    Modified the function "day_of_week()" to return 1..7 instead of
+ +  Modified the function "day_of_week()" to return 1..7 instead of
     0..6 (in order to make the functions "decode_day()" and
     "decode_month()" work the same way).
-    Changed the function and table "day_name_tab()" accordingly.
-    Exported the functions "decode_day()" and "decode_month()",
+ +  Changed the function and table "day_name_tab()" accordingly.
+ +  Exported the functions "decode_day()" and "decode_month()",
     which were purely for internal use in previous versions.
-    Added a utility named "parse_date.pl" to parse the output
+ +  Added a utility named "parse_date.pl" to parse the output
     of "/bin/date".
 
 Version 1.6   20.04.96
 
-    Tested with Perl 5.002 for compatibility (successfully).
-    Added another demo program which shows how to calculate, for instance,
+ +  Tested with Perl 5.002 for compatibility (successfully).
+ +  Added another demo program which shows how to calculate, for instance,
     the 2nd Thursday of a given month and year.
     This version was never published.
 
 Version 1.5   14.03.96
 
-    Added a prominent notice that you need an ANSI C compiler in order
+ +  Added a prominent notice that you need an ANSI C compiler in order
     to successfully install this package, because of too many problem
     reports of this kind from users.
-    Added a second demo program for decoding dates in U.S. american format.
+ +  Added a second demo program for decoding dates in U.S. american format.
 
 Version 1.4   11.02.96
 
-    Bugfix: The function newSVnv(double) was previously used in the XS file
+ +  Bugfix: The function newSVnv(double) was previously used in the XS file
     to create a new SV with an integer value passed to it. Fixed this to use
     newSViv(IV) instead.
 
 Version 1.3   10.12.95
 
-    The C library "lib_date.c" is compiled separately now,
+ +  The C library "lib_date.c" is compiled separately now,
     it is no longer "#include"d in the XS file.
-    Added the function "days_in_month()".
+ +  Added the function "days_in_month()".
 
 Version 1.2b  27.11.95
 
-    Fixed EXTEND(SP,num) back into EXTEND(sp,num).
-    Marginal refinements of the documentation.
-    The fix for type name clashes of previous version apparently succeeded.
+ +  Fixed EXTEND(SP,num) back into EXTEND(sp,num).
+ +  Marginal refinements of the documentation.
+ +  The fix for type name clashes of previous version apparently succeeded.
 
 Version 1.2a  21.11.95
 
-    Another attempt at fixing the problem of type name clashes.
-    Erroneously "fixed" EXTEND(sp,num) into EXTEND(SP,num).
+ +  Another attempt at fixing the problem of type name clashes.
+ +  Erroneously "fixed" EXTEND(sp,num) into EXTEND(SP,num).
 
 Version 1.1   18.11.95
 
-    Added test scripts for "make test".
-    Attempt at fixing the problem of type name clashes
+ +  Added test scripts for "make test".
+ +  Attempt at fixing the problem of type name clashes
     (changed "uint", "ulong" etc. to "unint", "unlong" etc.).
 
 Version 1.01  16.11.95
 
-    Made the necessary changes so as to comply with programming standards
+ +  Made the necessary changes so as to comply with programming standards
     required for Perl modules.
 
 Version 1.0   14.11.95   First version under UNIX (with Perl module)
 
-    Released as an article in the newsgroups comp.lang.perl.misc and
+ +  Released as an article in the newsgroups comp.lang.perl.misc and
     de.comp.lang.perl.
 
 Version 0.9   01.11.93   First version of C library under MS-DOS
 
-    I wrote this library in my spare time because the company I was working
+ +  I wrote this library in my spare time because the company I was working
     for at that time could have needed it: Instead of storing some values for
     the last 60 days in an array and the dates of the corresponding days in
     another array, my library would have permitted to economize the second

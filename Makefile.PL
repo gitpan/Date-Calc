@@ -11,6 +11,8 @@
 
 use ExtUtils::MakeMaker;
 
+use Config;
+
 WriteMakefile(
     'NAME'              => 'Date::Calc',
     'VERSION_FROM'      => 'Calc.pm',
@@ -18,7 +20,11 @@ WriteMakefile(
     'LIBS'              => [''],   # e.g., '-lm'
     'DEFINE'            => '',     # e.g., '-DHAVE_SOMETHING'
     'INC'               => '',     # e.g., '-I/usr/include/other'
-#   'EXE_FILES'         => [ qw() ],
+#   ($] >= 5.005 ?
+#       ('ABSTRACT'     => 'Gregorian calendar date calculations',
+#        'AUTHOR'       => 'Steffen Beyer (sb@engelschall.com)') : ()),
+#   ($] >= 5.005 && $ eq 'MSWin32' && $Config{archname} =~ /-object\b/i ?
+#       ('CAPI'         => 'TRUE') : ()),
     'dist'              => { COMPRESS => "gzip -9", SUFFIX => "gz" }
 );
 

@@ -77,7 +77,7 @@ require DynaLoader;
 ##                                              ##
 ##################################################
 
-$VERSION = '4.1';
+$VERSION = '4.2';
 
 bootstrap Date::Calc $VERSION;
 
@@ -304,6 +304,8 @@ __END__
 =head1 NAME
 
 Date::Calc - Gregorian calendar date calculations
+
+=head1 PREFACE
 
 This package consists of a C library and a Perl module (which uses
 the C library, internally) for all kinds of date calculations based
@@ -2174,7 +2176,7 @@ for B<ALL OTHER> processes or threads as well).
 
 =head1 VERSION
 
-This man page documents "Date::Calc" version 4.1.
+This man page documents "Date::Calc" version 4.2.
 
 =head1 AUTHOR
 

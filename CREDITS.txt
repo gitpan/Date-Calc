@@ -1,5 +1,5 @@
                      ====================================
-                       Package "Date::Calc" Version 4.1
+                       Package "Date::Calc" Version 4.2
                      ====================================
 
 
@@ -77,5 +77,9 @@ stand-alone, because that was what he needed to do as well.
 
 Many thanks to Gunardi Wu <gunardi@starindo.net> for notifying me about
 the bug in the "Add_Delta_YMD()" function which was fixed in version 4.1.
+
+Thanks to the several people who notified me about two compiler warnings
+concerning incompatible character types in Calc.xs line 857 (added two
+casts in version 4.2 to fix this flaw).
 
 

@@ -854,7 +854,7 @@ PPCODE:
         }
         else
         {
-            strncpy(buffer,DateCalc_Day_of_Week_to_Text_[DateCalc_Language][dow],3);
+            strncpy((char *)buffer,(char *)DateCalc_Day_of_Week_to_Text_[DateCalc_Language][dow],3);
             buffer[3] = '\0';
             PUSHs(sv_2mortal(newSVpv((char *)buffer,0)));
         }

@@ -1,5 +1,5 @@
                      ====================================
-                       Package "Date::Calc" Version 4.1
+                       Package "Date::Calc" Version 4.2
                      ====================================
 
 
@@ -12,6 +12,7 @@ Contents:
 
     +   Prerequisites
     +   Preliminary steps for use with Perl prior to version 5.002
+    +   Preliminary steps for use with ActiveState's port of Perl 5.005
     +   Preliminary steps for console users
     +   How to install additional languages
     +   Installation
@@ -31,7 +32,7 @@ Edit the file "Makefile.PL" and change the line
 
     'VERSION_FROM'      => 'Calc.pm',
 to
-    'VERSION'           => '4.1',
+    'VERSION'           => '4.2',
 
 Then edit the file "Calc.pm" and change the line
 
@@ -41,13 +42,23 @@ to
 
 Also edit the file "t/f000.t" and change the line
 
-    use Date::Calc 4.1;
+    use Date::Calc 4.2;
 to
     use Date::Calc;
 
 Finally, edit the file "Calc.xs" and delete the line
 
     PROTOTYPES: DISABLE
+
+
+Preliminary steps for use with ActiveState's port of Perl 5.005:
+----------------------------------------------------------------
+
+(For the Win32 platform)
+
+Edit the file "Makefile.PL" and remove all of the "#" characters
+which currently comment out the attributes "ABSTRACT", "AUTHOR"
+and "CAPI".
 
 
 Preliminary steps for console users:
@@ -213,7 +224,7 @@ Detailed installation guide:
 ----------------------------
 
  1) Change directory to the directory that has been created by unpacking this
-    package ("cd Date-Calc-4.1").
+    package ("cd Date-Calc-4.2").
 
  2) Type "perl Makefile.PL" (or whatever the name and path of your Perl 5
     binary is).

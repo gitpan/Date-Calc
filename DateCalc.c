@@ -768,10 +768,10 @@ boolean DateCalc_add_delta_ymd(Z_int *year, Z_int *month, Z_int *day,
     if (Dy >= 1)
     {
         *year = (Z_int) Dy;
-        if ((*day == 29) and (*month == 2) and not DateCalc_leap_year(*year))
+        if (*day >
+            (Dd = DateCalc_Days_in_Month_[DateCalc_leap_year(*year)][*month]))
         {
-            *day = 1;
-            *month = 3;
+            *day = Dd;
         }
         return(true);
     }
@@ -1442,15 +1442,16 @@ void DateCalc_Dispose(charptr string)
 
 charptr DateCalc_Version(void)
 {
-    return((charptr)"4.0");
+    return((charptr)"4.1");
 }
 
 /*****************************************************************************/
-/*  VERSION:  4.0                                                            */
+/*  VERSION:  4.1                                                            */
 /*****************************************************************************/
 /*  VERSION HISTORY:                                                         */
 /*****************************************************************************/
 /*                                                                           */
+/*    Version 4.1   08.06.98  Fixed bug in "add_delta_ymd()".                */
 /*    Version 4.0   12.05.98  Major rework. Added multi-language support.    */
 /*    Version 3.2   15.06.97  Added "week_of_year()".                        */
 /*    Version 3.1   12.06.97  No significant changes.                        */

@@ -10,7 +10,7 @@ use Date::Calc qw( Add_Delta_YMD );
 #                                           $y_offs,$m_offs,$d_offs);
 # ======================================================================
 
-print "1..18\n";
+print "1..22\n";
 
 $n = 1;
 eval { ($year,$mm,$dd) = Add_Delta_YMD(0,0,0,0,0,0); };
@@ -43,13 +43,18 @@ if ((($year,$mm,$dd) = Add_Delta_YMD(1996,2,29,0,0,0)) &&
 {print "ok $n\n";} else {print "not ok $n\n";}
 $n++;
 
+if ((($year,$mm,$dd) = Add_Delta_YMD(1992,2,29,4,0,0)) &&
+($year==1996) && ($mm==2) && ($dd==29))
+{print "ok $n\n";} else {print "not ok $n\n";}
+$n++;
+
 if ((($year,$mm,$dd) = Add_Delta_YMD(1996,2,29,1,0,0)) &&
-($year==1997) && ($mm==3) && ($dd==1))
+($year==1997) && ($mm==2) && ($dd==28))
 {print "ok $n\n";} else {print "not ok $n\n";}
 $n++;
 
 if ((($year,$mm,$dd) = Add_Delta_YMD(1997,1,29,0,1,0)) &&
-($year==1997) && ($mm==3) && ($dd==1))
+($year==1997) && ($mm==2) && ($dd==28))
 {print "ok $n\n";} else {print "not ok $n\n";}
 $n++;
 
@@ -81,19 +86,19 @@ if ((($year,$mm,$dd) = Add_Delta_YMD($year,$mm,$dd, $y,$m,$d)) &&
 $n++;
 
 if ((($year,$mm,$dd) = Add_Delta_YMD($year,$mm,$dd, -$y,-$m,-$d)) &&
-($year==1997) && ($mm==3) && ($dd==1))
+($year==1997) && ($mm==2) && ($dd==28))
 {print "ok $n\n";} else {print "not ok $n\n";}
 $n++;
 
 ($year,$mm,$dd) = (1997,2,15); ($y,$m,$d) = (0,1,-17);
 
 if ((($year,$mm,$dd) = Add_Delta_YMD($year,$mm,$dd, $y,$m,$d)) &&
-($year==1997) && ($mm==3) && ($dd==1))
+($year==1997) && ($mm==2) && ($dd==28))
 {print "ok $n\n";} else {print "not ok $n\n";}
 $n++;
 
 if ((($year,$mm,$dd) = Add_Delta_YMD($year,$mm,$dd, -$y,-$m,-$d)) &&
-($year==1997) && ($mm==2) && ($dd==18))
+($year==1997) && ($mm==2) && ($dd==17))
 {print "ok $n\n";} else {print "not ok $n\n";}
 $n++;
 
@@ -106,6 +111,21 @@ $n++;
 
 if ((($year,$mm,$dd) = Add_Delta_YMD($year,$mm,$dd, -$y,-$m,-$d)) &&
 ($year==1997) && ($mm==2) && ($dd==16))
+{print "ok $n\n";} else {print "not ok $n\n";}
+$n++;
+
+if ((($year,$mm,$dd) = Add_Delta_YMD(1998,1,30,0,1,0)) &&
+($year==1998) && ($mm==2) && ($dd==28))
+{print "ok $n\n";} else {print "not ok $n\n";}
+$n++;
+
+if ((($year,$mm,$dd) = Add_Delta_YMD(2000,1,30,0,1,0)) &&
+($year==2000) && ($mm==2) && ($dd==29))
+{print "ok $n\n";} else {print "not ok $n\n";}
+$n++;
+
+if ((($year,$mm,$dd) = Add_Delta_YMD(2000,1,31,0,3,0)) &&
+($year==2000) && ($mm==4) && ($dd==30))
 {print "ok $n\n";} else {print "not ok $n\n";}
 $n++;
 

@@ -3,7 +3,7 @@
 use strict;
 no strict "vars";
 
-use Date::Calc 4.0;
+use Date::Calc 4.1;
 
 # ======================================================================
 #   $version = Date::Calc::Version();
@@ -13,10 +13,10 @@ use Date::Calc 4.0;
 print "1..2\n";
 
 $n = 1;
-if (Date::Calc::Version() eq "4.0")
+if (Date::Calc::Version() eq "4.1")
 {print "ok $n\n";} else {print "not ok $n\n";}
 $n++;
-if ($Date::Calc::VERSION eq "4.0")
+if ($Date::Calc::VERSION eq "4.1")
 {print "ok $n\n";} else {print "not ok $n\n";}
 
 __END__

@@ -77,7 +77,7 @@ require DynaLoader;
 ##                                              ##
 ##################################################
 
-$VERSION = '4.0';
+$VERSION = '4.1';
 
 bootstrap Date::Calc $VERSION;
 
@@ -951,13 +951,22 @@ In other words, first the days offset is applied (using the function
 "C<Add_Delta_Days()>", internally), then the months offset, and finally
 the years offset.
 
-If the resulting date happens to be the 29th of February, but the resulting
-year is not a leap year, then the resulting date is replaced by the 1st of
-March of that year.
+If the resulting date happens to fall on a day beyond the end of the
+resulting month, like the 31st of April or the 29th of February (in
+non-leap years), then the day is replaced by the last valid day of
+that month in that year (e.g., the 30th of April or 28th of February).
 
-B<BEWARE> that because of this, but even more because a year and a month
-offset is not equivalent to a fixed number of days, the transformation
-performed by this function is B<NOT REVERSIBLE>!
+B<BEWARE> that this behaviour differs from that of previous versions
+of this module!
+
+(Formerly, only the 29th of February in non-leap years was checked for
+(which - in contrast to the current version - was replaced by the 1st
+of March). Other possible invalid dates were not checked (and returned
+unwittingly), constituting a severe bug of previous versions.)
+
+B<BEWARE> also that because of this replacement, but even more because
+a year and a month offset is not equivalent to a fixed number of days,
+the transformation performed by this function is B<NOT REVERSIBLE>!
 
 This is in contrast to the functions "C<Add_Delta_Days()>" and
 "C<Add_Delta_DHMS()>", which for this very reason have inverse functions
@@ -2165,7 +2174,7 @@ for B<ALL OTHER> processes or threads as well).
 
 =head1 VERSION
 
-This man page documents "Date::Calc" version 4.0.
+This man page documents "Date::Calc" version 4.1.
 
 =head1 AUTHOR
 

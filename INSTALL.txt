@@ -1,5 +1,5 @@
                      ====================================
-                       Package "Date::Calc" Version 4.0
+                       Package "Date::Calc" Version 4.1
                      ====================================
 
 
@@ -31,7 +31,7 @@ Edit the file "Makefile.PL" and change the line
 
     'VERSION_FROM'      => 'Calc.pm',
 to
-    'VERSION'           => '4.0',
+    'VERSION'           => '4.1',
 
 Then edit the file "Calc.pm" and change the line
 
@@ -41,7 +41,7 @@ to
 
 Also edit the file "t/f000.t" and change the line
 
-    use Date::Calc 4.0;
+    use Date::Calc 4.1;
 to
     use Date::Calc;
 
@@ -213,7 +213,7 @@ Detailed installation guide:
 ----------------------------
 
  1) Change directory to the directory that has been created by unpacking this
-    package ("cd Date-Calc-4.0").
+    package ("cd Date-Calc-4.1").
 
  2) Type "perl Makefile.PL" (or whatever the name and path of your Perl 5
     binary is).
@@ -274,7 +274,7 @@ Detailed installation guide:
     The output should look somewhat like this:
 
     PERL_DL_NONLAZY=1 /sw/bin/perl -I./blib/arch -I./blib/lib
-    -I/sw/pkg/perl/lib/i386-freebsd/5.00403 -I/sw/pkg/perl/lib
+    -I/sw/pkg/perl/lib/i386-freebsd/5.00404 -I/sw/pkg/perl/lib
     -e 'use Test::Harness qw(&runtests $verbose); $verbose=0;
     runtests @ARGV;' t/*.t
     t/f000..............ok
@@ -312,7 +312,7 @@ Detailed installation guide:
     t/f032..............ok
     t/f033..............ok
     All tests successful.
-    Files=34,  Tests=1819, 47 secs (36.90 cusr  5.77 csys = 42.67 cpu)
+    Files=34,  Tests=1823, 11 secs ( 9.38 cusr  0.98 csys = 10.35 cpu)
 
  5) At last, type "make install" (or "dmake install", "nmake install").
 

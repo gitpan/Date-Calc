@@ -1,5 +1,5 @@
                      ====================================
-                       Package "Date::Calc" Version 4.0
+                       Package "Date::Calc" Version 4.1
                      ====================================
 
 
@@ -74,5 +74,8 @@ of cal(1)?", which gave me the idea to write the function "calendar"
 which has been added to the module "DateCalcLib" in version 3.1, and
 also for the C code demonstrating how to use the C library "lib_date.c"
 stand-alone, because that was what he needed to do as well.
+
+Many thanks to Gunardi Wu <gunardi@starindo.net> for notifying me about
+the bug in the "Add_Delta_YMD()" function which was fixed in version 4.1.
 
 

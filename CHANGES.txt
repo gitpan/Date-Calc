@@ -1,5 +1,5 @@
                      ====================================
-                       Package "Date::Calc" Version 4.0
+                       Package "Date::Calc" Version 4.1
                      ====================================
 
 
@@ -105,6 +105,11 @@ The substitutions performed by this upgrade utility are the following:
 
 Version history:
 ----------------
+
+Version 4.1   08.06.98
+
+    Fixed the bug in "Add_Delta_YMD()" involving month offsets with days at
+    the end of the month, which caused this function to return invalid dates.
 
 Version 4.0   12.05.98
 

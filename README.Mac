@@ -1,0 +1,254 @@
+Saturday, January 06, 2001
+
+Dear MacPerl Users,
+
+this is the Date::Calc module with shared libraries compiled for MacPerl. Shared 
+libraries run only on PPC and CFM68K versions of MacPerl, not non-CFM 68K versions.
+
+This was compiled with MPW's MrC (PPC) and SC (68K). Passed all tests on both
+architectures (thanks to my old Mac LC :). However, let me know of any problems you
+might encounter.
+
+Currently, you can download the module and the readme from my website via:
+
+http://usemacperl.webjump.com/index.html
+
+
+INSTALLATION
+============
+The module is best installed using Chris Nandor's installme.plx droplet. Simply 
+drop the packed archive or the unpacked folder on the droplet. Answer the 
+upcoming question "Convert all text and MacBinary files?" with "Yes". This should 
+install the module properly. 
+
+The installer is part of the cpan-mac module, available from CPAN 
+
+    http://www.perl.com/CPAN-local/authors/id/CNANDOR/
+
+or via Chris Nandor's MacPerl page 
+
+    http://pudge.net/macperl/ .
+	
+
+CHANGES
+=======
+In the 'Mac_changed' folder, you will find a back-up of all the *ORIGINAL* files, 
+that have been changed:
+
+DateCalc.c
+README.txt
+Toolbox.h
+
+Actually, the source files I've changed are 'Toolbox.h' and 'DateCalc.c'. All the 
+changes I've made can be found by searching for the phrase '###TOM', if you are 
+interested in.
+
+I've added two MPW worksheets (PPC and 68K) to the distribution. This way you can
+build the module yourself, if you like. However, you will need the MacPerl source 
+distribution [1] and the FREE MPW development environment, available from Apple [2]. 
+You may also want to take a look at the Macintosh Perl XS Tutorial [3]. It's best 
+to open the worksheet and execute the commands step by step. Read and follow the 
+instructions I've provided for each step of the build process.
+
+In the build process for CFM68K some extra preparation is required for the source 
+file(s). To help you in this procedure, I've added the file 'Calc_68K.xs'. This 
+should be the input file for the XSUBpp compiler in the CFM68K build process.
+
+In that 68K XS file, the header declarations are bracketed with #import pragmas.
+This special pragma treatment is needed for the SC compiler and the ILink linker  
+(see the Macintosh Perl XS tutorial for details). Follow the steps in the 68K MPW
+worksheet and everything should be fine.
+
+Have fun.
+
+--
+Thomas Wegner
+
+toms_email@gmx.de
+
+
+References:
+
+[1] MacPerl 5.004 source  <ftp://sunsite.cnlab-switch.ch/software/platform/macos/perl/Mac_Perl_520r4_src.bin>
+[2] Apple's MPW  <http://developer.apple.com/tools/mpw-tools/>
+[3] Macintosh Perl XS Tutorial  <http://macperl.com/depts/Tutorials/XS/Mac_XS.sea.hqx>
+
+
+
+
+############################ ORIGINAL FOLLOWS ####################################################################
+
+
+                     ====================================
+                       Package "Date::Calc" Version 4.3
+                     ====================================
+
+
+This package is available for download either from my web site at
+
+                  http://www.engelschall.com/u/sb/download/
+
+or from any CPAN (= "Comprehensive Perl Archive Network") mirror server:
+
+                  http://www.perl.com/CPAN/authors/id/STBEY/
+
+
+The package consists of a C library (useful for C developers) which is the
+core of a Perl (wrapper) module (for easy access to the library from Perl).
+
+The C library is specifically designed so that it can be used stand-alone,
+without Perl.
+
+
+Legal issues:
+-------------
+
+This package with all its parts is
+
+Copyright (c) 1995 - 2000 by Steffen Beyer.
+All rights reserved.
+
+This package is free software; you can redistribute it and/or
+modify it under the same terms as Perl itself, i.e., under the
+terms of the "Artistic License" or the "GNU General Public License".
+
+The C library at the core of this Perl module can additionally
+be redistributed and/or modified under the terms of the
+"GNU Library General Public License".
+
+Please refer to the files "Artistic.txt", "GNU_GPL.txt" and
+"GNU_LGPL.txt" in this distribution for details!
+
+
+Prerequisites:
+--------------
+
+Perl version 5.000 or higher, and an ANSI C compiler (!)
+                                     ^^^^^^
+
+
+Installation:
+-------------
+
+Please see the file "INSTALL.txt" in this distribution for instructions
+on how to install this package.
+
+
+Adding more languages:
+----------------------
+
+Please see the corresponding section in the file "INSTALL.txt" in this
+distribution for detailed instructions on how to add other languages.
+
+
+Changes over previous versions:
+-------------------------------
+
+Please refer to the file "CHANGES.txt" in this distribution for a detailed
+version history.
+
+
+Documentation:
+--------------
+
+The documentation of this package is included in POD format (= "Plain Old
+Documentation") in the file "Calc.pm" in this distribution, the human-
+readable markup-language standard for Perl documentation.
+
+By building this package, this documentation will automatically be converted
+into a man page, which will automatically be installed in your Perl tree for
+further reference in this process, where it can be accessed via the command
+"man Date::Calc" (UNIX) or "perldoc Date::Calc" (UNIX and Win32).
+
+If Perl is not available on your system, you can also read this documentation
+directly.
+
+
+What does it do:
+----------------
+
+This package consists of a C library and a Perl module (which uses
+the C library, internally) for all kinds of date calculations based
+on the Gregorian calendar (the one used in all western countries today),
+thereby complying with all relevant norms and standards: ISO/R 2015-1971,
+DIN 1355 and, to some extent, ISO 8601 (where applicable).
+
+(See also http://www.engelschall.com/u/sb/download/Date-Calc/DIN1355/
+for a scan of part of the "DIN 1355" document (in German)).
+
+The module of course handles year numbers of 2000 and above correctly
+("Year 2000" or "Y2K" compliance) -- actually all year numbers from 1
+to the largest positive integer representable on your system (which
+is at least 32767) can be dealt with.
+
+Note that this package projects the Gregorian calendar back until the
+year 1 A.D. -- even though the Gregorian calendar was only adopted
+in 1582 by most (not all) European countries, in obedience to the
+corresponding decree of catholic pope Gregor I in that year.
+
+Some (mainly protestant) countries continued to use the Julian calendar
+(used until then) until as late as the beginning of the 20th century.
+
+Finally, note that this package is not intended to do everything you could
+ever imagine automagically for you; it is rather intended to serve as a
+toolbox (in the best of UNIX spirit and traditions) which should, however,
+always get you where you want to go.
+
+See the section "RECIPES" at the end of the manual page for solutions
+to common problems!
+
+If nevertheless you can't figure out how to solve a particular problem,
+please let me know! (See e-mail address at the bottom of this document.)
+
+
+Important note to C developers:
+-------------------------------
+
+Note again that the C library at the core of this module can also be
+used stand-alone (i.e., it contains no inter-dependencies whatsoever
+with Perl).
+
+The library itself consists of three files: "DateCalc.c", "DateCalc.h"
+and "ToolBox.h".
+
+Just compile "DateCalc.c" (which automatically includes "ToolBox.h")
+and link the resulting output file "DateCalc.o" with your application,
+which in turn should include "ToolBox.h" and "DateCalc.h" (in this order).
+
+
+Example applications:
+---------------------
+
+Please refer to the file "EXAMPLES.txt" in this distribution for details
+about the example applications in the "examples" subdirectory.
+
+
+Tools:
+------
+
+Please refer to the file "TOOLS.txt" in this distribution for details
+about the various tools to be found in the "tools" subdirectory.
+
+
+Credits:
+--------
+
+Please refer to the file "CREDITS.txt" in this distribution for a list
+of contributors.
+
+
+Author's note:
+--------------
+
+If you have any questions, suggestions or need any assistance, please
+let me know!
+
+I would in fact be glad to receive any kind of feedback from you!
+
+I hope you will find this module beneficial.
+
+Yours,
+--
+  Steffen Beyer <sb@engelschall.com> http://www.engelschall.com/u/sb/
+       "There is enough for the need of everyone in this world,
+         but not for the greed of everyone." - Mahatma Gandhi

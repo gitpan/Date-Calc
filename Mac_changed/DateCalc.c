@@ -17,16 +17,6 @@
 /*  MODULE INTERFACE:                                                        */
 /*****************************************************************************/
 
-// ###TOM added
-// The SC compiler warns, if stdio.h is not included: "function 'sprintf' has no
-// prototype".
-// Later on, the linker complains an unresolved reference to sprintf. Thus it's
-// better to include stdio.h here. 
-#ifdef CFM68K
-#include <stdio.h>
-#endif
-// END ###TOM added
-
 boolean
 DateCalc_leap_year                     (Z_int   year);
 
@@ -689,8 +679,6 @@ boolean DateCalc_delta_dhms(Z_long *Dd,
     else return(false);
 }
 
-
-
 boolean DateCalc_add_delta_days(Z_int *year, Z_int *month, Z_int *day,
                                                            Z_long Dd)
 {
@@ -725,7 +713,6 @@ boolean DateCalc_add_delta_days(Z_int *year, Z_int *month, Z_int *day,
     }
     else return(false);
 }
-
 
 boolean DateCalc_add_delta_dhms(Z_int *year, Z_int *month, Z_int *day,
                                 Z_int *hour, Z_int *min,   Z_int *sec,

@@ -1,0 +1,122 @@
+# INSTRUCTIONS FOR BUILDING THE Date::Calc CFM68K SHARED LIBRARY
+	
+
+
+# (1) Copy the Date-Calc-4.3 folder from the expanded Date-Calc-4.3.tar.gz archive into the 
+#     :MacPerl_Src:perl:ext folder of the MacPerl source distribution.
+#  
+#     and then
+#
+#     Set the current directory to the Date-Calc-4.3 folder (via Directory menu).
+
+
+# (2) Build the DateCalc.o object file (with support for shared library model): 
+
+SC DateCalc.c -o DateCalc.o  -sym off -w off  -model cfmflat -d CFM68K
+
+
+
+
+# (3) Set the MPW variable 'MPSrc' to the path to your MacPerl_Src folder, for example     
+
+Set MPSrc "MacintoshHD:MacPerl_Src"     # (change the path accordingly)
+
+
+
+
+
+# (4) Run the XSUBpp compiler for Calc_68K.xs
+
+perl :::lib:ExtUtils:xsubpp -typemap :::lib:ExtUtils:typemap -typemap :typemap  Calc_68K.xs >Calc.tc && Rename -y Calc.tc Calc.c
+
+
+
+
+
+
+# (5) If you like, take a look at the resulting C source file Calc.c
+
+open Calc.c
+
+
+
+
+
+# (6) Compile Calc.c (with support for shared library model):
+
+
+SC -w off -d __STD_C -d MULTIPLICITY ¶
+	-d MPW_HAS_BOOL ¶
+	-model cfmflat ¶
+	-i {MPSrc}: ¶
+	-i {MPSrc}:sfio:include: ¶
+	-i {MPSrc}:GUSI:include: ¶
+	-i {MPSrc}:perl: ¶
+	-i : ¶
+    -o Calc.c.o Calc.c
+
+
+
+
+# (7) Link Calc.c.o as shared lib. Link against the DateCalc.o object file from step (2)
+
+
+ILink ¶
+	":Calc.c.o" ¶
+	DateCalc.o ¶
+	"{CFM68KLibraries}NuMathLib.o" ¶
+	"{SharedLibraries}StdCLib" ¶
+	"{SharedLibraries}InterfaceLib" ¶
+	"{CFM68KLibraries}NuMacRuntime.o" ¶
+	"{CFM68KLibraries}NuToolLibs.o" ¶
+	MacintoshHD:MacPerl_Src:perl:PerlStub ¶
+	-sym off ¶
+	-mf -d ¶
+	-model cfmflat ¶
+	-xm sharedlibrary ¶
+	-fragname Calc ¶
+	-export boot_Date__Calc ¶
+	-state rewrite ¶
+	-compact -pad 0 ¶
+	-o Calc.shlb.CFM68K
+
+
+
+
+
+# (8) Rename shared lib temporary
+
+Rename -y Calc.shlb.CFM68K Calc.shlb.CFM68K.tmp
+
+
+
+
+# (9) Flatten the segmented shared library created by ILink
+
+MakeFlat Calc.shlb.CFM68K.tmp -o Calc.shlb.CFM68K
+ 
+
+
+
+# (10) Set the file type and creator of Calc.shlb.CFM68K 
+
+SetFile -t 'shlb' -c 'cfmg' Calc.shlb.CFM68K
+
+
+
+# (11) Delete the temporary file
+
+Delete -y Calc.shlb.CFM68K.tmp
+
+
+
+# (12) Rename the shared library 'Calc.shlb.CFM68K' to 'Calc'
+
+Rename -y Calc.shlb.CFM68K Calc
+
+
+
+
+
+#  Done. The shared library 'Calc' must be installed in the ':site_perl:MacCFM68K:auto:Date:Calc' folder.
+

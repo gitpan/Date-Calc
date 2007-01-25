@@ -92,6 +92,7 @@ please let me know! (See e-mail address at the end of this document.)
       Date_to_Time
       Time_to_Date
       Easter_Sunday
+      Easter_Orthodox_Sunday
       Decode_Month
       Decode_Day_of_Week
       Decode_Language
@@ -260,6 +261,9 @@ please let me know! (See e-mail address at the end of this document.)
 
   Easter_Sunday
       ($year,$month,$day) = Easter_Sunday($year);
+
+  Easter_Orthodox_Sunday
+      ($year,$month,$day) = Easter_Orthdox_Sunday($year [, $julian]);
 
   Decode_Month
       if ($month = Decode_Month($string))
@@ -1422,6 +1426,23 @@ Use the offsets shown above to calculate the date of the corresponding
 feast day as follows:
 
   ($year,$month,$day) = Add_Delta_Days(Easter_Sunday($year), $offset));
+
+=item *
+ 
+C<($year,$month,$day) = Easter_Orthdox_Sunday($year [, $julian]);>
+
+This function calculates the date of Easter Sunday for all years in the
+range from 326 to 2299 (all other year numbers will result in a fatal
+"year out of range" error message) using the method known as the "Gaussian
+Rule".The problem is that the eastern (greek) orthodox church, uses the
+Julian Calendar way of calculating Easter, but then applies +13 days
+of Gregorian Calendar offset.
+Note that asking for Easter_Orthdox_Sunday with $year < 1923 or setting 
+$julian to a true value will return the original Julian Date of Easter, 
+since the Gregorian (actually revised Julian) calendar wasn't adopted 
+in Greece before 1923 and still isn't (probably will never be) in some 
+orthodox countries - notably Russia, Serbia and Georgia according to 
+Wikipedia.
 
 =item *
 
@@ -2972,7 +2993,7 @@ threads as well).
 
 =head1 VERSION
 
-This man page documents "Date::Calc" version 5.4.
+This man page documents "Date::Calc" version 5.5.
 
 =head1 AUTHOR
 

@@ -308,6 +308,13 @@ DateCalc_easter_sunday                 (Z_int  *year,       /*  I/O  */
                                         Z_int  *month,      /*   O   */
                                         Z_int  *day);       /*   O   */
 
+boolean
+DateCalc_easter_orthodox_sunday        (Z_int  *year,       /*  I/O  */
+										boolean julian,     /*   I   */
+                                        Z_int  *month,      /*   O   */
+                                        Z_int  *day);       /*   O   */
+                                        
+
 Z_int
 DateCalc_Decode_Month                  (charptr buffer,
                                         Z_int   length);
@@ -647,11 +654,12 @@ extern const N_char DateCalc_Language_to_Text_[DateCalc_LANGUAGES+1][32];
 /*****************************************************************************/
 
 /*****************************************************************************/
-/*  VERSION:  5.4                                                            */
+/*  VERSION:  5.5                                                            */
 /*****************************************************************************/
 /*  VERSION HISTORY:                                                         */
 /*****************************************************************************/
 /*                                                                           */
+/*    Version 5.5  23.01.07  Fixed compiler warning under gcc-4.             */
 /*    Version 5.4  03.10.04  Added compiler directives for C++.              */
 /*    Version 5.3  29.09.02  No changes.                                     */
 /*    Version 5.2  18.09.02  No changes.                                     */

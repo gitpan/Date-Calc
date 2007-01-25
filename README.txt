@@ -1,5 +1,5 @@
                      ====================================
-                       Package "Date::Calc" Version 5.4
+                       Package "Date::Calc" Version 5.5
                      ====================================
 
 
@@ -35,23 +35,11 @@ interface) with overloaded operators, and a set of modules for calculations
 which take local holidays into account (both additions in Perl only, however).
 
 
-What's new in version 5.4:
+What's new in version 5.5:
 --------------------------
 
- +  Added compiler directives for C++.
- +  Removed "Carp::Clan" from the distribution (available separately).
- +  Fixed bug in initialization of "Date::Calendar::Year" objects.
- +  Added method "tags()" to "Date::Calendar" and "Date::Calendar::Year".
- +  Fixed the formula for "Labor Day" in the U.S. to "1/Mon/Sep".
- +  Added a new recipe to the "Date::Calc" documentation.
- +  Added Romanian to the list of languages supported by "Date::Calc".
- +  Changed the example script "calendar.cgi" to highlight the name
-    which led to a given date being a holiday.
- +  Fixed the Polish entries in "Date::Calc".
- +  Added a few commemorative days to the Norwegian calendar profile.
- +  Added "use bytes" to all Perl files to avoid problems on systems
-    not using the standard locale "C".
- +  Fixed test 5 of t/m005.t to (hopefully) work under other locales.
+ +  Fixed compiler warning under gcc-4.
+ +  Added Easter_Orthodox_Sunday($year [, $julian]).
 
 
 New features in version 5.0:
@@ -182,7 +170,7 @@ http://catcode.com/date/pcalc.html.
 Note to CPAN Testers:
 ---------------------
 
-After completion, version 5.4 of this module has already
+After completion, version 5.5 of this module has already
 been tested successfully with the following configurations:
 
   Perl 5.005_03  -  FreeBSD 4.1.1-RELEASE (with "dlopen() relative paths" patch)

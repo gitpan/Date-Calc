@@ -304,6 +304,13 @@ DateCalc_easter_sunday                 (Z_int  *year,       /*  I/O  */
                                         Z_int  *month,      /*   O   */
                                         Z_int  *day);       /*   O   */
 
+boolean
+DateCalc_easter_orthodox_sunday        (Z_int  *year,       /*  I/O  */
+                                        boolean julian,     /*   I   */
+                                        Z_int  *month,      /*   O   */
+                                        Z_int  *day);       /*   O   */
+                                        
+
 Z_int
 DateCalc_Decode_Month                  (charptr buffer,
                                         Z_int   length);
@@ -1551,6 +1558,45 @@ boolean DateCalc_easter_sunday(Z_int *year, Z_int *month, Z_int *day)
 /*  Whitsunday / Pfingstsonntag / Dimanche de Pentecote    =  easter sunday + 49  */
 /*  Whitmonday / Pfingstmontag / Lundi de Pentecote        =  easter sunday + 50  */
 /*  Feast of Corpus Christi / Fronleichnam / Fete-Dieu     =  easter sunday + 60  */
+boolean DateCalc_easter_orthodox_sunday(Z_int *year, boolean julian, Z_int *month, Z_int *day)
+{
+    Z_int a, b, c, d, e, m, n;
+
+    if ((*year < 326) or (*year > 2299)) return(false);
+
+    m = 15;
+    n = 6;
+    
+    a = *year % 19;
+    b = *year % 4;
+    c = *year % 7;
+    d = (19 * a + m) % 30;
+    e = (2 * b + 4 * c + 6 * d + n) % 7;
+    *day = 22 + d + e;
+    *month = 3;
+
+    /* greek orthodox easter is calculated the julian calendar way, but then displaced to gregorian 
+       (actually, revised julian) calendar but not before 1923.
+       The difference between revised julian and gregorian calendar should not make any difference at
+       least until year 2800 */
+    if (julian == false && *year > 1922)
+    	*day += 13;
+
+    if (*day > 31)
+    {
+        *day -= 31;
+        (*month)++;
+    }
+    /* so it may go well into May */
+    if (*day > 30)
+    {
+        *day -= 30;
+        (*month)++;
+    }
+    
+    return(true);
+}
+
 
 Z_int DateCalc_Decode_Month(charptr buffer, Z_int length) /* 0 = error */
 {
@@ -2235,15 +2281,16 @@ void DateCalc_Dispose(charptr string)
 
 charptr DateCalc_Version(void)
 {
-    return( (charptr) "5.4" );
+    return( (charptr) "5.5" );
 }
 
 /*****************************************************************************/
-/*  VERSION:  5.4                                                            */
+/*  VERSION:  5.5                                                            */
 /*****************************************************************************/
 /*  VERSION HISTORY:                                                         */
 /*****************************************************************************/
 /*                                                                           */
+/*    Version 5.5  23.01.07  Fixed compiler warning under gcc-4.             */
 /*    Version 5.4  03.10.04  Added compiler directives for C++.              */
 /*    Version 5.3  29.09.02  No changes.                                     */
 /*    Version 5.2  18.09.02  No changes.                                     */

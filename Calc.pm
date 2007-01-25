@@ -61,6 +61,7 @@ require DynaLoader;
     Date_to_Time
     Time_to_Date
     Easter_Sunday
+    Easter_Orthodox_Sunday
     Decode_Month
     Decode_Day_of_Week
     Decode_Language
@@ -99,7 +100,7 @@ require DynaLoader;
 ##                                              ##
 ##################################################
 
-$VERSION = '5.4';
+$VERSION = '5.5';
 
 bootstrap Date::Calc $VERSION;
 

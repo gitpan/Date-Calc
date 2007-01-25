@@ -1107,7 +1107,7 @@ PPCODE:
 
 void
 DateCalc_Easter_Sunday(year)
-    Z_int	year
+    Z_int	year;
 PPCODE:
 {
     Z_int month;
@@ -1123,6 +1123,29 @@ PPCODE:
     else DATECALC_YEAR_ERROR;
 }
 
+void
+DateCalc_Easter_Orthodox_Sunday(...)
+PPCODE:
+{
+	Z_int	year;
+    boolean julian;
+	Z_int month;
+    Z_int day;
+	
+	year  = (Z_int) SvIV( ST(0) );
+	
+	if (items == 2)	julian = (boolean) SvIV( ST(1) );
+	else			julian = false;
+        
+    if ((year > 0) and DateCalc_easter_orthodox_sunday(&year,julian,&month,&day))
+    {
+        EXTEND(sp,2);
+        PUSHs(sv_2mortal(newSViv((IV)year)));
+        PUSHs(sv_2mortal(newSViv((IV)month)));
+        PUSHs(sv_2mortal(newSViv((IV)day)));
+    }
+    else DATECALC_YEAR_ERROR;
+}
 
 Z_int
 DateCalc_Decode_Month(string)

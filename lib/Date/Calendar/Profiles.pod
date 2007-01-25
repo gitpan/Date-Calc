@@ -533,7 +533,7 @@ way. This hasn't been finished yet because it is very time-consuming.
 
 =head1 VERSION
 
-This man page documents "Date::Calendar::Profiles" version 5.4.
+This man page documents "Date::Calendar::Profiles" version 5.5.
 
 =head1 AUTHOR
 

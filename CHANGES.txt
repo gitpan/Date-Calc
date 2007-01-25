@@ -10,6 +10,11 @@
 Version history:
 ----------------
 
+Version 5.5   23.01.2007
+
+ + Added Easter_Orthodox_Sunday 
+ + Fixed compiler warning under gcc-4.1.2
+
 Version 5.4   03.10.2004
 
  +  Added compiler directives for C++.

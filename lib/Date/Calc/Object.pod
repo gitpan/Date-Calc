@@ -1225,7 +1225,7 @@ Date::Calendar::Year(3), Date::Calendar::Profiles(3).
 
 =head1 VERSION
 
-This man page documents "Date::Calc::Object" version 5.5.
+This man page documents "Date::Calc::Object" version 5.5.1.
 
 =head1 AUTHOR
 

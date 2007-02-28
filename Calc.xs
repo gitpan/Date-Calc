@@ -1106,38 +1106,31 @@ PPCODE:
 
 
 void
-DateCalc_Easter_Sunday(year)
-    Z_int	year;
-PPCODE:
-{
-    Z_int month;
-    Z_int day;
-
-    if ((year > 0) and DateCalc_easter_sunday(&year,&month,&day))
-    {
-        EXTEND(sp,3);
-        PUSHs(sv_2mortal(newSViv((IV)year)));
-        PUSHs(sv_2mortal(newSViv((IV)month)));
-        PUSHs(sv_2mortal(newSViv((IV)day)));
-    }
-    else DATECALC_YEAR_ERROR;
-}
-
-void
-DateCalc_Easter_Orthodox_Sunday(...)
+DateCalc_Easter_Sunday(...)
 PPCODE:
 {
 	Z_int	year;
-    boolean julian;
-	Z_int month;
+	boolean orthodox;
+	boolean julian;
+    Z_int month;
     Z_int day;
-	
+
 	year  = (Z_int) SvIV( ST(0) );
 	
-	if (items == 2)	julian = (boolean) SvIV( ST(1) );
-	else			julian = false;
-        
-    if ((year > 0) and DateCalc_easter_orthodox_sunday(&year,julian,&month,&day))
+	if (items == 3)	{
+		orthodox = (boolean) SvIV( ST(1) );
+		julian = (boolean) SvIV( ST(2) );
+	}
+	else if (items == 2) {
+		orthodox = (boolean) SvIV( ST(1) );
+		julian = false;
+	}
+	else {
+		orthodox = false;
+		julian = false;
+	}
+
+    if ((year > 0) and DateCalc_easter_sunday(&year,orthodox,julian,&month,&day))
     {
         EXTEND(sp,2);
         PUSHs(sv_2mortal(newSViv((IV)year)));

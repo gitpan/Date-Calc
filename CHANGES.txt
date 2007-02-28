@@ -1,6 +1,6 @@
-                     ====================================
-                       Package "Date::Calc" Version 5.4
-                     ====================================
+                     ======================================
+                       Package "Date::Calc" Version 5.5.1
+                     ======================================
 
 
                   Copyright (c) 1995 - 2004 by Steffen Beyer.
@@ -10,9 +10,14 @@
 Version history:
 ----------------
 
+Version 5.5.1   28.02.2007
+
+ + I had accidentally uploaded wrong version to PAUSE. Doh!
+ + Incorporated POD fixes from barrettclark and Qiang.
+
 Version 5.5   23.01.2007
 
- + Added Easter_Orthodox_Sunday 
+ + Modified Easter_Sunday($year [, $orthodox [, $julian]])
  + Fixed compiler warning under gcc-4.1.2
 
 Version 5.4   03.10.2004

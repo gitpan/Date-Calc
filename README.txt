@@ -1,6 +1,6 @@
-                     ====================================
-                       Package "Date::Calc" Version 5.5
-                     ====================================
+                     ======================================
+                       Package "Date::Calc" Version 5.5.1
+                     ======================================
 
 
 This package is available for download either from my web site at
@@ -35,11 +35,17 @@ interface) with overloaded operators, and a set of modules for calculations
 which take local holidays into account (both additions in Perl only, however).
 
 
+What's new in version 5.5.1:
+--------------------------
+
+  + I had accidentally uploaded wrong version to PAUSE. Doh!
+  + Incorporated POD fixes from barrettclark and Qiang.
+
 What's new in version 5.5:
 --------------------------
 
  +  Fixed compiler warning under gcc-4.
- +  Added Easter_Orthodox_Sunday($year [, $julian]).
+ +  Modified Easter_Sunday($year [, $orthodox [, $julian]]).
 
 
 New features in version 5.0:
@@ -170,7 +176,7 @@ http://catcode.com/date/pcalc.html.
 Note to CPAN Testers:
 ---------------------
 
-After completion, version 5.5 of this module has already
+After completion, version 5.5.1 of this module has already
 been tested successfully with the following configurations:
 
   Perl 5.005_03  -  FreeBSD 4.1.1-RELEASE (with "dlopen() relative paths" patch)

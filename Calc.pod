@@ -92,7 +92,6 @@ please let me know! (See e-mail address at the end of this document.)
       Date_to_Time
       Time_to_Date
       Easter_Sunday
-      Easter_Orthodox_Sunday
       Decode_Month
       Decode_Day_of_Week
       Decode_Language
@@ -260,10 +259,7 @@ please let me know! (See e-mail address at the end of this document.)
       ($year,$month,$day, $hour,$min,$sec) = Time_to_Date([time]);
 
   Easter_Sunday
-      ($year,$month,$day) = Easter_Sunday($year);
-
-  Easter_Orthodox_Sunday
-      ($year,$month,$day) = Easter_Orthdox_Sunday($year [, $julian]);
+      ($year,$month,$day) = Easter_Sunday($year [, $orthodox [, $julian]]);
 
   Decode_Month
       if ($month = Decode_Month($string))
@@ -416,7 +412,9 @@ On MacOS Classic, the valid range of dates is between
 to S<06-Feb-2040 06:28:15> (local time).
 
 Note further that the function "Easter_Sunday()" can only
-be used for years in the range 1583 to 2299.
+be used for years in the range 1583 to 2299 for Gregorian 
+Calculations and 326 to 2299 for (revised) Julian (ie 
+Orthodox) calculations.
 
 =item *
 
@@ -652,6 +650,9 @@ creating the world).
 
 In medieval times, Catholic Popes have decreed the Sunday to be the official
 day of rest, in order to dissociate the Christian from the Hebrew belief.
+barretclark notes that ``This actually happened with the Emperor Constantin,
+who converted to Christianity but still worshipped the Sun god. He moved 
+the Christian sabbath to the day of the Sun.'' 
 
 Nowadays, the Sunday B<AND> the Saturday are commonly considered (and
 used as) days of rest, usually referred to as the "week-end".
@@ -1166,7 +1167,9 @@ be almost 24 hours).
 C<($year,$month,$day, $hour,$min,$sec, $doy,$dow,$dst) = Gmtime([time]);>
 
 This is Date::Calc's equivalent of Perl's built-in "gmtime()" function.
-See also L<perlfunc/gmtime>.
+See also L<perlfunc/gmtime>. Optional argument time (seconds since the epoch)
+will of course return ($year,$month,$day, $hour,$min,$sec, $doy,$dow,$dst) 
+for that particular time (thanks to Qiang for noting this).
 
 The ranges of values returned (and their meanings) are as follows:
 
@@ -1401,12 +1404,21 @@ will always return the initial values.
 
 =item *
 
-C<($year,$month,$day) = Easter_Sunday($year);>
+C<($year,$month,$day) = Easter_Sunday($year [, $orthodox [, $julian]]);>
 
 This function calculates the date of Easter Sunday for all years in the
-range from 1583 to 2299 (all other year numbers will result in a fatal
+range from 1583 to 2299 for Gregorian - default - and 326 to 2299 for 
+(revised) Julian (ie Orthodox) (all other year numbers will result in a fatal
 "year out of range" error message) using the method known as the "Gaussian
 Rule".
+The switch $orthodox  uses the Julian Calendar way of calculating Easter, 
+but then applies +13 days of revised Julian Calendar offset.
+Note that asking for Easter_Orthdox_Sunday with $year < 1923 or setting 
+$julian to a true value will return the original Julian Date of Easter, 
+since the Gregorian (actually revised Julian) calendar wasn't adopted 
+in Greece before 1923 and still isn't (probably will never be) in some 
+orthodox countries - notably Russia, Serbia and Georgia according to 
+Wikipedia.
 
 Some related christian feast days which depend on the date of Easter Sunday:
 
@@ -1426,23 +1438,6 @@ Use the offsets shown above to calculate the date of the corresponding
 feast day as follows:
 
   ($year,$month,$day) = Add_Delta_Days(Easter_Sunday($year), $offset));
-
-=item *
- 
-C<($year,$month,$day) = Easter_Orthdox_Sunday($year [, $julian]);>
-
-This function calculates the date of Easter Sunday for all years in the
-range from 326 to 2299 (all other year numbers will result in a fatal
-"year out of range" error message) using the method known as the "Gaussian
-Rule".The problem is that the eastern (greek) orthodox church, uses the
-Julian Calendar way of calculating Easter, but then applies +13 days
-of Gregorian Calendar offset.
-Note that asking for Easter_Orthdox_Sunday with $year < 1923 or setting 
-$julian to a true value will return the original Julian Date of Easter, 
-since the Gregorian (actually revised Julian) calendar wasn't adopted 
-in Greece before 1923 and still isn't (probably will never be) in some 
-orthodox countries - notably Russia, Serbia and Georgia according to 
-Wikipedia.
 
 =item *
 
@@ -2993,7 +2988,7 @@ threads as well).
 
 =head1 VERSION
 
-This man page documents "Date::Calc" version 5.5.
+This man page documents "Date::Calc" version 5.5.1.
 
 =head1 AUTHOR
 

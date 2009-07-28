@@ -1,7 +1,7 @@
 
 ###############################################################################
 ##                                                                           ##
-##    Copyright (c) 1995 - 2004 by Steffen Beyer.                            ##
+##    Copyright (c) 1995 - 2009 by Steffen Beyer.                            ##
 ##    All rights reserved.                                                   ##
 ##                                                                           ##
 ##    This package is free software; you can redistribute it                 ##
@@ -99,7 +99,7 @@ require DynaLoader;
 ##                                              ##
 ##################################################
 
-$VERSION = '5.5.1';
+$VERSION = '5.6';
 
 bootstrap Date::Calc $VERSION;
 

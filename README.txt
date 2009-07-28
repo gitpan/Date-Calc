@@ -1,6 +1,6 @@
-                     ======================================
-                       Package "Date::Calc" Version 5.5.1
-                     ======================================
+                     ====================================
+                       Package "Date::Calc" Version 5.6
+                     ====================================
 
 
 This package is available for download either from my web site at
@@ -35,17 +35,11 @@ interface) with overloaded operators, and a set of modules for calculations
 which take local holidays into account (both additions in Perl only, however).
 
 
-What's new in version 5.5.1:
+What's new in version 5.6:
 --------------------------
 
-  + I had accidentally uploaded wrong version to PAUSE. Doh!
-  + Incorporated POD fixes from barrettclark and Qiang.
-
-What's new in version 5.5:
---------------------------
-
- +  Fixed compiler warning under gcc-4.
- +  Modified Easter_Sunday($year [, $orthodox [, $julian]]).
+ +  Made the module MacOS X compatible
+ +  Made some tiny changes to the documentation
 
 
 New features in version 5.0:
@@ -87,7 +81,7 @@ Legal issues:
 
 This package with all its parts is
 
-Copyright (c) 1995 - 2004 by Steffen Beyer.
+Copyright (c) 1995 - 2009 by Steffen Beyer.
 All rights reserved.
 
 This package is free software; you can use, modify and redistribute
@@ -107,15 +101,17 @@ Prerequisites:
 
 Perl version 5.000 or higher, and an ANSI C compiler. (!)
                                      ^^^^^^
-Module "Carp::Clan" version 5.0 or higher.
+Module "Carp::Clan" version 5.3 or higher.
+
+Optionally, module "Bit::Vector" version 6.6 or newer.
 
 If you plan to use the modules "Date::Calendar" or
 "Date::Calendar::Year" from this package, you will
-also need the module "Bit::Vector" version 6.4 or
+also need the module "Bit::Vector" version 6.6 or
 newer (which also needs an ANSI C compiler!).
 
 Otherwise you may safely ignore the warning message
-"Warning: prerequisite Bit::Vector 6.4 not found at ..."
+"Warning: prerequisite Bit::Vector 6.6 not found at ..."
 when running "perl Makefile.PL".
 
 Anyway, you can always install "Bit::Vector" later
@@ -176,18 +172,11 @@ http://catcode.com/date/pcalc.html.
 Note to CPAN Testers:
 ---------------------
 
-After completion, version 5.5.1 of this module has already
+After completion, version 5.6 of this module has already
 been tested successfully with the following configurations:
 
-  Perl 5.005_03  -  FreeBSD 4.1.1-RELEASE (with "dlopen() relative paths" patch)
-  Perl 5.6.0     -  FreeBSD 4.1.1-RELEASE
-  Perl 5.6.1     -  FreeBSD 4.1.1-RELEASE
-  Perl 5.7.0     -  FreeBSD 4.1.1-RELEASE
-  Perl 5.7.1     -  FreeBSD 4.1.1-RELEASE
-  Perl 5.7.2     -  FreeBSD 4.1.1-RELEASE
-  Perl 5.8.0     -  FreeBSD 4.1.1-RELEASE
-  Perl 5.8.4     -  FreeBSD 4.10-BETA
-  Perl 5.8.0     -  Windows 2000 & MS VC++ 6.0 (native Perl build)
+  Perl 5.8.0     -  Windows XP SP3 & MS VC++ 6.0 (native Perl build)
+  Perl 5.8.8     -  FreeBSD 5.5-PRERELEASE
 
 Note: You can safely ignore the failing tests in module Bit::Vector 6.0
 (Bit::Vector::Overload, to be precise) in file "t/30_overloaded.t" under

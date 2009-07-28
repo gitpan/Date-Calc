@@ -2,7 +2,7 @@
 
 ###############################################################################
 ##                                                                           ##
-##    Copyright (c) 2001 - 2004 by Steffen Beyer.                            ##
+##    Copyright (c) 2001 - 2009 by Steffen Beyer.                            ##
 ##    All rights reserved.                                                   ##
 ##                                                                           ##
 ##    This program is free software; you can redistribute it                 ##
@@ -568,7 +568,7 @@ any errors you find on this page!${END}
 <HR NOSHADE SIZE="2">
 <P>
 
-<A HREF="http://www.engelschall.com/u/sb/download/pkg/Date-Calc-5.4.tar.gz">Download</A>
+<A HREF="http://www.engelschall.com/u/sb/download/pkg/Date-Calc-5.6.tar.gz">Download</A>
 the Perl software that does all this!
 
 <P>

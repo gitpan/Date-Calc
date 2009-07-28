@@ -2,7 +2,7 @@
 
 ###############################################################################
 ##                                                                           ##
-##    Copyright (c) 1995 - 2004 by Steffen Beyer.                            ##
+##    Copyright (c) 1995 - 2009 by Steffen Beyer.                            ##
 ##    All rights reserved.                                                   ##
 ##                                                                           ##
 ##    This package is free software; you can redistribute it                 ##
@@ -22,7 +22,7 @@ WriteMakefile(
     'PREREQ_PM'         =>
                               {
                                   'Carp::Clan'  => 5.3,
-                                  'Bit::Vector' => 6.4
+                                  'Bit::Vector' => 6.6
                               },
     'OBJECT'            => '$(O_FILES)',
 #   ($] >= 5.005 ?

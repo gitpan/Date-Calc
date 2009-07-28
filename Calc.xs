@@ -2,7 +2,7 @@
 
 /*****************************************************************************/
 /*                                                                           */
-/*    Copyright (c) 1995 - 2004 by Steffen Beyer.                            */
+/*    Copyright (c) 1995 - 2009 by Steffen Beyer.                            */
 /*    All rights reserved.                                                   */
 /*                                                                           */
 /*    This package is free software; you can redistribute it                 */
@@ -1106,39 +1106,23 @@ PPCODE:
 
 
 void
-DateCalc_Easter_Sunday(...)
+DateCalc_Easter_Sunday(year)
+    Z_int	year
 PPCODE:
 {
-	Z_int	year;
-	boolean orthodox;
-	boolean julian;
     Z_int month;
     Z_int day;
 
-	year  = (Z_int) SvIV( ST(0) );
-	
-	if (items == 3)	{
-		orthodox = (boolean) SvIV( ST(1) );
-		julian = (boolean) SvIV( ST(2) );
-	}
-	else if (items == 2) {
-		orthodox = (boolean) SvIV( ST(1) );
-		julian = false;
-	}
-	else {
-		orthodox = false;
-		julian = false;
-	}
-
-    if ((year > 0) and DateCalc_easter_sunday(&year,orthodox,julian,&month,&day))
+    if ((year > 0) and DateCalc_easter_sunday(&year,&month,&day))
     {
-        EXTEND(sp,2);
+        EXTEND(sp,3);
         PUSHs(sv_2mortal(newSViv((IV)year)));
         PUSHs(sv_2mortal(newSViv((IV)month)));
         PUSHs(sv_2mortal(newSViv((IV)day)));
     }
     else DATECALC_YEAR_ERROR;
 }
+
 
 Z_int
 DateCalc_Decode_Month(string)

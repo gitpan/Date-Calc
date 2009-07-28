@@ -425,6 +425,13 @@ You can easily verify the results above with the help of the
 "calendar.cgi" CGI script or the "linearcal.pl" script from
 the "examples" subdirectory in the Date::Calc distribution.
 
+B<BEWARE> that this method may currently return unexpected
+(i.e., contradicting the above documentation) or plain wrong
+results when going back in time (this is a bug!).
+
+However, it works correctly and as documented above when
+going forward in time.
+
 =item *
 
 C<$flag = $calendar-E<gt>is_full(YEAR,MONTH,DAY|DATE);>
@@ -544,7 +551,7 @@ this.
 
 =head1 VERSION
 
-This man page documents "Date::Calendar" version 5.5.1.
+This man page documents "Date::Calendar" version 5.6.
 
 =head1 AUTHOR
 
@@ -554,7 +561,7 @@ This man page documents "Date::Calendar" version 5.5.1.
 
 =head1 COPYRIGHT
 
-Copyright (c) 2000 - 2004 by Steffen Beyer. All rights reserved.
+Copyright (c) 2000 - 2009 by Steffen Beyer. All rights reserved.
 
 =head1 LICENSE
 

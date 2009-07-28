@@ -1,9 +1,9 @@
-                     ======================================
-                       Package "Date::Calc" Version 5.5.1
-                     ======================================
+                     ====================================
+                       Package "Date::Calc" Version 5.6
+                     ====================================
 
 
-                  Copyright (c) 1995 - 2004 by Steffen Beyer.
+                  Copyright (c) 1995 - 2009 by Steffen Beyer.
                              All rights reserved.
 
 
@@ -22,15 +22,17 @@ Prerequisites:
 
 Perl version 5.000 or higher, and an ANSI C compiler. (!)
                                      ^^^^^^
-Module "Carp::Clan" version 5.0 or higher.
+Module "Carp::Clan" version 5.3 or higher.
+
+Optionally, module "Bit::Vector" version 6.6 or newer.
 
 If you plan to use the modules "Date::Calendar" or
 "Date::Calendar::Year" from this package, you will
-also need the module "Bit::Vector" version 6.4 or
+also need the module "Bit::Vector" version 6.6 or
 newer (which also needs an ANSI C compiler!).
 
 Otherwise you may safely ignore the warning message
-"Warning: prerequisite Bit::Vector 6.4 not found at ..."
+"Warning: prerequisite Bit::Vector 6.6 not found at ..."
 when running "perl Makefile.PL".
 
 Anyway, you can always install "Bit::Vector" later
@@ -95,7 +97,7 @@ Edit the file "Makefile.PL" and change the line
 
     'VERSION_FROM'      => 'Calc.pm',
 to
-    'VERSION'           => '5.5.1',
+    'VERSION'           => '5.6',
 
 Then edit the file "Calc.pm" and change the line
 
@@ -105,7 +107,7 @@ to
 
 Also edit the file "t/f000.t" and change all lines of the kind
 
-    use Date::Calc 5.5.1;
+    use Date::Calc 5.6;
 
 into just
 
@@ -297,7 +299,7 @@ Detailed installation guide:
 ----------------------------
 
  1) Change directory to the directory that has been created by unpacking this
-    package ("cd Date-Calc-5.5.1").
+    package ("cd Date-Calc-5.6").
 
  2) Type "perl Makefile.PL" (or whatever the name and path of your Perl 5
     binary is).

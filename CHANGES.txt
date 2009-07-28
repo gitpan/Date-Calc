@@ -1,24 +1,21 @@
-                     ======================================
-                       Package "Date::Calc" Version 5.5.1
-                     ======================================
+                     ====================================
+                       Package "Date::Calc" Version 5.6
+                     ====================================
 
 
-                  Copyright (c) 1995 - 2004 by Steffen Beyer.
+                  Copyright (c) 1995 - 2009 by Steffen Beyer.
                              All rights reserved.
 
 
 Version history:
 ----------------
 
-Version 5.5.1   28.02.2007
+Version 5.6   28.07.2009
 
- + I had accidentally uploaded wrong version to PAUSE. Doh!
- + Incorporated POD fixes from barrettclark and Qiang.
+ +  Made the module MacOS X compatible
+ +  Made some tiny changes to the documentation
 
-Version 5.5   23.01.2007
-
- + Modified Easter_Sunday($year [, $orthodox [, $julian]])
- + Fixed compiler warning under gcc-4.1.2
+Version 5.5   was skipped due to an unauthorized upload by someone else
 
 Version 5.4   03.10.2004
 

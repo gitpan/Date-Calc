@@ -1,9 +1,9 @@
-                     ======================================
-                       Package "Date::Calc" Version 5.5.1
-                     ======================================
+                     ====================================
+                       Package "Date::Calc" Version 5.6
+                     ====================================
 
 
-                  Copyright (c) 1995 - 2004 by Steffen Beyer.
+                  Copyright (c) 1995 - 2009 by Steffen Beyer.
                              All rights reserved.
 
 
@@ -426,5 +426,16 @@ providing me with more detailed information concerning the
 Many thanks to Vetle Roeim <vetler@opera.com> for sending some more
 commemorative days (some companies give half a day off) for the
 Norwegian profile.
+
+Thanks a lot to Jesse Vincent <jesse@bestpractical.com> and to
+Alistair Francis <alistair.francis@lokku.com> for reporting the
+ongoing problem with the boolean type in MacOS X and to Tatsuhiko
+Miyagawa (?) and Alistair Francis for providing patches.
+
+Thanks to Thanos Chatziathanassiou <tchatzi@arx.gr> along with
+Barret Clark and Qiang (?) for suggesting some changes to the
+documentation. Sorry for not including the changes concerning
+the Orthodox and Julian calendars since these are outside of
+the scope of this module.
 
 

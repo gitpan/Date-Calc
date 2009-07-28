@@ -1,7 +1,7 @@
 
 ###############################################################################
 ##                                                                           ##
-##    Copyright (c) 2000 - 2004 by Steffen Beyer.                            ##
+##    Copyright (c) 2000 - 2009 by Steffen Beyer.                            ##
 ##    All rights reserved.                                                   ##
 ##                                                                           ##
 ##    This package is free software; you can redistribute it                 ##
@@ -38,7 +38,7 @@ BEGIN # Re-export imports from Date::Calc:
     %EXPORT_TAGS = (all => [@Date::Calc::EXPORT_OK],
                     aux => [@AUXILIARY],
                     ALL => [@EXPORT_OK]);
-    $VERSION     = '5.5.1';
+    $VERSION     = '5.6';
     Date::Calc->import(@Date::Calc::EXPORT,@Date::Calc::EXPORT_OK);
 }
 

@@ -301,8 +301,6 @@ DateCalc_time2date                     (Z_int  *year,       /*   O   */
 
 boolean
 DateCalc_easter_sunday                 (Z_int  *year,       /*  I/O  */
-										boolean orthodox,   /*   I   */
-										boolean julian,     /*   I   */
                                         Z_int  *month,      /*   O   */
                                         Z_int  *day);       /*   O   */
 
@@ -1499,7 +1497,7 @@ boolean DateCalc_time2date(Z_int *year, Z_int *month, Z_int *day,
     return( DateCalc_add_delta_days(year,month,day,dd) );
 }
 
-boolean DateCalc_easter_sunday(Z_int *year, boolean orthodox, boolean julian, Z_int *month, Z_int *day)
+boolean DateCalc_easter_sunday(Z_int *year, Z_int *month, Z_int *day)
 {
     /****************************************************************/
     /*                                                              */
@@ -1514,24 +1512,15 @@ boolean DateCalc_easter_sunday(Z_int *year, boolean orthodox, boolean julian, Z_
     /****************************************************************/
 
     Z_int a, b, c, d, e, m, n;
-	
-	boolean gregorian = !orthodox;
-	
-	if (orthodox == true) {
-		if ((*year < 326) or (*year > 2299)) return(false);
-		m = 15;
-    	n = 6;
-	}
-	else {
-		if ((*year < 1583) or (*year > 2299)) return(false);
-		
-		if      (*year < 1700) { m = 22; n = 2; }
-	    else if (*year < 1800) { m = 23; n = 3; }
-	    else if (*year < 1900) { m = 23; n = 4; }
-	    else if (*year < 2100) { m = 24; n = 5; }
-	    else if (*year < 2200) { m = 24; n = 6; }
-	    else                   { m = 25; n = 0; }
-	}
+
+    if ((*year < 1583) or (*year > 2299)) return(false);
+
+    if      (*year < 1700) { m = 22; n = 2; }
+    else if (*year < 1800) { m = 23; n = 3; }
+    else if (*year < 1900) { m = 23; n = 4; }
+    else if (*year < 2100) { m = 24; n = 5; }
+    else if (*year < 2200) { m = 24; n = 6; }
+    else                   { m = 25; n = 0; }
 
     a = *year % 19;
     b = *year % 4;
@@ -1540,36 +1529,14 @@ boolean DateCalc_easter_sunday(Z_int *year, boolean orthodox, boolean julian, Z_
     e = (2 * b + 4 * c + 6 * d + n) % 7;
     *day = 22 + d + e;
     *month = 3;
-    
-    /* differentiation between gregorian, julian, revised julian here... */
-    /* greek orthodox easter is calculated the julian calendar way, but then displaced to gregorian 
-       (actually, revised julian) calendar but not before 1923.
-       The difference between revised julian and gregorian calendar should not make any difference at
-       least until year 2800 */
-    if (orthodox == true && julian == false && *year > 1922)
-    	*day += 13;
-
     if (*day > 31)
     {
         *day -= 31; /* same as *day = d + e - 9; */
         (*month)++;
     }
-    
-    /* gregorian rules exceptions here */
-    if (gregorian == true) {
-	    if ((*day == 26) and (*month == 4)) *day = 19;
-	    if ((*day == 25) and (*month == 4) and
-	        (d == 28) and (e == 6) and (a > 10)) *day = 18;
-	}
-	else if (orthodox == true && julian == false) {
-		/* so it may go well into May */
-	    if (*day > 30)
-	    {
-	        *day -= 30;
-	        (*month)++;
-	    }
-	}
-	
+    if ((*day == 26) and (*month == 4)) *day = 19;
+    if ((*day == 25) and (*month == 4) and
+        (d == 28) and (e == 6) and (a > 10)) *day = 18;
     return(true);
 }
 
@@ -2268,78 +2235,78 @@ void DateCalc_Dispose(charptr string)
 
 charptr DateCalc_Version(void)
 {
-    return( (charptr) "5.5.1" );
+    return( (charptr) "5.6" );
 }
 
-/*******************************************************************************/
-/*  VERSION:  5.5.1                                                            */
-/*******************************************************************************/
-/*  VERSION HISTORY:                                                           */
-/*******************************************************************************/
-/*                                                                             */
-/*    Version 5.5.1  28.02.07  Uploaded correct version to CPAN.               */
-/*    Version 5.5    23.01.07  Fixed compiler warning under gcc-4.             */
-/*    Version 5.4    03.10.04  Added compiler directives for C++.              */
-/*    Version 5.3    29.09.02  No changes.                                     */
-/*    Version 5.2    18.09.02  No changes.                                     */
-/*    Version 5.1    08.09.02  Added conditional changes for MacOS/MacPerl.    */
-/*    Version 5.0    10.10.01  New YMD/HMS functions, replaced <ctype.h>, ...  */
-/*    Version 4.3    08.01.00  decode_date_??: (yy < 70 ? 20yy : 19yy)         */
-/*    Version 4.2    07.09.98  No changes.                                     */
-/*    Version 4.1    08.06.98  Fixed bug in "add_delta_ymd()".                 */
-/*    Version 4.0    12.05.98  Major rework. Added multi-language support.     */
-/*    Version 3.2    15.06.97  Added "week_of_year()".                         */
-/*    Version 3.1    12.06.97  No significant changes.                         */
-/*    Version 3.0    16.02.97  Changed conventions for unsuccessful returns.   */
-/*    Version 2.3    22.11.96  Fixed unbalanced "malloc" and "free".           */
-/*    Version 2.2    26.05.96  No significant changes.                         */
-/*    Version 2.1    26.05.96  Fixed HH MM SS parameter checks.                */
-/*    Version 2.0    25.05.96  Added time calculations. Major rework.          */
-/*    Version 1.6    20.04.96  Not published.                                  */
-/*    Version 1.5    14.03.96  No significant changes.                         */
-/*    Version 1.4    11.02.96  No significant changes.                         */
-/*    Version 1.3    10.12.95  Added "days_in_month()".                        */
-/*    Version 1.2b   27.11.95  No significant changes.                         */
-/*    Version 1.2a   21.11.95  Fix for type name clashes.                      */
-/*    Version 1.1    18.11.95  Fix for type name clashes.                      */
-/*    Version 1.01   16.11.95  Improved compliance w/ programming standards.   */
-/*    Version 1.0    14.11.95  First version under UNIX (with Perl module).    */
-/*    Version 0.9    01.11.93  First version of C library under MS-DOS.        */
-/*                                                                             */
-/*******************************************************************************/
-/*  AUTHOR:                                                                    */
-/*******************************************************************************/
-/*                                                                             */
-/*    Steffen Beyer                                                            */
-/*    mailto:sb@engelschall.com                                                */
-/*    http://www.engelschall.com/u/sb/download/                                */
-/*                                                                             */
-/*******************************************************************************/
-/*  COPYRIGHT:                                                                 */
-/*******************************************************************************/
-/*                                                                             */
-/*    Copyright (c) 1993 - 2004 by Steffen Beyer.                              */
-/*    All rights reserved.                                                     */
-/*                                                                             */
-/*******************************************************************************/
-/*  LICENSE:                                                                   */
-/*******************************************************************************/
-/*                                                                             */
-/*    This library is free software; you can redistribute it and/or            */
-/*    modify it under the terms of the GNU Library General Public              */
-/*    License as published by the Free Software Foundation; either             */
-/*    version 2 of the License, or (at your option) any later version.         */
-/*                                                                             */
-/*    This library is distributed in the hope that it will be useful,          */
-/*    but WITHOUT ANY WARRANTY; without even the implied warranty of           */
-/*    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU         */
-/*    Library General Public License for more details.                         */
-/*                                                                             */
-/*    You should have received a copy of the GNU Library General Public        */
-/*    License along with this library; if not, write to the                    */
-/*    Free Software Foundation, Inc.,                                          */
-/*    59 Temple Place, Suite 330, Boston, MA 02111-1307 USA                    */
-/*    or download a copy from ftp://ftp.gnu.org/pub/gnu/COPYING.LIB-2.0        */
-/*                                                                             */
-/*******************************************************************************/
+/*****************************************************************************/
+/*  VERSION:  5.6                                                            */
+/*****************************************************************************/
+/*  VERSION HISTORY:                                                         */
+/*****************************************************************************/
+/*                                                                           */
+/*    Version 5.6  28.07.09  Made the module MacOS X compatible.             */
+/*    Version 5.5  skipped due to an unauthorized upload by someone else.    */
+/*    Version 5.4  03.10.04  Added compiler directives for C++.              */
+/*    Version 5.3  29.09.02  No changes.                                     */
+/*    Version 5.2  18.09.02  No changes.                                     */
+/*    Version 5.1  08.09.02  Added conditional changes for MacOS/MacPerl.    */
+/*    Version 5.0  10.10.01  New YMD/HMS functions, replaced <ctype.h>, ...  */
+/*    Version 4.3  08.01.00  decode_date_??: (yy < 70 ? 20yy : 19yy)         */
+/*    Version 4.2  07.09.98  No changes.                                     */
+/*    Version 4.1  08.06.98  Fixed bug in "add_delta_ymd()".                 */
+/*    Version 4.0  12.05.98  Major rework. Added multi-language support.     */
+/*    Version 3.2  15.06.97  Added "week_of_year()".                         */
+/*    Version 3.1  12.06.97  No significant changes.                         */
+/*    Version 3.0  16.02.97  Changed conventions for unsuccessful returns.   */
+/*    Version 2.3  22.11.96  Fixed unbalanced "malloc" and "free".           */
+/*    Version 2.2  26.05.96  No significant changes.                         */
+/*    Version 2.1  26.05.96  Fixed HH MM SS parameter checks.                */
+/*    Version 2.0  25.05.96  Added time calculations. Major rework.          */
+/*    Version 1.6  20.04.96  Not published.                                  */
+/*    Version 1.5  14.03.96  No significant changes.                         */
+/*    Version 1.4  11.02.96  No significant changes.                         */
+/*    Version 1.3  10.12.95  Added "days_in_month()".                        */
+/*    Version 1.2b 27.11.95  No significant changes.                         */
+/*    Version 1.2a 21.11.95  Fix for type name clashes.                      */
+/*    Version 1.1  18.11.95  Fix for type name clashes.                      */
+/*    Version 1.01 16.11.95  Improved compliance w/ programming standards.   */
+/*    Version 1.0  14.11.95  First version under UNIX (with Perl module).    */
+/*    Version 0.9  01.11.93  First version of C library under MS-DOS.        */
+/*                                                                           */
+/*****************************************************************************/
+/*  AUTHOR:                                                                  */
+/*****************************************************************************/
+/*                                                                           */
+/*    Steffen Beyer                                                          */
+/*    mailto:sb@engelschall.com                                              */
+/*    http://www.engelschall.com/u/sb/download/                              */
+/*                                                                           */
+/*****************************************************************************/
+/*  COPYRIGHT:                                                               */
+/*****************************************************************************/
+/*                                                                           */
+/*    Copyright (c) 1993 - 2009 by Steffen Beyer.                            */
+/*    All rights reserved.                                                   */
+/*                                                                           */
+/*****************************************************************************/
+/*  LICENSE:                                                                 */
+/*****************************************************************************/
+/*                                                                           */
+/*    This library is free software; you can redistribute it and/or          */
+/*    modify it under the terms of the GNU Library General Public            */
+/*    License as published by the Free Software Foundation; either           */
+/*    version 2 of the License, or (at your option) any later version.       */
+/*                                                                           */
+/*    This library is distributed in the hope that it will be useful,        */
+/*    but WITHOUT ANY WARRANTY; without even the implied warranty of         */
+/*    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU       */
+/*    Library General Public License for more details.                       */
+/*                                                                           */
+/*    You should have received a copy of the GNU Library General Public      */
+/*    License along with this library; if not, write to the                  */
+/*    Free Software Foundation, Inc.,                                        */
+/*    59 Temple Place, Suite 330, Boston, MA 02111-1307 USA                  */
+/*    or download a copy from ftp://ftp.gnu.org/pub/gnu/COPYING.LIB-2.0      */
+/*                                                                           */
+/*****************************************************************************/
 #endif

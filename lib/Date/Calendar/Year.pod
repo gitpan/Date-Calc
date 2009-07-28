@@ -748,6 +748,13 @@ instead, which does the same but is much easier to use
 and moreover allows calculations which cross an arbitrary
 number of year boundaries.
 
+B<BEWARE> that this method may currently return unexpected
+(i.e., contradicting the above documentation) or plain wrong
+results when going back in time (this is a bug!).
+
+However, it works correctly and as documented above when
+going forward in time.
+
 =item *
 
 C<$flag = $year-E<gt>is_full(YEAR,MONTH,DAY|DATE);>
@@ -827,7 +834,7 @@ this.
 
 =head1 VERSION
 
-This man page documents "Date::Calendar::Year" version 5.5.1.
+This man page documents "Date::Calendar::Year" version 5.6.
 
 =head1 AUTHOR
 
@@ -837,7 +844,7 @@ This man page documents "Date::Calendar::Year" version 5.5.1.
 
 =head1 COPYRIGHT
 
-Copyright (c) 2000 - 2004 by Steffen Beyer. All rights reserved.
+Copyright (c) 2000 - 2009 by Steffen Beyer. All rights reserved.
 
 =head1 LICENSE
 

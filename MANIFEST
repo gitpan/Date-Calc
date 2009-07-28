@@ -91,3 +91,4 @@ tools/compile.sh
 tools/iso2pc.c
 tools/pc2iso.c
 typemap
+META.yml                                 Module meta-data (added by MakeMaker)

@@ -54,11 +54,11 @@ unless ($@)
 {print "ok $n\n";} else {print "not ok $n\n";}
 $n++;
 
-if ($Date::Calc::VERSION eq '5.5.1')
+if ($Date::Calc::VERSION eq '5.6')
 {print "ok $n\n";} else {print "not ok $n\n";}
 $n++;
 
-if (&Date::Calc::Version() eq '5.5.1')
+if (&Date::Calc::Version() eq '5.6')
 {print "ok $n\n";} else {print "not ok $n\n";}
 $n++;
 
@@ -71,7 +71,7 @@ unless ($@)
 {print "ok $n\n";} else {print "not ok $n\n";}
 $n++;
 
-if ($Date::Calc::Object::VERSION eq '5.5.1')
+if ($Date::Calc::Object::VERSION eq '5.6')
 {print "ok $n\n";} else {print "not ok $n\n";}
 $n++;
 
@@ -84,7 +84,7 @@ unless ($@)
 {print "ok $n\n";} else {print "not ok $n\n";}
 $n++;
 
-if ($Date::Calendar::Profiles::VERSION eq '5.5.1')
+if ($Date::Calendar::Profiles::VERSION eq '5.6')
 {print "ok $n\n";} else {print "not ok $n\n";}
 $n++;
 
@@ -107,7 +107,7 @@ unless ($@)
 {print "ok $n\n";} else {print "not ok $n\n";}
 $n++;
 
-if ($Date::Calendar::Year::VERSION eq '5.5.1')
+if ($Date::Calendar::Year::VERSION eq '5.6')
 {print "ok $n\n";} else {print "not ok $n\n";}
 $n++;
 
@@ -120,7 +120,7 @@ unless ($@)
 {print "ok $n\n";} else {print "not ok $n\n";}
 $n++;
 
-if ($Date::Calendar::VERSION eq '5.5.1')
+if ($Date::Calendar::VERSION eq '5.6')
 {print "ok $n\n";} else {print "not ok $n\n";}
 $n++;
 

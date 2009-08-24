@@ -25,7 +25,7 @@ require Exporter;
 
 %EXPORT_TAGS = (all => [@EXPORT_OK]);
 
-$VERSION = '5.6';
+$VERSION = '5.7';
 
 use Bit::Vector;
 use Carp::Clan qw(^Date::);
@@ -152,7 +152,7 @@ sub new
     $self = { };
     $class = ref($class) || $class || 'Date::Calendar::Year';
     bless($self, $class);
-    $self->init($year,$profile,$language);
+    $self->init($year,$profile,$language,@_);
     return $self;
 }
 
@@ -163,8 +163,10 @@ sub init
     my($profile)  = shift;
     my($language) = shift || 0;
     my($days,$dow,$lang,$name,$item,$flag,$temp,$n);
-    my(@easter,@date);
+    my(@weekend,@easter,@date);
 
+    if (@_ > 0) { @weekend = @_; }
+    else        { @weekend = (6,7); } # Mon=1 Tue=2 Wed=3 Thu=4 Fri=5 Sat=6 Sun=7
     &check_year($year);
     croak("given profile is not a HASH ref") unless (ref($profile) eq 'HASH');
     $days = Days_in_Year($year,12);
@@ -175,12 +177,23 @@ sub init
     ${$self}{'HALF'} = Bit::Vector->new($days);
     ${$self}{'FULL'} = Bit::Vector->new($days);
     ${$self}{'WORK'} = Bit::Vector->new($days);
-    $dow = 6 - Day_of_Week($year,1,1); # Mon 1 => 5, ... , Fri 5 => 1, Sat 6 => 0, Sun 7 => -1
-    while ($dow < $days)
+#   $dow = 6 - Day_of_Week($year,1,1); # Mon 1 => 5, ... , Fri 5 => 1, Sat 6 => 0, Sun 7 => -1
+#   while ($dow < $days)
+#   {
+#       ${$self}{'FULL'}->Bit_On( $dow ) unless ($dow < 0);   # Saturday
+#       ${$self}{'FULL'}->Bit_On( $dow ) if (++$dow < $days); # Sunday
+#       $dow += 6;
+#   }
+    $dow = Day_of_Week($year,1,1); # Mon=1 Tue=2 Wed=3 Thu=4 Fri=5 Sat=6 Sun=7
+    foreach $item (@weekend)
     {
-        ${$self}{'FULL'}->Bit_On( $dow ) unless ($dow < 0);   # Saturday
-        ${$self}{'FULL'}->Bit_On( $dow ) if (++$dow < $days); # Sunday
-        $dow += 6;
+        $n = $item || 0;
+        if (($n >= 1) and ($n <= 7))
+        {
+            $n -= $dow;
+            while ($n < 0)                                     { $n += 7; }
+            while ($n < $days) { ${$self}{'FULL'}->Bit_On( $n ); $n += 7; }
+        }
     }
     @easter = Easter_Sunday($year);
     if ($language =~ /^\d+$/)

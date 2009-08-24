@@ -24,11 +24,11 @@ with years lying within the range [1583..2299].
   $date  = $year->index2date(INDEX);
 
   use Date::Calendar::Profiles qw( $Profiles );
-  $year_2000_US_FL = Date::Calendar::Year->new( 2000, $Profiles->{'US-FL'} [,LANG] );
-  $year_2001_DE_NW = Date::Calendar::Year->new( 2001, $Profiles->{'DE-NW'} [,LANG] );
+  $year_2000_US_FL = Date::Calendar::Year->new( 2000, $Profiles->{'US-FL'} [,LANG[,WEEKEND]] );
+  $year_2001_DE_NW = Date::Calendar::Year->new( 2001, $Profiles->{'DE-NW'} [,LANG[,WEEKEND]] );
 
   $year = Date::Calendar::Year->new( 2001, {} );
-  $year->init( 2002, $Profiles->{'DE-SN'} [,LANG] );
+  $year->init( 2002, $Profiles->{'DE-SN'} [,LANG[,WEEKEND]] );
 
   $vector = $year->vec_full(); # vector of full holidays
   $vector = $year->vec_half(); # vector of half holidays
@@ -226,9 +226,9 @@ Note that this method returns a Date::Calc B<OBJECT>!
 
 =item *
 
-C<$year_2000_US_FL = Date::Calendar::Year-E<gt>new( 2000, $Profiles-E<gt>{'US-FL'} [,LANG] );>
+C<$year_2000_US_FL = Date::Calendar::Year-E<gt>new( 2000, $Profiles-E<gt>{'US-FL'} [,LANG[,WEEKEND]] );>
 
-C<$year_2001_DE_NW = Date::Calendar::Year-E<gt>new( 2001, $Profiles-E<gt>{'DE-NW'} [,LANG] );>
+C<$year_2001_DE_NW = Date::Calendar::Year-E<gt>new( 2001, $Profiles-E<gt>{'DE-NW'} [,LANG[,WEEKEND]] );>
 
 C<$year = Date::Calendar::Year-E<gt>new( 2001, {} );>
 
@@ -263,11 +263,27 @@ when reading the profile, since the profile may contain
 names of months and weekdays in its formulas in that
 language.
 
-The default is English if none is specified.
+The default is English if no value or no valid value
+is specified.
+
+After the third argument, a list of day numbers which
+will constitute the "weekend" can optionally be specified,
+where 1=Monday, 2=Tuesday, 3=Wednesday, 4=Thursday,
+5=Friday, 6=Saturday and 7=Sunday.
+
+If no values are given, 6 and 7 (Saturday and Sunday)
+are automatically taken as default.
+
+If values outside of the range C<1..7> are given,
+they will be ignored.
+
+This can be used to switch off this feature and to
+have no regularly recurring holidays at all when
+for instance a zero is given.
 
 =item *
 
-C<$year-E<gt>init( 2002, $Profiles-E<gt>{'DE-SN'} [,LANG] );>
+C<$year-E<gt>init( 2002, $Profiles-E<gt>{'DE-SN'} [,LANG[,WEEKEND]] );>
 
 This method is called by the "new()" constructor method,
 internally, and has the same arguments as the latter.
@@ -276,7 +292,7 @@ See immediately above for a description of these arguments.
 
 Note that you can also call this method explicitly yourself,
 if needed, and you can of course subclass the Date::Calendar::Year
-class and override the "init()" method with an method of your own.
+class and override the "init()" method with a method of your own.
 
 The holiday scheme or "profile" (i.e., the reference of
 a hash passed as the second argument to this method) must
@@ -454,7 +470,8 @@ object.
 "vec_half()" and "vec_full()" immediately below.)
 
 It then sets the bits which correspond to Saturdays and
-Sundays in the "full holidays" bit vector.
+Sundays (or optionally to the days whose numbers have been
+specified as the "weekend") in the "full holidays" bit vector.
 
 At last, it iterates over the keys of the given holiday
 scheme (of the hash referred to by the hash reference
@@ -821,7 +838,7 @@ See also L<Bit::Vector(3)> for more details.
 =head1 SEE ALSO
 
 Bit::Vector(3), Date::Calendar(3), Date::Calendar::Profiles(3),
-Date::Calc::Object(3), Date::Calc(3).
+Date::Calc::Object(3), Date::Calc(3), Date::Calc::Util(3).
 
 =head1 KNOWN BUGS
 
@@ -834,7 +851,7 @@ this.
 
 =head1 VERSION
 
-This man page documents "Date::Calendar::Year" version 5.6.
+This man page documents "Date::Calendar::Year" version 5.7.
 
 =head1 AUTHOR
 

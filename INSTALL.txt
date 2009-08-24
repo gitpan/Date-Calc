@@ -1,5 +1,5 @@
                      ====================================
-                       Package "Date::Calc" Version 5.6
+                       Package "Date::Calc" Version 5.7
                      ====================================
 
 
@@ -24,15 +24,15 @@ Perl version 5.000 or higher, and an ANSI C compiler. (!)
                                      ^^^^^^
 Module "Carp::Clan" version 5.3 or higher.
 
-Optionally, module "Bit::Vector" version 6.6 or newer.
+Optionally, module "Bit::Vector" version 7.0 or newer.
 
 If you plan to use the modules "Date::Calendar" or
 "Date::Calendar::Year" from this package, you will
-also need the module "Bit::Vector" version 6.6 or
+also need the module "Bit::Vector" version 7.0 or
 newer (which also needs an ANSI C compiler!).
 
 Otherwise you may safely ignore the warning message
-"Warning: prerequisite Bit::Vector 6.6 not found at ..."
+"Warning: prerequisite Bit::Vector 7.0 not found at ..."
 when running "perl Makefile.PL".
 
 Anyway, you can always install "Bit::Vector" later
@@ -66,8 +66,9 @@ Windows 95/98 since the Win 95/98 command shell doesn't
 support the "&&" operator. You will need the Windows NT
 command shell ("cmd.exe") or the "4DOS" shell to be
 installed on your Windows 95/98 system first. Note that
-Windows NT and Windows 2000 are not affected and just
-work fine. I don't know about Windows XP, however.
+Windows NT, Windows 2000 and Windows XP are not affected
+and just work fine. I don't know about Windows Vista and
+Windows 7, however.
 
 Note that ActiveState provides precompiled binaries of
 this module for their Win32 port of Perl ("ActivePerl")
@@ -97,7 +98,7 @@ Edit the file "Makefile.PL" and change the line
 
     'VERSION_FROM'      => 'Calc.pm',
 to
-    'VERSION'           => '5.6',
+    'VERSION'           => '5.7',
 
 Then edit the file "Calc.pm" and change the line
 
@@ -107,7 +108,7 @@ to
 
 Also edit the file "t/f000.t" and change all lines of the kind
 
-    use Date::Calc 5.6;
+    use Date::Calc 5.7;
 
 into just
 
@@ -299,7 +300,7 @@ Detailed installation guide:
 ----------------------------
 
  1) Change directory to the directory that has been created by unpacking this
-    package ("cd Date-Calc-5.6").
+    package ("cd Date-Calc-5.7").
 
  2) Type "perl Makefile.PL" (or whatever the name and path of your Perl 5
     binary is).
@@ -360,63 +361,59 @@ Detailed installation guide:
 
     The output should look somewhat like this:
 
-    PERL_DL_NONLAZY=1 /sw/bin/perl
-    -Iblib/arch -Iblib/lib
-    -I/sw/pkg/perl/lib/5.00503/i386-freebsd
-    -I/sw/pkg/perl/lib/5.00503
-    -e 'use Test::Harness qw(&runtests $verbose);
-    $verbose=0; runtests @ARGV;' t/*.t
-    t/f000..............ok
-    t/f001..............ok
-    t/f002..............ok
-    t/f003..............ok
-    t/f004..............ok
-    t/f005..............ok
-    t/f006..............ok
-    t/f007..............ok
-    t/f008..............ok
-    t/f009..............ok
-    t/f010..............ok
-    t/f011..............ok
-    t/f012..............ok
-    t/f013..............ok
-    t/f014..............ok
-    t/f015..............ok
-    t/f016..............ok
-    t/f017..............ok
-    t/f018..............ok
-    t/f019..............ok
-    t/f020..............ok
-    t/f021..............ok
-    t/f022..............ok
-    t/f023..............ok
-    t/f024..............ok
-    t/f025..............ok
-    t/f026..............ok
-    t/f027..............ok
-    t/f028..............ok
-    t/f029..............ok
-    t/f030..............ok
-    t/f031..............ok
-    t/f032..............ok
-    t/f033..............ok
-    t/f034..............ok
-    t/f035..............ok
-    t/f036..............ok
-    t/m001..............ok
-    t/m002..............ok
-    t/m003..............ok
-    t/m004..............ok
-    t/m005..............ok
-    t/m006..............ok
-    t/m007..............ok
-    t/m008..............ok
-    t/m009..............ok
-    t/m010..............ok
-    t/m011..............ok
+    PERL_DL_NONLAZY=1 /v/guest/sw/bin/perl "-MExtUtils::Command::MM"
+    "-e" "test_harness(0, 'blib/lib', 'blib/arch')" t/*.t
+    t/f000.t .. ok
+    t/f001.t .. ok
+    t/f002.t .. ok
+    t/f003.t .. ok
+    t/f004.t .. ok
+    t/f005.t .. ok
+    t/f006.t .. ok
+    t/f007.t .. ok
+    t/f008.t .. ok
+    t/f009.t .. ok
+    t/f010.t .. ok
+    t/f011.t .. ok
+    t/f012.t .. ok
+    t/f013.t .. ok
+    t/f014.t .. ok
+    t/f015.t .. ok
+    t/f016.t .. ok
+    t/f017.t .. ok
+    t/f018.t .. ok
+    t/f019.t .. ok
+    t/f020.t .. ok
+    t/f021.t .. ok
+    t/f022.t .. ok
+    t/f023.t .. ok
+    t/f024.t .. ok
+    t/f025.t .. ok
+    t/f026.t .. ok
+    t/f027.t .. ok
+    t/f028.t .. ok
+    t/f029.t .. ok
+    t/f030.t .. ok
+    t/f031.t .. ok
+    t/f032.t .. ok
+    t/f033.t .. ok
+    t/f034.t .. ok
+    t/f035.t .. ok
+    t/f036.t .. ok
+    t/m001.t .. ok
+    t/m002.t .. ok
+    t/m003.t .. ok
+    t/m004.t .. ok
+    t/m005.t .. ok
+    t/m006.t .. ok
+    t/m007.t .. ok
+    t/m008.t .. ok
+    t/m009.t .. ok
+    t/m010.t .. ok
+    t/m011.t .. ok
     All tests successful.
-    Files=48,  Tests=2770, 30 wallclock secs
-    (26.29 cusr +  1.41 csys = 27.70 CPU)
+    Files=48, Tests=2812,  4 wallclock secs ( 0.58 usr  0.24 sys +  2.38 cusr  0.79 csys =  3.98 CPU)
+    Result: PASS
 
  5) At last, type "make install" (or "dmake install", "nmake install").
 

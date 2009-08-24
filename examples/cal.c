@@ -9,6 +9,16 @@
 /*                                                                           */
 /*****************************************************************************/
 
+/******************************************************/
+/*                                                    */
+/*  Copy ToolBox.h, DateCalc.h and DateCalc.o to      */
+/*  this directory, then compile this file and link   */
+/*  with DateCalc.o, e.g. with                        */
+/*                                                    */
+/*             gcc -o cal cal.c DateCalc.o            */
+/*                                                    */
+/******************************************************/
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

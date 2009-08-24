@@ -22,7 +22,7 @@ WriteMakefile(
     'PREREQ_PM'         =>
                               {
                                   'Carp::Clan'  => 5.3,
-                                  'Bit::Vector' => 6.6
+                                  'Bit::Vector' => 7.0
                               },
     'OBJECT'            => '$(O_FILES)',
 #   ($] >= 5.005 ?

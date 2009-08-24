@@ -29,8 +29,8 @@ with years lying within the range [1583..2299].
   use Date::Calendar::Profiles qw( $Profiles );
   use Date::Calendar;
 
-  $calendar_US_AZ  = Date::Calendar->new( $Profiles->{'US-AZ'} [,LANG] );
-  $calendar_DE_SN  = Date::Calendar->new( $Profiles->{'DE-SN'} [,LANG] );
+  $calendar_US_AZ  = Date::Calendar->new( $Profiles->{'US-AZ'} [,LANG[,WEEKEND]] );
+  $calendar_DE_SN  = Date::Calendar->new( $Profiles->{'DE-SN'} [,LANG[,WEEKEND]] );
 
   $year_2000_US_AZ = $calendar_US_AZ->year( 2000 );
   $year_2001_DE_SN = $calendar_DE_SN->year( 2001 );
@@ -126,7 +126,7 @@ does so by returning a Date::Calc[::Object] date object.
 
 =item *
 
-C<$calendar = Date::Calendar-E<gt>new(PROFILE[,LANG]);>
+C<$calendar = Date::Calendar-E<gt>new(PROFILE[,LANG[,WEEKEND]]);>
 
 The first argument must be the reference of a hash,
 which contains a holiday scheme or "profile" to be used
@@ -135,6 +135,21 @@ in all calculations involving the new calendar object.
 The second argument is optional, and must consist of
 the valid name or number of a language as provided by
 the Date::Calc(3) module if given.
+
+After the second argument, a list of day numbers which
+will constitute the "weekend" can optionally be specified,
+where 1=Monday, 2=Tuesday, 3=Wednesday, 4=Thursday,
+5=Friday, 6=Saturday and 7=Sunday.
+
+If no values are given, 6 and 7 (Saturday and Sunday)
+are automatically taken as default.
+
+If values outside of the range C<1..7> are given,
+they will be ignored.
+
+This can be used to switch off this feature and to
+have no regularly recurring holidays at all when
+for instance a zero is given.
 
 See L<Date::Calendar::Profiles(3)> and L<Date::Calendar::Year(3)>
 for more details about these arguments and about how
@@ -538,7 +553,17 @@ details.
 =head1 SEE ALSO
 
 Date::Calendar::Year(3), Date::Calendar::Profiles(3),
-Date::Calc::Object(3), Date::Calc(3), Bit::Vector(3).
+Date::Calc::Object(3), Date::Calc(3), Date::Calc::Util(3),
+Bit::Vector(3).
+
+=head1 LIMITATIONS
+
+The calendar profiles included in L<Date::Calendar::Profiles(3)>
+usually do not take historical irregularities into account
+(even though some do in order to show how this can be done),
+they only provide means for calculating B<regularly> recurring
+events (B<the profiles should therefore not be relied upon
+for historical faithfulness>).
 
 =head1 KNOWN BUGS
 
@@ -551,7 +576,7 @@ this.
 
 =head1 VERSION
 
-This man page documents "Date::Calendar" version 5.6.
+This man page documents "Date::Calendar" version 5.7.
 
 =head1 AUTHOR
 

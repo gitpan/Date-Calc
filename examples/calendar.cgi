@@ -2,7 +2,7 @@
 
 ###############################################################################
 ##                                                                           ##
-##    Copyright (c) 2001 - 2009 by Steffen Beyer.                            ##
+##    Copyright (c) 2001 - 2004 by Steffen Beyer.                            ##
 ##    All rights reserved.                                                   ##
 ##                                                                           ##
 ##    This program is free software; you can redistribute it                 ##
@@ -12,7 +12,7 @@
 
            #########################################################
            ##                                                     ##
-           ##    See http://www.engelschall.com/u/sb/calendar/    ##
+           ##    See http://www.engelschall.com/~sb/calendar/     ##
            ##    for a "live" example of this CGI script.         ##
            ##                                                     ##
            #########################################################
@@ -34,9 +34,12 @@ my $language = 6;
 my $country  = 'NL';
 my $select   = 0;
 my $fullyear = 0;
+my $weekend  = '';
 
+my @DOW      = ();
 my @html     = ();
 my @start    = ();
+my @markwend = ();
 my @marksele = ();
 my @markyear = ();
 my @language = ();
@@ -45,6 +48,7 @@ my @marklang = ();
 my %profiles = ();
 my %sortprof = ();
 my %markprof = ();
+my %weekend  = ();
 my %sdm      = ();
 
 &init_tables();
@@ -328,10 +332,11 @@ sub process_profiles()
 
 sub process_query_string()
 {
-    my $query = $ENV{'QUERY_STRING'} || $ENV{'REDIRECT_QUERY_STRING'} || '';
+    my $query = $ENV{'QUERY_STRING'} || $ENV{'REDIRECT_QUERY_STRING'} || 'weekend=6-7';
     my @pairs = split(/&/, $query);
-    my($pair,$var,$val);
+    my($pair,$var,$val,$dow);
 
+    %weekend = ();
     foreach $pair (@pairs)
     {
         ($var,$val) = split(/=/,$pair,2);
@@ -340,6 +345,11 @@ sub process_query_string()
             if    ($var eq 'select')
             {
                 if ($val =~ m!^[0-9]+$!) { $select = $val ? 1 : 0; }
+            }
+            elsif ($var eq 'weekend')
+            {
+                if    ($val =~ m!^[1-7]$!)            { $weekend{$val} = 1; }
+                elsif ($val =~ m!^[1-7](?:-[1-7])+$!) { foreach $dow (split(/-/,$val)) { $weekend{$dow} = 1; } }
             }
             elsif ($var eq 'fullyear')
             {
@@ -371,6 +381,8 @@ sub process_query_string()
             }
         }
     }
+    $weekend{0} = 1 unless (scalar(keys(%weekend)));
+    $weekend = join('-',sort(keys(%weekend)));
 }
 
 sub set_defaults()
@@ -378,11 +390,13 @@ sub set_defaults()
     my $year;
     local $_;
 
+    @markwend = ('' x 7);
     @marksele = ('', '');
     @markyear = ('', '', '');
     @marklang = ('') x (Languages() + 1);
     %markprof = map { $_, '' } keys(%profiles);
 
+    $markwend[$_]        = ' CHECKED' foreach (keys %weekend);
     $marksele[$select]   = ' CHECKED';
     $markyear[$fullyear] = ' CHECKED';
     $marklang[$language] = ' SELECTED';
@@ -425,6 +439,7 @@ sub set_defaults()
         }
     }
     Language($language);
+    $DOW[$_] = Day_of_Week_Abbreviation($_) foreach (1..7);
 }
 
 sub print_page()
@@ -436,6 +451,7 @@ Content-type: text/html; charset="iso-8859-1"
 
 <HTML>
 <HEAD>
+    <META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso-8859-1">
     <TITLE>Steffen Beyer's International Eternal Gregorian Calendar</TITLE>
 </HEAD>
 <BODY BGCOLOR="#FFFFFF">
@@ -496,6 +512,19 @@ VERBATIM
 </TR></TABLE>
 </TD>
 </TR><TR>
+<TD ALIGN="left">Weekend days:</TD>
+<TD ALIGN="right" COLSPAN="2">
+<TABLE WIDTH="100%" CELLSPACING="0" CELLPADDING="0" BORDER="0"><TR>
+<TD ALIGN="right" WIDTH="14%"><INPUT TYPE="checkbox" NAME="weekend" VALUE="1"$markwend[1]>$DOW[1]</TD>
+<TD ALIGN="right" WIDTH="14%"><INPUT TYPE="checkbox" NAME="weekend" VALUE="2"$markwend[2]>$DOW[2]</TD>
+<TD ALIGN="right" WIDTH="14%"><INPUT TYPE="checkbox" NAME="weekend" VALUE="3"$markwend[3]>$DOW[3]</TD>
+<TD ALIGN="right" WIDTH="14%"><INPUT TYPE="checkbox" NAME="weekend" VALUE="4"$markwend[4]>$DOW[4]</TD>
+<TD ALIGN="right" WIDTH="14%"><INPUT TYPE="checkbox" NAME="weekend" VALUE="5"$markwend[5]>$DOW[5]</TD>
+<TD ALIGN="right" WIDTH="14%"><INPUT TYPE="checkbox" NAME="weekend" VALUE="6"$markwend[6]>$DOW[6]</TD>
+<TD ALIGN="right" WIDTH="14%"><INPUT TYPE="checkbox" NAME="weekend" VALUE="7"$markwend[7]>$DOW[7]</TD>
+</TR></TABLE>
+</TD>
+</TR><TR>
 <TD ALIGN="center" COLSPAN="3"><INPUT TYPE="reset" VALUE="Reset"></TD>
 </TR><TR>
 <TD ALIGN="center" COLSPAN="3"><INPUT TYPE="submit" VALUE="Display"></TD>
@@ -532,6 +561,7 @@ VERBATIM
 <INPUT TYPE="hidden" NAME="month"    VALUE="$start[3][1]">
 <INPUT TYPE="hidden" NAME="wyear"    VALUE="$start[4][1]">
 <INPUT TYPE="hidden" NAME="fullyear" VALUE="$fullyear">
+<INPUT TYPE="hidden" NAME="weekend"  VALUE="$weekend">
 <INPUT TYPE="submit" VALUE="&nbsp;&lt;&nbsp;&lt;&nbsp;&lt;&nbsp;">
 </FORM>
 </TD>
@@ -550,6 +580,7 @@ $filler
 <INPUT TYPE="hidden" NAME="month"    VALUE="$start[5][1]">
 <INPUT TYPE="hidden" NAME="wyear"    VALUE="$start[6][1]">
 <INPUT TYPE="hidden" NAME="fullyear" VALUE="$fullyear">
+<INPUT TYPE="hidden" NAME="weekend"  VALUE="$weekend">
 <INPUT TYPE="submit" VALUE="&nbsp;&gt;&nbsp;&gt;&nbsp;&gt;&nbsp;">
 </FORM>
 </TD>
@@ -592,7 +623,7 @@ sub print_calendar()
     my(@date,$tags);
     local $_;
 
-    $calendar = Date::Calendar->new( $Profiles->{$country} );
+    $calendar = Date::Calendar->new( $Profiles->{$country}, 0, keys(%weekend) );
 
     print <<"VERBATIM";
 <TR>

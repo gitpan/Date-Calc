@@ -23,7 +23,7 @@ require Exporter;
 
 @EXPORT_OK = qw();
 
-$VERSION = '5.6';
+$VERSION = '5.7';
 
 use Carp::Clan qw(^Date::);
 use Date::Calc::Object qw(:ALL);
@@ -42,6 +42,7 @@ sub new
     $self->[0] = { };
     $self->[1] = $profile;
     $self->[2] = $language;
+    $self->[3] = [@_];
     return $self;
 }
 
@@ -58,7 +59,7 @@ sub year
     else
     {
         return $self->[0]{$year} =
-            Date::Calendar::Year->new( $year, $self->[1], $self->[2] );
+            Date::Calendar::Year->new( $year, $self->[1], $self->[2], @{$self->[3]} );
     }
 }
 

@@ -435,7 +435,7 @@ const N_char DateCalc_Month_to_Text_[DateCalc_LANGUAGES+1][13][32] =
     },
     {
         "???", "januari", "februari", "maart", "april", "mei", "juni",
-        "juli", "augustus", "september", "october", "november", "december"
+        "juli", "augustus", "september", "oktober", "november", "december"
     },
     {
         "???", "Gennaio", "Febbraio", "Marzo", "Aprile", "Maggio", "Giugno",
@@ -565,7 +565,8 @@ const N_char DateCalc_Day_of_Week_Abbreviation_[DateCalc_LANGUAGES+1][8][4] =
         "", "", "", "", "", "", "", ""    /*  4 */
     },
     {
-        "???", "2ª", "3ª", "4ª", "5ª", "6ª", "Sáb", "Dom"    /*  5 */
+        "", "", "", "", "", "", "", ""    /*  5 */
+/*      "???", "2ª", "3ª", "4ª", "5ª", "6ª", "Sáb", "Dom"    /*  5 */
     },
     {
         "", "", "", "", "", "", "", ""    /*  6 */
@@ -2235,15 +2236,16 @@ void DateCalc_Dispose(charptr string)
 
 charptr DateCalc_Version(void)
 {
-    return( (charptr) "5.6" );
+    return( (charptr) "5.7" );
 }
 
 /*****************************************************************************/
-/*  VERSION:  5.6                                                            */
+/*  VERSION:  5.7                                                            */
 /*****************************************************************************/
 /*  VERSION HISTORY:                                                         */
 /*****************************************************************************/
 /*                                                                           */
+/*    Version 5.7  23.08.09  Fixed Dutch "oktober", Portuguese DOW abbrevs.  */
 /*    Version 5.6  28.07.09  Made the module MacOS X compatible.             */
 /*    Version 5.5  skipped due to an unauthorized upload by someone else.    */
 /*    Version 5.4  03.10.04  Added compiler directives for C++.              */

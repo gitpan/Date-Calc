@@ -1,5 +1,5 @@
                      ====================================
-                       Package "Date::Calc" Version 5.6
+                       Package "Date::Calc" Version 5.7
                      ====================================
 
 
@@ -35,11 +35,28 @@ interface) with overloaded operators, and a set of modules for calculations
 which take local holidays into account (both additions in Perl only, however).
 
 
-What's new in version 5.6:
+What's new in version 5.7:
 --------------------------
 
- +  Made the module MacOS X compatible
- +  Made some tiny changes to the documentation
+ +  Fixed "october" => "oktober" in Dutch
+ +  Disabled the special abbreviated names
+    of the days of the week in Portuguese
+ +  Made the days which form the weekend con-
+    figurable in "Calendar.pm" and "Year.pm"
+ +  Added some test cases for this new feature
+    in "t/m008.t"
+ +  The file "examples/calendar.cgi" now
+    also supports this new feature
+ +  Updated "README.txt" and "INSTALL.txt"
+    and the dependency on "Bit::Vector" 7.0
+ +  Added an additional "README.htm" file to this
+    distribution highlighting its key points
+ +  Updated the documentation of "Date::Calc",
+    "Date::Calendar", "Date::Calendar::Profiles",
+    "Date::Calendar::Year" and "Date::Object"
+ +  See the new module "Date::Calc::Util" (which
+    is available separately) for all the shortcuts
+    you ever wanted to have in "Date::Calc"
 
 
 New features in version 5.0:
@@ -103,15 +120,15 @@ Perl version 5.000 or higher, and an ANSI C compiler. (!)
                                      ^^^^^^
 Module "Carp::Clan" version 5.3 or higher.
 
-Optionally, module "Bit::Vector" version 6.6 or newer.
+Optionally, module "Bit::Vector" version 7.0 or newer.
 
 If you plan to use the modules "Date::Calendar" or
 "Date::Calendar::Year" from this package, you will
-also need the module "Bit::Vector" version 6.6 or
+also need the module "Bit::Vector" version 7.0 or
 newer (which also needs an ANSI C compiler!).
 
 Otherwise you may safely ignore the warning message
-"Warning: prerequisite Bit::Vector 6.6 not found at ..."
+"Warning: prerequisite Bit::Vector 7.0 not found at ..."
 when running "perl Makefile.PL".
 
 Anyway, you can always install "Bit::Vector" later
@@ -145,8 +162,9 @@ Windows 95/98 since the Win 95/98 command shell doesn't
 support the "&&" operator. You will need the Windows NT
 command shell ("cmd.exe") or the "4DOS" shell to be
 installed on your Windows 95/98 system first. Note that
-Windows NT and Windows 2000 are not affected and just
-work fine. I don't know about Windows XP, however.
+Windows NT, Windows 2000 and Windows XP are not affected
+and just work fine. I don't know about Windows Vista and
+Windows 7, however.
 
 Note that ActiveState provides precompiled binaries of
 this module for their Win32 port of Perl ("ActivePerl")
@@ -172,21 +190,12 @@ http://catcode.com/date/pcalc.html.
 Note to CPAN Testers:
 ---------------------
 
-After completion, version 5.6 of this module has already
+After completion, version 5.7 of this module has already
 been tested successfully with the following configurations:
 
+  Perl 5.005_03  -  Windows XP SP3 & MS VC++ 6.0 (native Perl build)
   Perl 5.8.0     -  Windows XP SP3 & MS VC++ 6.0 (native Perl build)
-  Perl 5.8.8     -  FreeBSD 5.5-PRERELEASE
-
-Note: You can safely ignore the failing tests in module Bit::Vector 6.0
-(Bit::Vector::Overload, to be precise) in file "t/30_overloaded.t" under
-Perl 5.7.1 and Perl 5.7.2. The same applies to older versions of
-Bit::Vector.
-
-The failing tests are due to a change in Perl's core module "overload.pm"
-which attempts to modify a read-only value when an exception is thrown
-in the handler of an overloaded operator. This just causes a different
-error message to be printed than the intended one.
+  Perl 5.10.0    -  FreeBSD 7.2-STABLE
 
 
 Installation:

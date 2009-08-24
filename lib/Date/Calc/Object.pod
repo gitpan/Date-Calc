@@ -1220,12 +1220,12 @@ and their descriptions in the file "EXAMPLES.txt".
 
 =head1 SEE ALSO
 
-Date::Calc(3), Date::Calendar(3),
+Date::Calc(3), Date::Calc::Util(3), Date::Calendar(3),
 Date::Calendar::Year(3), Date::Calendar::Profiles(3).
 
 =head1 VERSION
 
-This man page documents "Date::Calc::Object" version 5.6.
+This man page documents "Date::Calc::Object" version 5.7.
 
 =head1 AUTHOR
 

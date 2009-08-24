@@ -1978,8 +1978,11 @@ day of week, B<IF> such special abbreviations have been defined for the
 currently selected language (see further below for details about the
 multi-language support of this package).
 
-(In the original distribution of this package, this is only true for
-Portuguese.)
+(In the original distribution of this package, this was only true for
+Portuguese. In the meantime, the abbreviations in Portuguese have been
+disabled, so that now none of the languages in this package has any
+special abbreviations. But it remains possible to define some and
+then recompile the package.)
 
 If not, the first three letters of the name of the day of week in the
 currently selected language are returned instead.
@@ -2962,8 +2965,9 @@ B<OR> all negative values, B<NOT> all positive values as above.
 
 =head1 SEE ALSO
 
-Date::Calc::Object(3), Date::Calendar(3),
-Date::Calendar::Year(3), Date::Calendar::Profiles(3).
+Date::Calc::Util(3), Date::Calc::Object(3),
+Date::Calendar(3), Date::Calendar::Year(3),
+Date::Calendar::Profiles(3).
 
   "The Calendar FAQ":
   http://www.tondering.dk/claus/calendar.html
@@ -2980,7 +2984,7 @@ threads as well).
 
 =head1 VERSION
 
-This man page documents "Date::Calc" version 5.6.
+This man page documents "Date::Calc" version 5.7.
 
 =head1 AUTHOR
 

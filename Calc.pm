@@ -99,7 +99,7 @@ require DynaLoader;
 ##                                              ##
 ##################################################
 
-$VERSION = '5.6';
+$VERSION = '5.7';
 
 bootstrap Date::Calc $VERSION;
 

@@ -1,5 +1,5 @@
                      ====================================
-                       Package "Date::Calc" Version 5.6
+                       Package "Date::Calc" Version 5.7
                      ====================================
 
 
@@ -9,6 +9,28 @@
 
 Version history:
 ----------------
+
+Version 5.7   23.08.2009
+
+ +  Fixed "october" => "oktober" in Dutch
+ +  Disabled the special abbreviated names
+    of the days of the week in Portuguese
+ +  Made the days which form the weekend con-
+    figurable in "Calendar.pm" and "Year.pm"
+ +  Added some test cases for this new feature
+    in "t/m008.t"
+ +  The file "examples/calendar.cgi" now
+    also supports this new feature
+ +  Updated "README.txt" and "INSTALL.txt"
+    and the dependency on "Bit::Vector" 7.0
+ +  Added an additional "README.htm" file to this
+    distribution highlighting its key points
+ +  Updated the documentation of "Date::Calc",
+    "Date::Calendar", "Date::Calendar::Profiles",
+    "Date::Calendar::Year" and "Date::Object"
+ +  See the new module "Date::Calc::Util" (which
+    is available separately) for all the shortcuts
+    you ever wanted to have in "Date::Calc"
 
 Version 5.6   28.07.2009
 

@@ -145,6 +145,14 @@ DateCalc_delta_ymd                     (Z_int  *year1,      /*  I/O  */
                                         Z_int   day2);      /*   I   */
 
 boolean
+DateCalc_norm_delta_ymd                (Z_int  *year1,      /*  I/O  */
+                                        Z_int  *month1,     /*  I/O  */
+                                        Z_int  *day1,       /*  I/O  */
+                                        Z_int   year2,      /*   I   */
+                                        Z_int   month2,     /*   I   */
+                                        Z_int   day2);      /*   I   */
+
+boolean
 DateCalc_delta_ymdhms                  (Z_int  *D_y,        /*   O   */
                                         Z_int  *D_m,        /*   O   */
                                         Z_int  *D_d,        /*   O   */
@@ -1042,6 +1050,48 @@ boolean DateCalc_delta_ymd(Z_int *year1, Z_int *month1, Z_int *day1,
         *day1   = day2   - *day1;
         *month1 = month2 - *month1;
         *year1  = year2  - *year1;
+        return(true);
+    }
+    return(false);
+}
+
+boolean DateCalc_norm_delta_ymd(Z_int *year1, Z_int *month1, Z_int *day1,
+                                Z_int  year2, Z_int  month2, Z_int  day2)
+{
+    Z_long Dy = 0L;
+    Z_long Dm = 0L;
+    Z_long Dd = 0L;
+    Z_long d2;
+    Z_int  ty;
+    Z_int  tm;
+    Z_int  td;
+
+    if (DateCalc_check_date(*year1,*month1,*day1) and
+        DateCalc_check_date(year2,month2,day2))
+    {
+        d2 =    DateCalc_Date_to_Days(year2,month2,day2);
+        Dd = d2-DateCalc_Date_to_Days(*year1,*month1,*day1);
+        if ((Dd < -30L) or (Dd > 30L))
+        {
+            Dy = (Z_long) (year2  - *year1);
+            Dm = (Z_long) (month2 - *month1);
+            ty=*year1; tm=*month1; td=*day1; if (!DateCalc_add_delta_ym(&ty,&tm,&td,Dy,Dm)) return(false); Dd=d2-DateCalc_Date_to_Days(ty,tm,td);
+            if (!(((Dy >= 0L) and (Dm >= 0L) and (Dd >= 0L)) or
+                  ((Dy <= 0L) and (Dm <= 0L) and (Dd <= 0L))))
+            {
+                if      ((Dy < 0L) and (Dm > 0L)) { Dy++; Dm -= 12L; }
+                else if ((Dy > 0L) and (Dm < 0L)) { Dy--; Dm += 12L; }
+                if      ((Dm < 0L) and (Dd > 0L)) { Dm++; ty=*year1; tm=*month1; td=*day1; if (!DateCalc_add_delta_ym(&ty,&tm,&td,Dy,Dm)) return(false); Dd=d2-DateCalc_Date_to_Days(ty,tm,td); }
+                else if ((Dm > 0L) and (Dd < 0L)) { Dm--; ty=*year1; tm=*month1; td=*day1; if (!DateCalc_add_delta_ym(&ty,&tm,&td,Dy,Dm)) return(false); Dd=d2-DateCalc_Date_to_Days(ty,tm,td); }
+                if      ((Dy < 0L) and (Dd > 0L)) { Dy++; Dm -= 12L; }
+                else if ((Dy > 0L) and (Dd < 0L)) { Dy--; Dm += 12L; }
+                if      ((Dm < 0L) and (Dd > 0L)) { Dm++; ty=*year1; tm=*month1; td=*day1; if (!DateCalc_add_delta_ym(&ty,&tm,&td,Dy,Dm)) return(false); Dd=d2-DateCalc_Date_to_Days(ty,tm,td); }
+                else if ((Dm > 0L) and (Dd < 0L)) { Dm--; ty=*year1; tm=*month1; td=*day1; if (!DateCalc_add_delta_ym(&ty,&tm,&td,Dy,Dm)) return(false); Dd=d2-DateCalc_Date_to_Days(ty,tm,td); }
+            }
+        }
+        *year1  = (Z_int) Dy;
+        *month1 = (Z_int) Dm;
+        *day1   = (Z_int) Dd;
         return(true);
     }
     return(false);
@@ -2236,15 +2286,16 @@ void DateCalc_Dispose(charptr string)
 
 charptr DateCalc_Version(void)
 {
-    return( (charptr) "5.7" );
+    return( (charptr) "5.8" );
 }
 
 /*****************************************************************************/
-/*  VERSION:  5.7                                                            */
+/*  VERSION:  5.8                                                            */
 /*****************************************************************************/
 /*  VERSION HISTORY:                                                         */
 /*****************************************************************************/
 /*                                                                           */
+/*    Version 5.8  12.09.09  Added "norm_delta_ymd()".                       */
 /*    Version 5.7  23.08.09  Fixed Dutch "oktober", Portuguese DOW abbrevs.  */
 /*    Version 5.6  28.07.09  Made the module MacOS X compatible.             */
 /*    Version 5.5  skipped due to an unauthorized upload by someone else.    */
@@ -2280,7 +2331,7 @@ charptr DateCalc_Version(void)
 /*****************************************************************************/
 /*                                                                           */
 /*    Steffen Beyer                                                          */
-/*    mailto:sb@engelschall.com                                              */
+/*    mailto:STBEY@cpan.org                                                  */
 /*    http://www.engelschall.com/u/sb/download/                              */
 /*                                                                           */
 /*****************************************************************************/

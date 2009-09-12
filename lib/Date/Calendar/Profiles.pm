@@ -35,7 +35,7 @@ require Exporter;
     &Advent
 );
 
-$VERSION = '5.7';
+$VERSION = '5.8';
 
 use Date::Calc qw(:all);
 use Carp::Clan qw(^Date::);
@@ -1326,7 +1326,7 @@ $Profiles->{'DK'} = # Denmark
 };
 
 # Thanks to:
-# H. Merijn Brand <h.m.brand@hccnet.nl>
+# H. Merijn Brand <h.m.brand@xs4all.nl>
 # Johan Vromans <JVromans@squirrel.nl>
 # Abigail <abigail@foad.org>
 # Elizabeth Mattijsen <liz@dijkmat.nl>

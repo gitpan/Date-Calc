@@ -347,7 +347,7 @@ int main(int argc, char *argv[])
 /*****************************************************************************/
 /*                                                                           */
 /*    Steffen Beyer                                                          */
-/*    mailto:sb@engelschall.com                                              */
+/*    mailto:STBEY@cpan.org                                                  */
 /*    http://www.engelschall.com/u/sb/download/                              */
 /*                                                                           */
 /*****************************************************************************/

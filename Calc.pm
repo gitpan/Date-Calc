@@ -42,6 +42,7 @@ require DynaLoader;
     Delta_Days
     Delta_DHMS
     Delta_YMD
+    N_Delta_YMD
     Delta_YMDHMS
     Normalize_DHMS
     Add_Delta_Days
@@ -99,7 +100,7 @@ require DynaLoader;
 ##                                              ##
 ##################################################
 
-$VERSION = '5.7';
+$VERSION = '5.8';
 
 bootstrap Date::Calc $VERSION;
 

@@ -73,6 +73,7 @@ please let me know! (See e-mail address at the end of this document.)
       Delta_Days
       Delta_DHMS
       Delta_YMD
+      N_Delta_YMD
       Delta_YMDHMS
       Normalize_DHMS
       Add_Delta_Days
@@ -187,6 +188,11 @@ please let me know! (See e-mail address at the end of this document.)
       ($Dy,$Dm,$Dd) =
       Delta_YMD($year1,$month1,$day1,
                 $year2,$month2,$day2);
+
+  N_Delta_YMD
+      ($Dy,$Dm,$Dd) =
+      N_Delta_YMD($year1,$month1,$day1,
+                  $year2,$month2,$day2);
 
   Delta_YMDHMS
       ($D_y,$D_m,$D_d, $Dh,$Dm,$Ds) =
@@ -413,6 +419,31 @@ to S<06-Feb-2040 06:28:15> (local time).
 
 Note further that the function "Easter_Sunday()" can only
 be used for years in the range 1583 to 2299.
+
+=item *
+
+POSIX functions
+
+Note that the following functions
+
+              Gmtime()
+              Localtime()
+              Mktime()
+              Timezone()
+
+are actually wrappers around or based upon the corresponding
+POSIX functions "time()", "gmtime()", "localtime()" and "mktime()".
+
+As such, they depend on local settings of the underlying machine
+such as e.g. the system clock, the time zone and the locale.
+
+Their results can therefore sometimes be unexpected or counter-intuitive.
+
+Therefore, no support can be provided for these functions.
+
+They are supplied "as is", purely for the sake of interoperability.
+
+Use at your own risk. (You have been warned!)
 
 =item *
 
@@ -836,7 +867,88 @@ This function returns the vector
 
     ( $year2 - $year1, $month2 - $month1, $day2 - $day1 )
 
+This is called the "one-by-one" semantics.
+
 An error occurs if any of the two dates is invalid.
+
+=item *
+
+C<($Dy,$Dm,$Dd) = N_Delta_YMD($year1,$month1,$day1, $year2,$month2,$day2);>
+
+This function returns the difference between the two given dates in a
+more intuitive way (as far as possible - more on that see a bit further
+below) than the function "Delta_YMD()" described immediately above.
+
+The "N" which precedes its name is meant to signify "new" or "normalized".
+
+This function is loosely based on recipe #17 b) (see the section "RECIPES"
+below near the end of this document).
+
+However, the code of recipe #17 b) actually does not treat positive and
+negative values symmetrically and consistently.
+
+This new routine does.
+
+The return values of this function are guaranteed to all have the same
+sign (or to be zero). This is why this function is called "normalized".
+
+Moreover, the results are guaranteed to be "minimal", in the sense that
+C<|$Dm| E<lt> 12> and C<|$Dd| E<lt> 31> (which is equivalent to C<$Dm>
+lying in the range C<[-11..11]> and C<$Dd> lying in the range C<[-30..30]>).
+
+Finally, contrary to the function "Delta_YMD()" above, the return values
+of this function are actually mathematically meaningful, in the sense of
+mathematically useful and consistent:
+
+When the results are applied (i.e., added) to the first given date in a
+left-to-right order, the second given date is guaranteed to be obtained,
+provided that intermediary results are truncated, as done by the function
+"Add_Delta_YM()" (see further below), i.e., that invalid intermediate dates
+such as e.g. [2009,2,31] will automatically be transformed into [2009,2,28]
+(and not "wrapped" into the next month, e.g. to [2009,3,3]).
+
+This is called the "left-to-right with truncation" semantics.
+
+Note that reversing the order of the given dates and reversing the sign of
+each of the result values will not always add up.
+
+Consider the dates [2008,2,29] and [2009,2,1]: their difference is [0,11,3]
+([2008,2,29] plus 11 months is [2009,1,29], which plus 3 days is [2009,2,1]),
+but the difference between [2009,2,1] and [2008,2,29] is [0,-11,-1], and
+not [0,-11,-3] ([2009,2,1] minus 11 months is [2008,3,1], which minus one
+day is [2008,2,29]).
+
+Another example: The difference between [1996,2,29] and [1997,2,28] is [1,0,0]
+(observe the truncation of the invalid date [1997,2,29] to [1997,2,28] here!),
+whereas the difference between [1997,2,28] and [1996,2,29] is [0,-11,-28]
+([1997,2,28] minus 11 months is [1996,3,28], which minus 28 days is not
+[1996,3,0] but of course [1996,2,29]).
+
+"Good natured" examples such as for instance the difference between
+[1964,1,3] and [2009,9,10] are completely symmetrical: The difference
+in this example is [45,8,7], whereas the difference between [2009,9,10]
+and [1964,1,3] is [-45,-8,-7], as would normally be expected. In this
+example, the result is also the same as the one returned by "Delta_YMD()".
+
+All these counter-intuitive effects are due to the fact that months
+(and due to leap years, also years) do not correspond to a fixed number
+of days, so the semantics of "plus one month" or "plus one year" are in
+fact undefined.
+
+The present function is a try to provide a definition which is intuitive
+most of the time, and at least consistent the rest of the time.
+
+Other definitions are of course possible, but most often lead to
+contradictions (e.g., the results and the given first date do not
+add up to the second given date).
+
+See the file "datecalc.pl" in the "examples" subdirectory of this
+distribution for a way to play around with this function, or go to
+http://www.engelschall.com/u/sb/datecalc/ for the online version.
+
+An error occurs if any of the two given dates is invalid, or if any
+intermediate result leads to an invalid date (this does not apply
+to truncation, however, as explained above).
 
 =item *
 
@@ -2984,12 +3096,12 @@ threads as well).
 
 =head1 VERSION
 
-This man page documents "Date::Calc" version 5.7.
+This man page documents "Date::Calc" version 5.8.
 
 =head1 AUTHOR
 
   Steffen Beyer
-  mailto:sb@engelschall.com
+  mailto:STBEY@cpan.org
   http://www.engelschall.com/u/sb/download/
 
 =head1 COPYRIGHT

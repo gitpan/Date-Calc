@@ -576,12 +576,12 @@ this.
 
 =head1 VERSION
 
-This man page documents "Date::Calendar" version 5.7.
+This man page documents "Date::Calendar" version 5.8.
 
 =head1 AUTHOR
 
   Steffen Beyer
-  mailto:sb@engelschall.com
+  mailto:STBEY@cpan.org
   http://www.engelschall.com/u/sb/download/
 
 =head1 COPYRIGHT

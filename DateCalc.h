@@ -149,6 +149,14 @@ DateCalc_delta_ymd                     (Z_int  *year1,      /*  I/O  */
                                         Z_int   day2);      /*   I   */
 
 boolean
+DateCalc_norm_delta_ymd                (Z_int  *year1,      /*  I/O  */
+                                        Z_int  *month1,     /*  I/O  */
+                                        Z_int  *day1,       /*  I/O  */
+                                        Z_int   year2,      /*   I   */
+                                        Z_int   month2,     /*   I   */
+                                        Z_int   day2);      /*   I   */
+
+boolean
 DateCalc_delta_ymdhms                  (Z_int  *D_y,        /*   O   */
                                         Z_int  *D_m,        /*   O   */
                                         Z_int  *D_d,        /*   O   */
@@ -648,11 +656,12 @@ extern const N_char DateCalc_Language_to_Text_[DateCalc_LANGUAGES+1][32];
 /*****************************************************************************/
 
 /*****************************************************************************/
-/*  VERSION:  5.7                                                            */
+/*  VERSION:  5.8                                                            */
 /*****************************************************************************/
 /*  VERSION HISTORY:                                                         */
 /*****************************************************************************/
 /*                                                                           */
+/*    Version 5.8  12.09.09  Added "norm_delta_ymd()".                       */
 /*    Version 5.7  23.08.09  Fixed Dutch "oktober", Portuguese DOW abbrevs.  */
 /*    Version 5.6  28.07.09  Made the module MacOS X compatible.             */
 /*    Version 5.5  skipped due to an unauthorized upload by someone else.    */
@@ -688,7 +697,7 @@ extern const N_char DateCalc_Language_to_Text_[DateCalc_LANGUAGES+1][32];
 /*****************************************************************************/
 /*                                                                           */
 /*    Steffen Beyer                                                          */
-/*    mailto:sb@engelschall.com                                              */
+/*    mailto:STBEY@cpan.org                                                  */
 /*    http://www.engelschall.com/u/sb/download/                              */
 /*                                                                           */
 /*****************************************************************************/

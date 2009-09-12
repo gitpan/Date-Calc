@@ -25,7 +25,7 @@ require Exporter;
 
 %EXPORT_TAGS = (all => [@EXPORT_OK]);
 
-$VERSION = '5.7';
+$VERSION = '5.8';
 
 use Bit::Vector;
 use Carp::Clan qw(^Date::);

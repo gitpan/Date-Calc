@@ -2,7 +2,7 @@
 
 ###############################################################################
 ##                                                                           ##
-##    Copyright (c) 2001 - 2004 by Steffen Beyer.                            ##
+##    Copyright (c) 2001 - 2009 by Steffen Beyer.                            ##
 ##    All rights reserved.                                                   ##
 ##                                                                           ##
 ##    This program is free software; you can redistribute it                 ##
@@ -33,7 +33,7 @@ my $END      = '</FONT>';
 my $language = 6;
 my $country  = 'NL';
 my $select   = 0;
-my $fullyear = 0;
+my $dispyear = 0;
 my $weekend  = '';
 
 my @DOW      = ();
@@ -351,9 +351,9 @@ sub process_query_string()
                 if    ($val =~ m!^[1-7]$!)            { $weekend{$val} = 1; }
                 elsif ($val =~ m!^[1-7](?:-[1-7])+$!) { foreach $dow (split(/-/,$val)) { $weekend{$dow} = 1; } }
             }
-            elsif ($var eq 'fullyear')
+            elsif ($var eq 'dispyear')
             {
-                if ($val =~ m!^[0-9]+$! and $val >= 0 and $val <= 2) { $fullyear = $val; }
+                if ($val =~ m!^[0-9]+$! and $val >= 0 and $val <= 2) { $dispyear = $val; }
             }
             elsif ($var eq 'language')
             {
@@ -390,7 +390,7 @@ sub set_defaults()
     my $year;
     local $_;
 
-    @markwend = ('' x 7);
+    @markwend = ('') x 8;
     @marksele = ('', '');
     @markyear = ('', '', '');
     @marklang = ('') x (Languages() + 1);
@@ -398,11 +398,11 @@ sub set_defaults()
 
     $markwend[$_]        = ' CHECKED' foreach (keys %weekend);
     $marksele[$select]   = ' CHECKED';
-    $markyear[$fullyear] = ' CHECKED';
+    $markyear[$dispyear] = ' CHECKED';
     $marklang[$language] = ' SELECTED';
     $markprof{$country}  = ' SELECTED';
 
-    if ($fullyear > 0)
+    if ($dispyear > 0)
     {
         if ($select) { $year = $start[1][1]; }
         else         { $year = $start[0][0]; }
@@ -439,7 +439,7 @@ sub set_defaults()
         }
     }
     Language($language);
-    $DOW[$_] = Day_of_Week_Abbreviation($_) foreach (1..7);
+    $DOW[$_] = html(Day_of_Week_Abbreviation($_)) foreach (1..7);
 }
 
 sub print_page()
@@ -466,8 +466,8 @@ Content-type: text/html; charset="iso-8859-1"
 <P>
 
 <FORM METHOD="GET" ACTION="">
-<TABLE CELLSPACING="0" CELLPADDING="4" BORDER="0"><TR>
-<TD ALIGN="left">Your language:</TD>
+<TABLE CELLSPACING="1" CELLPADDING="7" BORDER="2"><TR>
+<TD ALIGN="right">Your language:</TD>
 <TD ALIGN="right" COLSPAN="2"><SELECT NAME="language">
 VERBATIM
 
@@ -479,7 +479,7 @@ VERBATIM
     print <<"VERBATIM";
 </SELECT></TD>
 </TR><TR>
-<TD ALIGN="left">Your country:</TD>
+<TD ALIGN="right">Your country:</TD>
 <TD ALIGN="right" COLSPAN="2"><SELECT NAME="country" SIZE="10">
 VERBATIM
 
@@ -491,37 +491,37 @@ VERBATIM
     print <<"VERBATIM";
 </SELECT></TD>
 </TR><TR>
-<TD ALIGN="left">Select by:</TD>
+<TD ALIGN="right">Select by:</TD>
 <TD ALIGN="right"><INPUT TYPE="radio" NAME="select" VALUE="0"$marksele[0]>&nbsp;Year and Month</TD>
 <TD ALIGN="right"><INPUT TYPE="radio" NAME="select" VALUE="1"$marksele[1]>&nbsp;Week and Year</TD>
 </TR><TR>
-<TD ALIGN="left">$filler</TD>
+<TD ALIGN="right">$filler</TD>
 <TD ALIGN="right">Year (1583..2299): <INPUT TYPE="text" SIZE="4" MAXLENGTH="4" NAME="myear" VALUE="$start[0][0]"></TD>
 <TD ALIGN="right">     Week (1..53): <INPUT TYPE="text" SIZE="4" MAXLENGTH="4" NAME="week"  VALUE="$start[1][0]"></TD>
 </TR><TR>
-<TD ALIGN="left">$filler</TD>
+<TD ALIGN="right">$filler</TD>
 <TD ALIGN="right">    Month (1..12): <INPUT TYPE="text" SIZE="4" MAXLENGTH="4" NAME="month" VALUE="$start[0][1]"></TD>
 <TD ALIGN="right">Year (1583..2299): <INPUT TYPE="text" SIZE="4" MAXLENGTH="4" NAME="wyear" VALUE="$start[1][1]"></TD>
 </TR><TR>
-<TD ALIGN="left">Show full year:</TD>
+<TD ALIGN="right">Display a:</TD>
 <TD ALIGN="right" COLSPAN="2">
 <TABLE WIDTH="100%" CELLSPACING="0" CELLPADDING="0" BORDER="0"><TR>
-<TD ALIGN="right" WIDTH="20%"><INPUT TYPE="radio" NAME="fullyear" VALUE="0"$markyear[0]>&nbsp;Off</TD>
-<TD ALIGN="right" WIDTH="40%"><INPUT TYPE="radio" NAME="fullyear" VALUE="1"$markyear[1]>&nbsp;Days off only</TD>
-<TD ALIGN="right" WIDTH="40%"><INPUT TYPE="radio" NAME="fullyear" VALUE="2"$markyear[2]>&nbsp;All named days</TD>
+<TD ALIGN="left" ><INPUT TYPE="radio" NAME="dispyear" VALUE="0"$markyear[0]>&nbsp;Month</TD>
+<TD ALIGN="right"><INPUT TYPE="radio" NAME="dispyear" VALUE="1"$markyear[1]>&nbsp;Year: days off only</TD>
+<TD ALIGN="right"><INPUT TYPE="radio" NAME="dispyear" VALUE="2"$markyear[2]>&nbsp;Year: all named days</TD>
 </TR></TABLE>
 </TD>
 </TR><TR>
-<TD ALIGN="left">Weekend days:</TD>
+<TD ALIGN="right">Weekend days:</TD>
 <TD ALIGN="right" COLSPAN="2">
 <TABLE WIDTH="100%" CELLSPACING="0" CELLPADDING="0" BORDER="0"><TR>
-<TD ALIGN="right" WIDTH="14%"><INPUT TYPE="checkbox" NAME="weekend" VALUE="1"$markwend[1]>$DOW[1]</TD>
-<TD ALIGN="right" WIDTH="14%"><INPUT TYPE="checkbox" NAME="weekend" VALUE="2"$markwend[2]>$DOW[2]</TD>
-<TD ALIGN="right" WIDTH="14%"><INPUT TYPE="checkbox" NAME="weekend" VALUE="3"$markwend[3]>$DOW[3]</TD>
-<TD ALIGN="right" WIDTH="14%"><INPUT TYPE="checkbox" NAME="weekend" VALUE="4"$markwend[4]>$DOW[4]</TD>
-<TD ALIGN="right" WIDTH="14%"><INPUT TYPE="checkbox" NAME="weekend" VALUE="5"$markwend[5]>$DOW[5]</TD>
-<TD ALIGN="right" WIDTH="14%"><INPUT TYPE="checkbox" NAME="weekend" VALUE="6"$markwend[6]>$DOW[6]</TD>
-<TD ALIGN="right" WIDTH="14%"><INPUT TYPE="checkbox" NAME="weekend" VALUE="7"$markwend[7]>$DOW[7]</TD>
+<TD ALIGN="right" WIDTH="14%"><INPUT TYPE="checkbox" NAME="weekend" VALUE="1"$markwend[1]> <TT>$DOW[1]</TT></TD>
+<TD ALIGN="right" WIDTH="14%"><INPUT TYPE="checkbox" NAME="weekend" VALUE="2"$markwend[2]> <TT>$DOW[2]</TT></TD>
+<TD ALIGN="right" WIDTH="14%"><INPUT TYPE="checkbox" NAME="weekend" VALUE="3"$markwend[3]> <TT>$DOW[3]</TT></TD>
+<TD ALIGN="right" WIDTH="14%"><INPUT TYPE="checkbox" NAME="weekend" VALUE="4"$markwend[4]> <TT>$DOW[4]</TT></TD>
+<TD ALIGN="right" WIDTH="14%"><INPUT TYPE="checkbox" NAME="weekend" VALUE="5"$markwend[5]> <TT>$DOW[5]</TT></TD>
+<TD ALIGN="right" WIDTH="14%"><INPUT TYPE="checkbox" NAME="weekend" VALUE="6"$markwend[6]> <TT>$DOW[6]</TT></TD>
+<TD ALIGN="right" WIDTH="14%"><INPUT TYPE="checkbox" NAME="weekend" VALUE="7"$markwend[7]> <TT>$DOW[7]</TT></TD>
 </TR></TABLE>
 </TD>
 </TR><TR>
@@ -560,7 +560,7 @@ VERBATIM
 <INPUT TYPE="hidden" NAME="week"     VALUE="$start[4][0]">
 <INPUT TYPE="hidden" NAME="month"    VALUE="$start[3][1]">
 <INPUT TYPE="hidden" NAME="wyear"    VALUE="$start[4][1]">
-<INPUT TYPE="hidden" NAME="fullyear" VALUE="$fullyear">
+<INPUT TYPE="hidden" NAME="dispyear" VALUE="$dispyear">
 <INPUT TYPE="hidden" NAME="weekend"  VALUE="$weekend">
 <INPUT TYPE="submit" VALUE="&nbsp;&lt;&nbsp;&lt;&nbsp;&lt;&nbsp;">
 </FORM>
@@ -579,7 +579,7 @@ $filler
 <INPUT TYPE="hidden" NAME="week"     VALUE="$start[6][0]">
 <INPUT TYPE="hidden" NAME="month"    VALUE="$start[5][1]">
 <INPUT TYPE="hidden" NAME="wyear"    VALUE="$start[6][1]">
-<INPUT TYPE="hidden" NAME="fullyear" VALUE="$fullyear">
+<INPUT TYPE="hidden" NAME="dispyear" VALUE="$dispyear">
 <INPUT TYPE="hidden" NAME="weekend"  VALUE="$weekend">
 <INPUT TYPE="submit" VALUE="&nbsp;&gt;&nbsp;&gt;&nbsp;&gt;&nbsp;">
 </FORM>
@@ -592,15 +592,15 @@ $filler
 <P>
 
 ${RED}Please
-<A HREF="mailto:sb\@engelschall.com?subject=Error%20in%20calendar%20web%20page">report</A>
+<A HREF="mailto:STBEY\@cpan.org?subject=Error%20in%20calendar%20web%20page">report</A>
 any errors you find on this page!${END}
 
 <P>
 <HR NOSHADE SIZE="2">
 <P>
 
-<A HREF="http://www.engelschall.com/u/sb/download/pkg/Date-Calc-5.6.tar.gz">Download</A>
-the Perl software that does all this!
+<A HREF="http://www.engelschall.com/u/sb/download/pkg/Date-Calc-5.8.tar.gz">Download</A>
+the Perl software that does all <A HREF="calendar.pl">this</A>!
 
 <P>
 <HR NOSHADE SIZE="2">
@@ -651,9 +651,9 @@ VERBATIM
                 $full  = $calendar->year($year)->vec_full();
                 $half  = $calendar->year($year)->vec_half();
             }
-            if ( ($fullyear == 0) or
-                (($fullyear == 2) and (keys(%{$tags = $calendar->year($year)->tags($index)}))) or
-                (($fullyear == 1) and ($full->bit_test($index) or $half->bit_test($index)) and (Day_of_Week(@date) < 6)))
+            if ( ($dispyear == 0) or
+                (($dispyear == 2) and (keys(%{$tags = $calendar->year($year)->tags($index)}))) or
+                (($dispyear == 1) and ($full->bit_test($index) or $half->bit_test($index)) and not exists($weekend{Day_of_Week(@date)})))
             {
                 print "<TR>\n";
                 if    ($full->bit_test($index)) { $C =  $RED; $N = $END; }
@@ -674,7 +674,7 @@ VERBATIM
                 }
                 else { $cell = $filler; }
                 print qq(<TD ALIGN="right">$cell</TD>\n);         # Week Number
-                $tags = $calendar->year($year)->tags($index) unless ($fullyear == 2);
+                $tags = $calendar->year($year)->tags($index) unless ($dispyear == 2);
                 $dow = html(Day_of_Week_to_Text(Day_of_Week(@date)));
                 print qq(<TD ALIGN="left" >$C$dow$N</TD>\n);      # Day of Week
                 if ($omonth != $date[1])

@@ -475,6 +475,27 @@ PPCODE:
 
 
 void
+DateCalc_N_Delta_YMD(year1,month1,day1, year2,month2,day2)
+    Z_int	year1
+    Z_int	month1
+    Z_int	day1
+    Z_int	year2
+    Z_int	month2
+    Z_int	day2
+PPCODE:
+{
+    if (DateCalc_norm_delta_ymd(&year1,&month1,&day1, year2,month2,day2))
+    {
+        EXTEND(sp,3);
+        PUSHs(sv_2mortal(newSViv((IV)year1)));
+        PUSHs(sv_2mortal(newSViv((IV)month1)));
+        PUSHs(sv_2mortal(newSViv((IV)day1)));
+    }
+    else DATECALC_DATE_ERROR;
+}
+
+
+void
 DateCalc_Delta_YMDHMS(year1,month1,day1, hour1,min1,sec1, year2,month2,day2, hour2,min2,sec2)
     Z_int	year1
     Z_int	month1

@@ -1,5 +1,5 @@
                      ====================================
-                       Package "Date::Calc" Version 5.7
+                       Package "Date::Calc" Version 5.8
                      ====================================
 
 
@@ -261,7 +261,7 @@ Erland Sommarskog <sommar@algonet.se>
 Flemming Mahler Larsen <mahler@dk.net>
 Francois Desarmenien <francois@fdesar.net>
 Gordon Fletcher <G.Fletcher@mailbox.gu.edu.au>
-H. Merijn Brand <h.m.brand@hccnet.nl>
+H. Merijn Brand <h.m.brand@xs4all.nl>
 Hendrik Van Belleghem <beatnik@quickndirty.org>
 Herbert Liechti <herbert.liechti@thinx.ch>
 Jean Forget <ponder.stibbons@wanadoo.fr>
@@ -443,5 +443,8 @@ Yu <frequency@cpan.org> for alerting me about the problem that in
 Date::Calendar and Date::Calendar::Year, it is hardcoded that
 Saturday and Sunday are holidays, and for asking to make this
 configurable.
+
+Many thanks to H. Merijn Brand <h.m.brand@xs4all.nl> for triggering
+the development of a new normalized date difference function.
 
 

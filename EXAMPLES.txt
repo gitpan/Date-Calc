@@ -1,5 +1,5 @@
                      ====================================
-                       Package "Date::Calc" Version 5.7
+                       Package "Date::Calc" Version 5.8
                      ====================================
 
 
@@ -17,7 +17,8 @@ in the "examples" subdirectory of this distribution:
                         examples/age_in_days_us.pl
                         examples/anniversaries.pl
                         examples/cal.c
-                        examples/calendar.cgi
+                        examples/calendar.pl
+                        examples/datecalc.pl
                         examples/delta.pl
                         examples/holidays.pl
                         examples/income.pl
@@ -219,8 +220,8 @@ the (two) character sets commonly used on PC's, as follows:
 (for newer versions of MS-DOS and the Win32 DOS box).
 
 
-calendar.cgi:
--------------
+calendar.pl:
+------------
 
 This CGI script demonstrates the capabilities of the new "Calendar::*"
 modules.
@@ -254,6 +255,9 @@ careful which mode you choose and which input field you type into!)
 Saturdays, Sundays and official holidays will be marked in red, "half"
 holidays will be marked in purple. Workdays are printed in black.
 
+Optionally, the days of week which form the "weekend" (default: Saturday
+and Sunday) can be configured using the corresponding checkboxes.
+
 All the names associated with each day (the names of official holidays
 as well as purely commemorative days) are displayed to the right of
 each day.
@@ -265,6 +269,20 @@ There is a "mailto:" hyperlink at the bottom of the generated page for
 this purpose.
 
 Thank you very much in advance!
+
+
+datecalc.pl:
+------------
+
+This CGI script lets you perform simple date calculations, as if it
+was some sort of pocket calculator.
+
+You can either add a year, month and/or day offset to a given date,
+or calculate the difference in years, months and days between two
+given dates.
+
+See http://www.engelschall.com/u/sb/datecalc/ for a "live" example
+of this script to play around with!
 
 
 delta.pl:

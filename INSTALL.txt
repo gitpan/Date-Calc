@@ -1,5 +1,5 @@
                      ====================================
-                       Package "Date::Calc" Version 5.7
+                       Package "Date::Calc" Version 5.8
                      ====================================
 
 
@@ -98,7 +98,7 @@ Edit the file "Makefile.PL" and change the line
 
     'VERSION_FROM'      => 'Calc.pm',
 to
-    'VERSION'           => '5.7',
+    'VERSION'           => '5.8',
 
 Then edit the file "Calc.pm" and change the line
 
@@ -108,7 +108,7 @@ to
 
 Also edit the file "t/f000.t" and change all lines of the kind
 
-    use Date::Calc 5.7;
+    use Date::Calc 5.8;
 
 into just
 
@@ -300,7 +300,7 @@ Detailed installation guide:
 ----------------------------
 
  1) Change directory to the directory that has been created by unpacking this
-    package ("cd Date-Calc-5.7").
+    package ("cd Date-Calc-5.8").
 
  2) Type "perl Makefile.PL" (or whatever the name and path of your Perl 5
     binary is).
@@ -327,7 +327,7 @@ Detailed installation guide:
 
     Should you encounter any compiler warnings or errors (like the redefi-
     nition of certain types already defined by your system), please contact
-    me via e-mail at <sb@engelschall.com>, sending me your compiler output
+    me via e-mail at <STBEY@cpan.org>, sending me your compiler output
     (both STDOUT and STDERR). Thank you!
 
     ======================================================================
@@ -400,6 +400,7 @@ Detailed installation guide:
     t/f034.t .. ok
     t/f035.t .. ok
     t/f036.t .. ok
+    t/f037.t .. ok
     t/m001.t .. ok
     t/m002.t .. ok
     t/m003.t .. ok
@@ -412,7 +413,7 @@ Detailed installation guide:
     t/m010.t .. ok
     t/m011.t .. ok
     All tests successful.
-    Files=48, Tests=2812,  4 wallclock secs ( 0.58 usr  0.24 sys +  2.38 cusr  0.79 csys =  3.98 CPU)
+    Files=49, Tests=2889,  4 wallclock secs ( 0.63 usr  0.22 sys +  2.43 cusr  1.37 csys =  4.65 CPU)
     Result: PASS
 
  5) At last, type "make install" (or "dmake install", "nmake install").

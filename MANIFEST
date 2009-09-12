@@ -23,7 +23,8 @@ examples/age_in_days_eu.pl
 examples/age_in_days_us.pl
 examples/bug.pl
 examples/cal.c
-examples/calendar.cgi
+examples/calendar.pl
+examples/datecalc.pl
 examples/delta.pl
 examples/holidays.pl
 examples/income.pl
@@ -75,6 +76,7 @@ t/f033.t
 t/f034.t
 t/f035.t
 t/f036.t
+t/f037.t
 t/m001.t
 t/m002.t
 t/m003.t

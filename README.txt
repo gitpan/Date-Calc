@@ -1,5 +1,5 @@
                      ====================================
-                       Package "Date::Calc" Version 5.7
+                       Package "Date::Calc" Version 5.8
                      ====================================
 
 
@@ -35,28 +35,16 @@ interface) with overloaded operators, and a set of modules for calculations
 which take local holidays into account (both additions in Perl only, however).
 
 
-What's new in version 5.7:
+What's new in version 5.8:
 --------------------------
 
- +  Fixed "october" => "oktober" in Dutch
- +  Disabled the special abbreviated names
-    of the days of the week in Portuguese
- +  Made the days which form the weekend con-
-    figurable in "Calendar.pm" and "Year.pm"
- +  Added some test cases for this new feature
-    in "t/m008.t"
- +  The file "examples/calendar.cgi" now
-    also supports this new feature
- +  Updated "README.txt" and "INSTALL.txt"
-    and the dependency on "Bit::Vector" 7.0
- +  Added an additional "README.htm" file to this
-    distribution highlighting its key points
- +  Updated the documentation of "Date::Calc",
-    "Date::Calendar", "Date::Calendar::Profiles",
-    "Date::Calendar::Year" and "Date::Object"
- +  See the new module "Date::Calc::Util" (which
-    is available separately) for all the shortcuts
-    you ever wanted to have in "Date::Calc"
+ +  Added a new function "N_Delta_YMD()"
+ +  Added a new test script "t/f037.t"
+ +  Updated the "Calc.pod" manual page accordingly
+ +  Renamed "calendar.cgi" in the "examples"
+    subdirectory to "calendar.pl"
+ +  Added a new CGI script named "datecalc.pl"
+    to the "examples" subdirectory
 
 
 New features in version 5.0:
@@ -190,12 +178,12 @@ http://catcode.com/date/pcalc.html.
 Note to CPAN Testers:
 ---------------------
 
-After completion, version 5.7 of this module has already
+After completion, version 5.8 of this module has already
 been tested successfully with the following configurations:
 
   Perl 5.005_03  -  Windows XP SP3 & MS VC++ 6.0 (native Perl build)
   Perl 5.8.0     -  Windows XP SP3 & MS VC++ 6.0 (native Perl build)
-  Perl 5.10.0    -  FreeBSD 7.2-STABLE
+  Perl 5.10.1    -  FreeBSD 7.2-STABLE
 
 
 Installation:
@@ -364,6 +352,6 @@ I hope you will find this module useful. Enjoy!
 
 Yours,
 --
-  Steffen Beyer <sb@engelschall.com> http://www.engelschall.com/u/sb/
+  Steffen Beyer <STBEY@cpan.org> http://www.engelschall.com/u/sb/
   "There is enough for the need of everyone in this world, but not
    for the greed of everyone." - Mohandas Karamchand "Mahatma" Gandhi

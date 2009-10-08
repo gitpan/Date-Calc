@@ -73,14 +73,17 @@ please let me know! (See e-mail address at the end of this document.)
       Delta_Days
       Delta_DHMS
       Delta_YMD
-      N_Delta_YMD
       Delta_YMDHMS
+      N_Delta_YMD
+      N_Delta_YMDHMS
       Normalize_DHMS
       Add_Delta_Days
       Add_Delta_DHMS
       Add_Delta_YM
       Add_Delta_YMD
       Add_Delta_YMDHMS
+      Add_N_Delta_YMD
+      Add_N_Delta_YMDHMS
       System_Clock
       Today
       Now
@@ -189,15 +192,20 @@ please let me know! (See e-mail address at the end of this document.)
       Delta_YMD($year1,$month1,$day1,
                 $year2,$month2,$day2);
 
+  Delta_YMDHMS
+      ($D_y,$D_m,$D_d, $Dh,$Dm,$Ds) =
+      Delta_YMDHMS($year1,$month1,$day1, $hour1,$min1,$sec1,
+                   $year2,$month2,$day2, $hour2,$min2,$sec2);
+
   N_Delta_YMD
       ($Dy,$Dm,$Dd) =
       N_Delta_YMD($year1,$month1,$day1,
                   $year2,$month2,$day2);
 
-  Delta_YMDHMS
-      ($D_y,$D_m,$D_d, $Dh,$Dm,$Ds) =
-      Delta_YMDHMS($year1,$month1,$day1, $hour1,$min1,$sec1,
-                   $year2,$month2,$day2, $hour2,$min2,$sec2);
+  N_Delta_YMDHMS
+      ($D_y,$D_m,$D_d, $Dhh,$Dmm,$Dss) =
+      N_Delta_YMDHMS($year1,$month1,$day1, $hour1,$min1,$sec1,
+                     $year2,$month2,$day2, $hour2,$min2,$sec2);
 
   Normalize_DHMS
       ($Dd,$Dh,$Dm,$Ds) =
@@ -227,6 +235,16 @@ please let me know! (See e-mail address at the end of this document.)
       ($year,$month,$day, $hour,$min,$sec) =
       Add_Delta_YMDHMS($year,$month,$day, $hour,$min,$sec,
                        $D_y,$D_m,$D_d, $Dh,$Dm,$Ds);
+
+  Add_N_Delta_YMD
+      ($year,$month,$day) =
+      Add_N_Delta_YMD($year,$month,$day,
+                      $Dy,$Dm,$Dd);
+
+  Add_N_Delta_YMDHMS
+      ($year,$month,$day, $hour,$min,$sec) =
+      Add_N_Delta_YMDHMS($year,$month,$day, $hour,$min,$sec,
+                         $D_y,$D_m,$D_d, $Dhh,$Dmm,$Dss);
 
   System_Clock
       ($year,$month,$day, $hour,$min,$sec, $doy,$dow,$dst) =
@@ -268,19 +286,19 @@ please let me know! (See e-mail address at the end of this document.)
       ($year,$month,$day) = Easter_Sunday($year);
 
   Decode_Month
-      if ($month = Decode_Month($string))
+      if ($month = Decode_Month($string[,$lang]))
 
   Decode_Day_of_Week
-      if ($dow = Decode_Day_of_Week($string))
+      if ($dow = Decode_Day_of_Week($string[,$lang]))
 
   Decode_Language
       if ($lang = Decode_Language($string))
 
   Decode_Date_EU
-      if (($year,$month,$day) = Decode_Date_EU($string))
+      if (($year,$month,$day) = Decode_Date_EU($string[,$lang]))
 
   Decode_Date_US
-      if (($year,$month,$day) = Decode_Date_US($string))
+      if (($year,$month,$day) = Decode_Date_US($string[,$lang]))
 
   Fixed_Window
       $year = Fixed_Window($yy);
@@ -298,48 +316,48 @@ please let me know! (See e-mail address at the end of this document.)
       if (check_compressed($date))
 
   Compressed_to_Text
-      $string = Compressed_to_Text($date);
+      $string = Compressed_to_Text($date[,$lang]);
 
   Date_to_Text
-      $string = Date_to_Text($year,$month,$day);
+      $string = Date_to_Text($year,$month,$day[,$lang]);
 
   Date_to_Text_Long
-      $string = Date_to_Text_Long($year,$month,$day);
+      $string = Date_to_Text_Long($year,$month,$day[,$lang]);
 
   English_Ordinal
       $string = English_Ordinal($number);
 
   Calendar
-      $string = Calendar($year,$month[,$orthodox]);
+      $string = Calendar($year,$month[,$orthodox[,$lang]]);
 
   Month_to_Text
-      $string = Month_to_Text($month);
+      $string = Month_to_Text($month[,$lang]);
 
   Day_of_Week_to_Text
-      $string = Day_of_Week_to_Text($dow);
+      $string = Day_of_Week_to_Text($dow[,$lang]);
 
   Day_of_Week_Abbreviation
-      $string = Day_of_Week_Abbreviation($dow);
+      $string = Day_of_Week_Abbreviation($dow[,$lang]);
 
   Language_to_Text
       $string = Language_to_Text($lang);
 
   Language
       $lang = Language();
-      Language($lang);
-      $oldlang = Language($newlang);
+      Language($lang);               # DEPRECATED
+      $oldlang = Language($newlang); # DEPRECATED
 
   Languages
       $max_lang = Languages();
 
   Decode_Date_EU2
-      if (($year,$month,$day) = Decode_Date_EU2($string))
+      if (($year,$month,$day) = Decode_Date_EU2($string[,$lang]))
 
   Decode_Date_US2
-      if (($year,$month,$day) = Decode_Date_US2($string))
+      if (($year,$month,$day) = Decode_Date_US2($string[,$lang]))
 
   Parse_Date
-      if (($year,$month,$day) = Parse_Date($string))
+      if (($year,$month,$day) = Parse_Date($string[,$lang]))
 
   ISO_LC
       $lower = ISO_LC($string);
@@ -470,8 +488,8 @@ Function names completely in lower case indicate a boolean return value.
 
 Boolean values
 
-Boolean values in this module are always a numeric zero ("C<0>") for
-"false" and a numeric one ("C<1>") for "true".
+Boolean values returned from functions in this module are always a
+numeric zero ("C<0>") for "false" and a numeric one ("C<1>") for "true".
 
 =item *
 
@@ -869,86 +887,20 @@ This function returns the vector
 
 This is called the "one-by-one" semantics.
 
-An error occurs if any of the two dates is invalid.
+Adding the result of this function to the first date always yields the
+second date again, and adding the negative result (where the signs of
+all elements of the result vector have been flipped) to the second
+date gives the first date. See also the description of the function
+"Add_Delta_YMD()" further below.
 
-=item *
+Example:
 
-C<($Dy,$Dm,$Dd) = N_Delta_YMD($year1,$month1,$day1, $year2,$month2,$day2);>
+  (6,2,-30) == Delta_YMD(1996,1,31, 2002,3,1]);
 
-This function returns the difference between the two given dates in a
-more intuitive way (as far as possible - more on that see a bit further
-below) than the function "Delta_YMD()" described immediately above.
+  [1996,1,31] + ( 6, 2,-30) = [2002,3, 1]
+  [2002,3, 1] + (-6,-2, 30) = [1996,1,31]
 
-The "N" which precedes its name is meant to signify "new" or "normalized".
-
-This function is loosely based on recipe #17 b) (see the section "RECIPES"
-below near the end of this document).
-
-However, the code of recipe #17 b) actually does not treat positive and
-negative values symmetrically and consistently.
-
-This new routine does.
-
-The return values of this function are guaranteed to all have the same
-sign (or to be zero). This is why this function is called "normalized".
-
-Moreover, the results are guaranteed to be "minimal", in the sense that
-C<|$Dm| E<lt> 12> and C<|$Dd| E<lt> 31> (which is equivalent to C<$Dm>
-lying in the range C<[-11..11]> and C<$Dd> lying in the range C<[-30..30]>).
-
-Finally, contrary to the function "Delta_YMD()" above, the return values
-of this function are actually mathematically meaningful, in the sense of
-mathematically useful and consistent:
-
-When the results are applied (i.e., added) to the first given date in a
-left-to-right order, the second given date is guaranteed to be obtained,
-provided that intermediary results are truncated, as done by the function
-"Add_Delta_YM()" (see further below), i.e., that invalid intermediate dates
-such as e.g. [2009,2,31] will automatically be transformed into [2009,2,28]
-(and not "wrapped" into the next month, e.g. to [2009,3,3]).
-
-This is called the "left-to-right with truncation" semantics.
-
-Note that reversing the order of the given dates and reversing the sign of
-each of the result values will not always add up.
-
-Consider the dates [2008,2,29] and [2009,2,1]: their difference is [0,11,3]
-([2008,2,29] plus 11 months is [2009,1,29], which plus 3 days is [2009,2,1]),
-but the difference between [2009,2,1] and [2008,2,29] is [0,-11,-1], and
-not [0,-11,-3] ([2009,2,1] minus 11 months is [2008,3,1], which minus one
-day is [2008,2,29]).
-
-Another example: The difference between [1996,2,29] and [1997,2,28] is [1,0,0]
-(observe the truncation of the invalid date [1997,2,29] to [1997,2,28] here!),
-whereas the difference between [1997,2,28] and [1996,2,29] is [0,-11,-28]
-([1997,2,28] minus 11 months is [1996,3,28], which minus 28 days is not
-[1996,3,0] but of course [1996,2,29]).
-
-"Good natured" examples such as for instance the difference between
-[1964,1,3] and [2009,9,10] are completely symmetrical: The difference
-in this example is [45,8,7], whereas the difference between [2009,9,10]
-and [1964,1,3] is [-45,-8,-7], as would normally be expected. In this
-example, the result is also the same as the one returned by "Delta_YMD()".
-
-All these counter-intuitive effects are due to the fact that months
-(and due to leap years, also years) do not correspond to a fixed number
-of days, so the semantics of "plus one month" or "plus one year" are in
-fact undefined.
-
-The present function is a try to provide a definition which is intuitive
-most of the time, and at least consistent the rest of the time.
-
-Other definitions are of course possible, but most often lead to
-contradictions (e.g., the results and the given first date do not
-add up to the second given date).
-
-See the file "datecalc.pl" in the "examples" subdirectory of this
-distribution for a way to play around with this function, or go to
-http://www.engelschall.com/u/sb/datecalc/ for the online version.
-
-An error occurs if any of the two given dates is invalid, or if any
-intermediate result leads to an invalid date (this does not apply
-to truncation, however, as explained above).
+An error occurs if any of the two given dates is invalid.
 
 =item *
 
@@ -965,13 +917,116 @@ positive result.
 In any case, adding the result of this function to the first date/time value
 (C<$year1,$month1,$day1,> C<$hour1,$min1,$sec1>) always gives the second
 date/time value (C<$year2,$month2,$day2,> C<$hour2,$min2,$sec2>) again,
-and adding the negative result (all elements of the result vector negated)
-to the second date/time value gives the first date/time value.
+and adding the negative result (with the signs of all elements of the result
+vector flipped) to the second date/time value gives the first date/time value.
 
 See the function "Add_Delta_YMDHMS()" further below for adding a date/time
 value and a date/time difference.
 
-An error occurs if any of the two date/time values is invalid.
+An error occurs if any of the given two date/time values is invalid.
+
+=item *
+
+C<($Dy,$Dm,$Dd) = N_Delta_YMD($year1,$month1,$day1, $year2,$month2,$day2);>
+
+This function returns the difference between the two given dates in a
+more intuitive way (as far as possible - more on that see a bit further
+below) than the function "Delta_YMD()" described above.
+
+The "N" which precedes its name is meant to signify "new" or "normalized".
+
+This function is loosely based on recipe #17 b) (see the section "RECIPES"
+below near the end of this document).
+
+However, the code of recipe #17 b) actually does not treat positive and
+negative values symmetrically and consistently.
+
+This new routine does.
+
+The return values of this function are guaranteed to all have the same
+sign (or to be zero). This is why this function is called "normalized".
+
+Moreover, the results are guaranteed to be "minimal", in the sense that
+C<|$Dm| E<lt> 12> and C<|$Dd| E<lt> 31> (which is equivalent to C<$Dm>
+lying in the range C<[-11..+11]> and C<$Dd> lying in the range C<[-30..+30]>).
+
+When the results are applied (i.e., added) to the first given date in a
+left-to-right order, the second given date is guaranteed to be obtained,
+provided that intermediary results are truncated, as done by the function
+"Add_Delta_YM()" (see further below), i.e., that invalid intermediate dates
+such as e.g. [2009,2,31] will automatically be transformed into [2009,2,28]
+(and not "wrapped" into the next month, e.g. to [2009,3,3]).
+
+This is called the "left-to-right with truncation" semantics.
+
+Note that reversing the order of the given dates and reversing the sign of
+each of the result values will not always add up.
+
+Consider the dates [2008,2,29] and [2009,2,1]: their difference is (0,11,3)
+([2008,2,29] plus 11 months is [2009,1,29], which plus 3 days is [2009,2,1]),
+but the difference between [2009,2,1] and [2008,2,29] is (0,-11,-1), and
+not (0,-11,-3) ([2009,2,1] minus 11 months is [2008,3,1], which minus one
+day is [2008,2,29]).
+
+Another example: The difference between [1996,2,29] and [1997,2,28] is (1,0,0)
+(observe the truncation of the invalid date [1997,2,29] to [1997,2,28] here!),
+whereas the difference between [1997,2,28] and [1996,2,29] is (0,-11,-28)
+([1997,2,28] minus 11 months is [1996,3,28], which minus 28 days is not
+[1996,3,0] but of course [1996,2,29]).
+
+"Benign" examples such as for instance the difference between [1964,1,3]
+and [2009,9,10] are completely symmetrical: The difference in this example
+is (45,8,7), whereas the difference between [2009,9,10] and [1964,1,3] is
+(-45,-8,-7), as would normally be expected. In this example, the result
+is also the same as the one returned by "Delta_YMD()".
+
+All these counter-intuitive effects are due to the fact that months
+(and due to leap years, also years) do not correspond to a fixed number
+of days, so the semantics of "plus one month" or "plus one year" are in
+fact undefined.
+
+The present function is an attempt to provide a definition which is
+intuitive most of the time, and at least consistent the rest of the
+time.
+
+Other definitions are of course possible, but most often lead to
+contradictions (e.g., the results and the given first date do not
+add up to the second given date).
+
+See the file "datecalc.pl" in the "examples" subdirectory of this
+distribution for a way to play around with this function, or go to
+http://www.engelschall.com/u/sb/datecalc/ for the online version.
+
+An error occurs if any of the two given dates is invalid, or if any
+intermediate result leads to an invalid date (this does not apply
+to truncation, however, as explained above).
+
+=item *
+
+C<($D_y,$D_m,$D_d, $Dhh,$Dmm,$Dss) = N_Delta_YMDHMS($year1,$month1,$day1, $hour1,$min1,$sec1, $year2,$month2,$day2, $hour2,$min2,$sec2);>
+
+This function essentially does the same as the function "N_Delta_YMD()"
+described immediately above, except that also the difference in hours,
+minutes and seconds is taken into account.
+
+This function is loosely based on recipe #17 a) (see the section "RECIPES"
+below near the end of this document).
+
+However, the code of recipe #17 a) actually does not treat positive and
+negative values symmetrically and consistently.
+
+This new routine does.
+
+The return values of this function (including the time differences)
+are guaranteed to all have the same sign (or to be zero). This is the
+reason for the "N" that precedes the name of this function, which
+is intended to mean "normalized" (or "new").
+
+Moreover, the results are guaranteed to be "minimal", in the sense that
+C<|$D_m| E<lt> 12>, C<|$D_d| E<lt> 31>, C<|$Dhh| E<lt> 24>, C<|$Dmm| E<lt> 60>
+and C<|$Dss| E<lt> 60> (which is equivalent to C<$D_m> lying in the range
+C<[-11..+11]>, C<$D_d> lying in the range C<[-30..+30]>, C<$Dhh> lying in the
+range C<[-23..+23]>, and C<$Dmm> and C<$Dss> both lying in the range C<[-59..+59]>).
 
 =item *
 
@@ -1050,13 +1105,13 @@ day of the resulting month.
 
 Examples:
 
-Adding an offset of 0 years, 1 month to the date (1999,1,31) would result
-in the (invalid) date (1999,2,31). The function replaces this result by
-the (valid) date (1999,2,28).
+Adding an offset of 0 years, 1 month to the date [1999,1,31] would result
+in the (invalid) date [1999,2,31]. The function replaces this result by
+the (valid) date [1999,2,28].
 
-Adding an offset of 1 year, 1 month to the same date (1999,1,31) as above
-would result in the (still invalid) date (2000,2,31). The function replaces
-this result by the valid date (2000,2,29) (because 2000 is a leap year).
+Adding an offset of 1 year, 1 month to the same date [1999,1,31] as above
+would result in the (still invalid) date [2000,2,31]. The function replaces
+this result by the valid date [2000,2,29] (because 2000 is a leap year).
 
 Note that the year and month offsets can be negative, and that they can
 have different signs.
@@ -1070,12 +1125,12 @@ If you want to additionally add a days offset, use the function
 Note that your result may depend on the order in which you call
 these two functions!
 
-Consider the date (1999,2,28) and the offsets 0 years, 1 month
+Consider the date [1999,2,28] and the offsets 0 years, 1 month
 and 1 day:
 
-(1999,2,28) plus one month is (1999,3,28), plus one day is
-(1999,3,29). (1999,2,28) plus one day is (1999,3,1), plus
-one month is (1999,4,1).
+[1999,2,28] plus one month is [1999,3,28], plus one day is
+[1999,3,29]. [1999,2,28] plus one day is [1999,3,1], plus
+one month is [1999,4,1].
 
 (Which is also the reason why the "C<Add_Delta_YM()>" function
 does not allow to add a days offset, because this would actually
@@ -1132,10 +1187,45 @@ Note that for this same reason,
   @date = Add_Delta_YMD(
           Add_Delta_YMD(@date, $Dy,$Dm,$Dd), -$Dy,-$Dm,-$Dd);
 
-will in general B<NOT> return the initial date "C<@date>".
+will in general B<NOT> return the initial date "C<@date>", even
+though
 
-Note that this is B<NOT> a program bug but B<NECESSARILY> so
-because of the variable lengths of years and months!
+  @date2 = Add_Delta_YMD( @date1, Delta_YMD(@date1, @date2) );
+
+will always return the second date "C<@date2>", and
+
+  @date1 = Add_Delta_YMD( @date2, map(-$_, Delta_YMD(@date1, @date2)) );
+
+which is the same as
+
+  @date1 = Add_Delta_YMD( @date2, Delta_YMD(@date2, @date1) );
+
+will always return the first date "C<@date1>".
+
+Examples:
+
+  [1996,1,31] + ( 6, 1,-2) = [2002,3,1]
+  [2002,3, 1] + (-6,-1, 2) = [1996,2,3] # EXPECTED: [1996,1,31]
+
+  (6,2,-30) == Delta_YMD(1996,1,31, 2002,3,1);
+
+  [1996,1,31] + ( 6, 2,-30) = [2002,3, 1]
+  [2002,3, 1] + (-6,-2, 30) = [1996,1,31] # OK
+
+  (6,1,-2) == Delta_YMD(1996,2,3, 2002,3,1);
+
+  [1996,2,3] + ( 6, 1,-2) = [2002,3,1]
+  [2002,3,1] + (-6,-1, 2) = [1996,2,3] # OK
+
+Note that this is B<NOT> a program bug but B<NECESSARILY> so,
+because of the variable lengths of years and months, and hence
+because of the ambiguity of the difference between two dates
+in terms of years, months and days, i.e., the fact that the
+difference between two dates can be expressed in more than
+one way:
+
+  [1996,1,31] + (6,1, -2) = [2002,3,1]
+  [1996,1,31] + (6,2,-30) = [2002,3,1]
 
 =item *
 
@@ -1143,6 +1233,56 @@ C<($year,$month,$day, $hour,$min,$sec) = Add_Delta_YMDHMS($year,$month,$day, $ho
 
 Same as the function above, except that a time offset may be given in
 addition to the year, month and day offset.
+
+=item *
+
+C<($year,$month,$day) = Add_N_Delta_YMD($year,$month,$day, $Dy,$Dm,$Dd);>
+
+This function is actually a shortcut for applying the function "Add_Delta_YM()"
+first, followed by the function "Add_Delta_Days()", i.e., this function does
+exactly the same as
+
+ ($year,$month,$day) = Add_Delta_Days( Add_Delta_YM($year,$month,$day,$Dy,$Dm), $Dd );
+
+Beware that, if necessary, the function "Add_Delta_YM()" truncates the
+resulting day of the month to the largest allowable value for that month,
+i.e., the (invalid) result [2009,2,31] is automatically transformed into
+[2009,2,28].
+
+For more details on this truncation, see the description of the function
+"Add_Delta_YM()" further above.
+
+This function is meant to be complementary with the function "N_Delta_YMD()"
+described further above.
+
+This means that it is guaranteed that the result returned by
+
+  Add_N_Delta_YMD( @date1, N_Delta_YMD(@date1, @date2) );
+
+is always identical with the given date "C<@date2>".
+
+Note however that unlike with function "Add_Delta_YMD()",
+the reverse is not true here, i.e.,
+
+  ($Dy,$Dm,$Dd) = N_Delta_YMD(@date1,@date2);
+  @date = Add_N_Delta_YMD(@date2, -$Dy,-$Dm,-$Dd);
+
+will B<NOT> always return the initial date "C<@date1>".
+
+Example:
+
+  (0,11,3) == N_Delta_YMD(2008,2,29, 2009,2,1);
+
+  [2008,2,29] + (0, 11, 3) = [2009,2, 1]
+  [2009,2, 1] + (0,-11,-3) = [2008,2,27] # EXPECTED: [2008,2,29]
+
+=item *
+
+C<($year,$month,$day, $hour,$min,$sec) = Add_N_Delta_YMDHMS($year,$month,$day, $hour,$min,$sec, $D_y,$D_m,$D_d, $Dhh,$Dmm,$Dss);>
+
+This function essentially does the same as the function "Add_N_Delta_YMD()"
+described immediately above, except that also the difference in hours,
+minutes and seconds is taken into account.
 
 =item *
 
@@ -1278,7 +1418,7 @@ be almost 24 hours).
 C<($year,$month,$day, $hour,$min,$sec, $doy,$dow,$dst) = Gmtime([time]);>
 
 This is Date::Calc's equivalent of Perl's built-in "gmtime()" function.
-See also L<perlfunc/gmtime>.
+See also L<perlfunc(1)/gmtime>.
 
 With the optional argument "time" (i.e., seconds since the epoch),
 this function will return the corresponding values for that particular
@@ -1321,7 +1461,7 @@ internally.
 C<($year,$month,$day, $hour,$min,$sec, $doy,$dow,$dst) = Localtime([time]);>
 
 This is Date::Calc's equivalent of Perl's built-in "localtime()" function.
-See also L<perlfunc/localtime>.
+See also L<perlfunc(1)/localtime>.
 
 The ranges of values returned (and their meanings) are as follows:
 
@@ -1365,7 +1505,7 @@ the "epoch". On Unix and most other systems this is the number of seconds
 since January 1st 1970 at midnight (GMT). On MacOS Classic this is the
 number of seconds since January 1st 1904 at midnight (local time).
 
-The function is similar to the "POSIX::mktime()" function (see L<POSIX/mktime>
+The function is similar to the "POSIX::mktime()" function (see L<POSIX(1)/mktime>
 for more details), but in contrast to the latter, it expects dates in the
 usual ranges used throughout this module: The year 2001 stays year 2001,
 and months are numbered from 1 to 12.
@@ -1545,10 +1685,10 @@ feast day as follows:
 
 =item *
 
-C<if ($month = Decode_Month($string))>
+C<if ($month = Decode_Month($string[,$lang]))>
 
 This function takes a string as its argument, which should contain the
-name of a month B<IN THE CURRENTLY SELECTED LANGUAGE> (see further below
+name of a month in the given or currently selected language (see further below
 for details about the multi-language support of this package), or any uniquely
 identifying abbreviation of a month's name (i.e., the first few letters),
 and returns the corresponding number (1..12) upon a successful match, or
@@ -1561,20 +1701,20 @@ pertain to the month's name, especially no leading or trailing whitespace.
 Note also that matching is performed in a case-insensitive manner (this may
 depend on the "locale" setting on your current system, though!)
 
-With "English" as the currently selected language (which is the default),
-the following examples will all return the value "C<9>":
+With "1" ("English") as the given language, the following examples will
+all return the value "C<9>":
 
-  $month = Decode_Month("s");
-  $month = Decode_Month("Sep");
-  $month = Decode_Month("septemb");
-  $month = Decode_Month("September");
+  $month = Decode_Month("s",1);
+  $month = Decode_Month("Sep",1);
+  $month = Decode_Month("septemb",1);
+  $month = Decode_Month("September",1);
 
 =item *
 
-C<if ($dow = Decode_Day_of_Week($string))>
+C<if ($dow = Decode_Day_of_Week($string[,$lang]))>
 
 This function takes a string as its argument, which should contain the
-name of a day of week B<IN THE CURRENTLY SELECTED LANGUAGE> (see further
+name of a day of week in the given or currently selected language (see further
 below for details about the multi-language support of this package), or any
 uniquely identifying abbreviation of the name of a day of week (i.e., the
 first few letters), and returns the corresponding number (1..7) upon a
@@ -1588,13 +1728,13 @@ or trailing whitespace.
 Note also that matching is performed in a case-insensitive manner (this may
 depend on the "locale" setting on your current system, though!)
 
-With "English" as the currently selected language (which is the default),
-the following examples will all return the value "C<3>":
+With "1" ("English") as the given language, the following examples will
+all return the value "C<3>":
 
-  $dow = Decode_Day_of_Week("w");
-  $dow = Decode_Day_of_Week("Wed");
-  $dow = Decode_Day_of_Week("wednes");
-  $dow = Decode_Day_of_Week("Wednesday");
+  $dow = Decode_Day_of_Week("w",1);
+  $dow = Decode_Day_of_Week("Wed",1);
+  $dow = Decode_Day_of_Week("wednes",1);
+  $dow = Decode_Day_of_Week("Wednesday",1);
 
 =item *
 
@@ -1615,7 +1755,7 @@ whitespace.
 Note also that matching is performed in a case-insensitive manner (this may
 depend on the "locale" setting on your current system, though!)
 
-The original distribution supports the following thirteen languages:
+The original distribution supports the following fourteen languages:
 
             English                    ==>    1    (default)
             Français    (French)       ==>    2
@@ -1652,7 +1792,7 @@ before the first special international character.
 
 =item *
 
-C<if (($year,$month,$day) = Decode_Date_EU($string))>
+C<if (($year,$month,$day) = Decode_Date_EU($string[,$lang]))>
 
 This function scans a given string and tries to parse any date
 which might be embedded in it.
@@ -1672,9 +1812,9 @@ B<BETWEEN> these three items (i.e., between day and month and between
 month and year).
 
 The month may be given either numerically (i.e., a number from "C<1>"
-to "C<12>"), or alphanumerically, i.e., as the name of the month B<IN
-THE CURRENTLY SELECTED LANGUAGE>, or any uniquely identifying abbreviation
-thereof.
+to "C<12>"), or alphanumerically, i.e., as the name of the month in
+the given or currently selected language, or any uniquely identifying
+abbreviation thereof.
 
 (See further below for details about the multi-language support of this
 package!)
@@ -1721,7 +1861,7 @@ Experiment! (See the corresponding example applications in the
 
 =item *
 
-C<if (($year,$month,$day) = Decode_Date_US($string))>
+C<if (($year,$month,$day) = Decode_Date_US($string[,$lang]))>
 
 This function scans a given string and tries to parse any date
 which might be embedded in it.
@@ -1741,9 +1881,9 @@ Moreover, zero or more B<NON-NUMERIC> characters are permitted
 B<BETWEEN> the day and the year, as well as B<AFTER> the year.
 
 The month may be given either numerically (i.e., a number from "C<1>"
-to "C<12>"), or alphanumerically, i.e., as the name of the month B<IN
-THE CURRENTLY SELECTED LANGUAGE>, or any uniquely identifying abbreviation
-thereof.
+to "C<12>"), or alphanumerically, i.e., as the name of the month in
+the given or currently selected language, or any uniquely identifying
+abbreviation thereof.
 
 (See further below for details about the multi-language support of this
 package!)
@@ -1929,7 +2069,7 @@ and that its use is not recommended.
 
 =item *
 
-C<$string = Compressed_to_Text($date);>
+C<$string = Compressed_to_Text($date[,$lang]);>
 
 WARNING: This function is legacy code, its use is deprecated!
 
@@ -1939,8 +2079,8 @@ containing a textual representation of the compressed date encoded in
 
 This string has the form "dd-Mmm-yy", where "dd" is the two-digit number
 of the day, "Mmm" are the first three letters of the name of the month
-in the currently selected language (see further below for details about
-the multi-language support of this package), and "yy" is the two-digit
+in the given or currently selected language (see further below for details
+about the multi-language support of this package), and "yy" is the two-digit
 year number (i.e., the year number taken modulo 100).
 
 If "C<$date>" does not represent a valid date, the string "??-???-??" is
@@ -1951,16 +2091,17 @@ and that its use is not recommended.
 
 =item *
 
-C<$string = Date_to_Text($year,$month,$day);>
+C<$string = Date_to_Text($year,$month,$day[,$lang]);>
 
 This function returns a string containing a textual representation of the
 given date of the form "www dd-Mmm-yyyy", where "www" are the first three
-letters of the name of the day of week in the currently selected language,
-or a special abbreviation, if special abbreviations have been defined for
-the currently selected language (see further below for details about the
-multi-language support of this package), "dd" is the day (one or two digits),
-"Mmm" are the first three letters of the name of the month in the currently
-selected language, and "yyyy" is the number of the year in full length.
+letters of the name of the day of week in the given or currently selected
+language, or a special abbreviation, if special abbreviations have been
+defined for the given or currently selected language (see further below for
+details about the multi-language support of this package), "dd" is the day
+(one or two digits), "Mmm" are the first three letters of the name of the
+month in the given or currently selected language, and "yyyy" is the number
+of the year in full length.
 
 If the given input values do not constitute a valid date, a fatal "not a
 valid date" error occurs.
@@ -1970,19 +2111,19 @@ for how to print dates in any format you like.)
 
 =item *
 
-C<$string = Date_to_Text_Long($year,$month,$day);>
+C<$string = Date_to_Text_Long($year,$month,$day[,$lang]);>
 
 This function returns a string containing a textual representation of the
 given date roughly of the form "Wwwwww, dd Mmmmmm yyyy", where "Wwwwww"
-is the name of the day of week in the currently selected language (see
-further below for details about the multi-language support of this package),
+is the name of the day of week in the given or currently selected language
+(see further below for details about the multi-language support of this package),
 "dd" is the day (one or two digits), "Mmmmmm" is the name of the month
-in the currently selected language, and "yyyy" is the number of the year
-in full length.
+in the given or currently selected language, and "yyyy" is the number of
+the year in full length.
 
-The exact format of the output string depends on the currently selected
-language. In the original distribution of this package, these formats are
-defined as follows:
+The exact format of the output string depends on the given or currently
+selected language. In the original distribution of this package, these
+formats are defined as follows:
 
   1  English    :  "Wwwwww, Mmmmmm ddth yyyy"
   2  French     :  "Wwwwww dd mmmmmm yyyy"
@@ -2006,7 +2147,7 @@ If the given input values do not constitute a valid date, a fatal
 "not a valid date" error occurs.
 
 In order to capitalize the day of week at the beginning of the string
-in Norwegian, use "C<lcfirst(Date_to_Text_Long($year,$month,$day));>".
+in Norwegian, use "C<ucfirst(Date_to_Text_Long($year,$month,$day,8));>".
 
 (See the section "RECIPES" near the end of this document for
 an example on how to print dates in any format you like.)
@@ -2035,12 +2176,12 @@ etc.
 
 =item *
 
-C<$string = Calendar($year,$month[,$orthodox]);>
+C<$string = Calendar($year,$month[,$orthodox[,$lang]]);>
 
 This function returns a calendar of the given month in the given year
-(somewhat similar to the UNIX "C<cal>" command), B<IN THE CURRENTLY SELECTED
-LANGUAGE> (see further below for details about the multi-language support
-of this package).
+(somewhat similar to the UNIX "C<cal>" command), in the given or currently
+selected language (see further below for details about the multi-language
+support of this package).
 
 Example:
 
@@ -2061,34 +2202,34 @@ the calendar starts on Sunday instead of Monday.
 
 =item *
 
-C<$string = Month_to_Text($month);>
+C<$string = Month_to_Text($month[,$lang]);>
 
-This function returns the name of the given month in the currently selected
-language (see further below for details about the multi-language support of
-this package).
+This function returns the name of the given month in the given or currently
+selected language (see further below for details about the multi-language
+support of this package).
 
 If the given month lies outside of the valid range from "C<1>" to "C<12>",
 a fatal "month out of range" error will occur.
 
 =item *
 
-C<$string = Day_of_Week_to_Text($dow);>
+C<$string = Day_of_Week_to_Text($dow[,$lang]);>
 
-This function returns the name of the given day of week in the currently
-selected language (see further below for details about the multi-language
-support of this package).
+This function returns the name of the given day of week in the given or
+currently selected language (see further below for details about the
+multi-language support of this package).
 
 If the given day of week lies outside of the valid range from "C<1>" to "C<7>",
 a fatal "day of week out of range" error will occur.
 
 =item *
 
-C<$string = Day_of_Week_Abbreviation($dow);>
+C<$string = Day_of_Week_Abbreviation($dow[,$lang]);>
 
 This function returns the special abbreviation of the name of the given
 day of week, B<IF> such special abbreviations have been defined for the
-currently selected language (see further below for details about the
-multi-language support of this package).
+given or currently selected language (see further below for details
+about the multi-language support of this package).
 
 (In the original distribution of this package, this was only true for
 Portuguese. In the meantime, the abbreviations in Portuguese have been
@@ -2097,7 +2238,7 @@ special abbreviations. But it remains possible to define some and
 then recompile the package.)
 
 If not, the first three letters of the name of the day of week in the
-currently selected language are returned instead.
+given or currently selected language are returned instead.
 
 If the given day of week lies outside of the valid range from "C<1>"
 to "C<7>", a fatal "day of week out of range" error will occur.
@@ -2112,7 +2253,7 @@ C<$string = Language_to_Text($lang);>
 This function returns the name of any language supported by this package
 when the internal number representing that language is given as input.
 
-The original distribution supports the following thirteen languages:
+The original distribution supports the following fourteen languages:
 
             1   ==>   English                     (default)
             2   ==>   Français    (French)
@@ -2143,18 +2284,20 @@ C<$lang = Language();>
 
 =item *
 
-C<Language($lang);>
+C<Language($lang); # DEPRECATED>
 
 =item *
 
-C<$oldlang = Language($newlang);>
+C<$oldlang = Language($newlang); # DEPRECATED>
 
 This function can be used to determine which language is currently selected,
-and to change the selected language.
+and to change the selected language (this latter use is deprecated, because
+this global setting may cause conflicts between threads or modules running
+concurrently).
 
 Thereby, each language has a unique internal number.
 
-The original distribution contains the following thirteen languages:
+The original distribution contains the following fourteen languages:
 
             1   ==>   English                     (default)
             2   ==>   Français    (French)
@@ -2187,7 +2330,11 @@ package.
 
 Therefore, you should always use a statement such as
 
-  Language(Decode_Language("Name_of_Language"));
+  Language(Decode_Language("Name_of_Language")); # DEPRECATED
+
+or
+
+  DateCalc_Function(@parameters,Decode_Language("Name_of_Language")); # RECOMMENDED
 
 to select the desired language, and
 
@@ -2195,7 +2342,7 @@ to select the desired language, and
 
 or
 
-  $old_language = Language_to_Text(Language("Name_of_new_Language"));
+  $old_language = Language_to_Text(Language("Name_of_new_Language")); # DEPRECATED
 
 to determine the (previously) selected language.
 
@@ -2204,13 +2351,31 @@ this will result in an appropriate error message, instead of silently
 using the wrong (a random) language (which just happens to have the
 same internal number in the other installation).
 
-Note that in the current implementation of this package, the selected
-language is a global setting valid for B<ALL> functions that use the names
-of months, days of week or languages internally, valid for B<ALL PROCESSES>
-using the same copy of the "Date::Calc" shared library in memory!
+B<BEWARE> that when using the function "C<Language()>", the selected
+language is a global setting, shared by all threads or modules you
+might be running concurrently, thus possibly causing conflicts between
+them.
 
-This may have surprising side-effects in a multi-user environment, and even
-more so when Perl will be capable of multi-threading in some future release.
+In order to avoid these conflicts, you should B<NEVER> use the function
+"C<Language()>", but should B<ALWAYS> pass a language number (as returned
+by the function "C<Decode_Language()>") to the functions which are
+language-dependent, which are:
+
+"Decode_Month()", "Decode_Day_of_Week()", "Compressed_to_Text()",
+"Date_to_Text()", "Date_to_Text_Long()", "Calendar()",
+"Month_to_Text()", "Day_of_Week_to_Text()", "Day_of_Week_Abbreviation()",
+"Decode_Date_EU()", "Decode_Date_US()", "Decode_Date_EU2()",
+"Decode_Date_US2()", "Parse_Date()".
+
+Note that when you pass an invalid number, such as e.g. zero, or no
+language parameter at all, these functions will revert to their behaviour
+in the versions of this module prior to 6.0, which means that the global
+setting (as set by "C<Language()>") becomes active again (only in case
+of an invalid or missing language parameter!).
+
+In the C library "DateCalc.c", where omitting a parameter is not an option,
+passing a zero for the language is therefore the recommended way to guarantee
+backward compatibility.
 
 =item *
 
@@ -2225,13 +2390,13 @@ See the section "How to install additional languages" in the file
 "INSTALL.txt" in this distribution for how to add more languages
 to this package.
 
-In the original distribution of this package there are thirteen built-in
+In the original distribution of this package there are fourteen built-in
 languages, therefore the value returned by this function will be "C<14>"
 if no other languages have been added to your particular installation.
 
 =item *
 
-C<if (($year,$month,$day) = Decode_Date_EU2($string))>
+C<if (($year,$month,$day) = Decode_Date_EU2($string[,$lang))>
 
 This function is the Perl equivalent of the function "C<Decode_Date_EU()>"
 (implemented in C), included here merely as an example to demonstrate how
@@ -2249,7 +2414,7 @@ functions.)
 
 =item *
 
-C<if (($year,$month,$day) = Decode_Date_US2($string))>
+C<if (($year,$month,$day) = Decode_Date_US2($string[,$lang))>
 
 This function is the Perl equivalent of the function "C<Decode_Date_US()>"
 (implemented in C), included here merely as an example to demonstrate how
@@ -2271,7 +2436,7 @@ Hint: Try the string "(1/364)" with both functions.)
 
 =item *
 
-C<if (($year,$month,$day) = Parse_Date($string))>
+C<if (($year,$month,$day) = Parse_Date($string[,$lang))>
 
 This function is useful for parsing dates as returned by the UNIX "C<date>"
 command or as found in the headers of e-mail (in order to determine the
@@ -2303,7 +2468,7 @@ C<$lower = ISO_LC($string);>
 Returns a copy of the given string where all letters of the ISO-Latin-1
 character set have been replaced by their lower case equivalents.
 
-Similar to Perl's built-in function "C<lc()>" (see L<perlfunc/lc>) but
+Similar to Perl's built-in function "C<lc()>" (see L<perlfunc(1)/lc>) but
 for the whole ISO-Latin-1 character set, not just plain ASCII.
 
 =item *
@@ -2313,7 +2478,7 @@ C<$upper = ISO_UC($string);>
 Returns a copy of the given string where all letters of the ISO-Latin-1
 character set have been replaced by their upper case equivalents.
 
-Similar to Perl's built-in function "C<uc()>" (see L<perlfunc/uc>) but
+Similar to Perl's built-in function "C<uc()>" (see L<perlfunc(1)/uc>) but
 for the whole ISO-Latin-1 character set, not just plain ASCII.
 
 =item *
@@ -2963,6 +3128,11 @@ I.e., how can I show a difference in date (and time) in a more human-readable
 form, for example in order to show how much time until (or since) the expiration
 of something (e.g. an account, a domain, a credit card, etc.) is left (has passed)?
 
+Correct solution: Use the functions "N_Delta_YMDHMS()" and "N_Delta_YMD()" instead!
+
+The following gives a rudimentary sketch of a (much inferior) solution,
+which is maintained here only for historical reasons of this module:
+
 a) Delta_YMDHMS():
 
   #!perl
@@ -3085,18 +3255,20 @@ Date::Calendar::Profiles(3).
   http://www.tondering.dk/claus/calendar.html
   by Claus Tondering <claus@tondering.dk>
 
-=head1 LIMITATIONS
+=head1 BEWARE
 
-In the current implementation of this package, the selected language
-is stored in a global variable.
+When you are using the (deprecated) function "Language()", the language
+setting is stored in a global variable.
 
-Therefore, when you are using a threaded Perl, this may cause undesired
-side effects (of one thread always selecting the language for B<ALL OTHER>
-threads as well).
+This may cause conflicts between threads or modules running concurrently.
+
+Therefore, in order to avoid such conflicts, NEVER use the function
+"Language()", but ALWAYS pass a language parameter to the functions
+which are language-dependent.
 
 =head1 VERSION
 
-This man page documents "Date::Calc" version 5.8.
+This man page documents "Date::Calc" version 6.0.
 
 =head1 AUTHOR
 

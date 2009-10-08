@@ -47,12 +47,16 @@ const char *_DateCalc_LANGUAGE_ERROR   = "language not available";
 const char *_DateCalc_SYSTEM_ERROR     = "not available on this system";
 const char *_DateCalc_MEMORY_ERROR     = "unable to allocate memory";
 const char *_DateCalc_STRING_ERROR     = "argument is not a string";
+const char *_DateCalc_SCALAR_ERROR     = "argument is not a scalar";
 
 
 #define DATECALC_STRING(ref,var,len) \
     ( ref && !(SvROK(ref)) && SvPOK(ref) && \
     (var = (charptr)SvPV(ref,PL_na)) && \
     ((len = (N_int)SvCUR(ref)) | 1) )
+
+#define DATECALC_SCALAR(ref,typ,var) \
+    ( ref && !(SvROK(ref)) && ((var = (typ)SvIV(ref)) | 1) )
 
 
 #define DATECALC_ERROR(message) \
@@ -97,6 +101,9 @@ const char *_DateCalc_STRING_ERROR     = "argument is not a string";
 
 #define DATECALC_STRING_ERROR \
     DATECALC_ERROR( _DateCalc_STRING_ERROR )
+
+#define DATECALC_SCALAR_ERROR \
+    DATECALC_ERROR( _DateCalc_SCALAR_ERROR )
 
 
 MODULE = Date::Calc		PACKAGE = Date::Calc		PREFIX = DateCalc_
@@ -475,27 +482,6 @@ PPCODE:
 
 
 void
-DateCalc_N_Delta_YMD(year1,month1,day1, year2,month2,day2)
-    Z_int	year1
-    Z_int	month1
-    Z_int	day1
-    Z_int	year2
-    Z_int	month2
-    Z_int	day2
-PPCODE:
-{
-    if (DateCalc_norm_delta_ymd(&year1,&month1,&day1, year2,month2,day2))
-    {
-        EXTEND(sp,3);
-        PUSHs(sv_2mortal(newSViv((IV)year1)));
-        PUSHs(sv_2mortal(newSViv((IV)month1)));
-        PUSHs(sv_2mortal(newSViv((IV)day1)));
-    }
-    else DATECALC_DATE_ERROR;
-}
-
-
-void
 DateCalc_Delta_YMDHMS(year1,month1,day1, hour1,min1,sec1, year2,month2,day2, hour2,min2,sec2)
     Z_int	year1
     Z_int	month1
@@ -535,6 +521,76 @@ PPCODE:
                 PUSHs(sv_2mortal(newSViv((IV)Dh)));
                 PUSHs(sv_2mortal(newSViv((IV)Dm)));
                 PUSHs(sv_2mortal(newSViv((IV)Ds)));
+            }
+            else DATECALC_DATE_ERROR;
+        }
+        else DATECALC_TIME_ERROR;
+    }
+    else DATECALC_DATE_ERROR;
+}
+
+
+void
+DateCalc_N_Delta_YMD(year1,month1,day1, year2,month2,day2)
+    Z_int	year1
+    Z_int	month1
+    Z_int	day1
+    Z_int	year2
+    Z_int	month2
+    Z_int	day2
+PPCODE:
+{
+    if (DateCalc_norm_delta_ymd(&year1,&month1,&day1, year2,month2,day2))
+    {
+        EXTEND(sp,3);
+        PUSHs(sv_2mortal(newSViv((IV)year1)));
+        PUSHs(sv_2mortal(newSViv((IV)month1)));
+        PUSHs(sv_2mortal(newSViv((IV)day1)));
+    }
+    else DATECALC_DATE_ERROR;
+}
+
+
+void
+DateCalc_N_Delta_YMDHMS(year1,month1,day1, hour1,min1,sec1, year2,month2,day2, hour2,min2,sec2)
+    Z_int	year1
+    Z_int	month1
+    Z_int	day1
+    Z_int	hour1
+    Z_int	min1
+    Z_int	sec1
+    Z_int	year2
+    Z_int	month2
+    Z_int	day2
+    Z_int	hour2
+    Z_int	min2
+    Z_int	sec2
+PPCODE:
+{
+    Z_int  D_y;
+    Z_int  D_m;
+    Z_int  D_d;
+    Z_int  Dhh;
+    Z_int  Dmm;
+    Z_int  Dss;
+
+    if (DateCalc_check_date(year1,month1,day1) and
+        DateCalc_check_date(year2,month2,day2))
+    {
+        if (DateCalc_check_time(hour1,min1,sec1) and
+            DateCalc_check_time(hour2,min2,sec2))
+        {
+            if (DateCalc_norm_delta_ymdhms(&D_y,&D_m,&D_d,    &Dhh,&Dmm,&Dss,
+                                           year1,month1,day1, hour1,min1,sec1,
+                                           year2,month2,day2, hour2,min2,sec2))
+            {
+                EXTEND(sp,6);
+                PUSHs(sv_2mortal(newSViv((IV)D_y)));
+                PUSHs(sv_2mortal(newSViv((IV)D_m)));
+                PUSHs(sv_2mortal(newSViv((IV)D_d)));
+                PUSHs(sv_2mortal(newSViv((IV)Dhh)));
+                PUSHs(sv_2mortal(newSViv((IV)Dmm)));
+                PUSHs(sv_2mortal(newSViv((IV)Dss)));
             }
             else DATECALC_DATE_ERROR;
         }
@@ -683,6 +739,68 @@ PPCODE:
                                           &hour,&min,&sec,
                                           D_y,D_m,D_d,
                                           Dh,Dm,Ds))
+            {
+                EXTEND(sp,6);
+                PUSHs(sv_2mortal(newSViv((IV)year)));
+                PUSHs(sv_2mortal(newSViv((IV)month)));
+                PUSHs(sv_2mortal(newSViv((IV)day)));
+                PUSHs(sv_2mortal(newSViv((IV)hour)));
+                PUSHs(sv_2mortal(newSViv((IV)min)));
+                PUSHs(sv_2mortal(newSViv((IV)sec)));
+            }
+            else DATECALC_DATE_ERROR;
+        }
+        else DATECALC_TIME_ERROR;
+    }
+    else DATECALC_DATE_ERROR;
+}
+
+
+void
+DateCalc_Add_N_Delta_YMD(year,month,day, Dy,Dm,Dd)
+    Z_int	year
+    Z_int	month
+    Z_int	day
+    Z_long	Dy
+    Z_long	Dm
+    Z_long	Dd
+PPCODE:
+{
+    if (DateCalc_add_norm_delta_ymd(&year,&month,&day, Dy,Dm,Dd))
+    {
+        EXTEND(sp,3);
+        PUSHs(sv_2mortal(newSViv((IV)year)));
+        PUSHs(sv_2mortal(newSViv((IV)month)));
+        PUSHs(sv_2mortal(newSViv((IV)day)));
+    }
+    else DATECALC_DATE_ERROR;
+}
+
+
+void
+DateCalc_Add_N_Delta_YMDHMS(year,month,day, hour,min,sec, D_y,D_m,D_d, Dhh,Dmm,Dss)
+    Z_int	year
+    Z_int	month
+    Z_int	day
+    Z_int	hour
+    Z_int	min
+    Z_int	sec
+    Z_long	D_y
+    Z_long	D_m
+    Z_long	D_d
+    Z_long	Dhh
+    Z_long	Dmm
+    Z_long	Dss
+PPCODE:
+{
+    if (DateCalc_check_date(year,month,day))
+    {
+        if (DateCalc_check_time(hour,min,sec))
+        {
+            if (DateCalc_add_norm_delta_ymdhms(&year,&month,&day,
+                                               &hour,&min,&sec,
+                                               D_y,D_m,D_d,
+                                               Dhh,Dmm,Dss))
             {
                 EXTEND(sp,6);
                 PUSHs(sv_2mortal(newSViv((IV)year)));
@@ -1145,26 +1263,58 @@ PPCODE:
 }
 
 
-Z_int
-DateCalc_Decode_Month(string)
-    charptr	string
-CODE:
+void
+DateCalc_Decode_Month(...)
+PPCODE:
 {
-    RETVAL = DateCalc_Decode_Month(string,strlen((char *)string));
+    charptr string;
+    N_int   length;
+    Z_int   lang;
+
+    if ((items == 1) or (items == 2))
+    {
+        if ( DATECALC_STRING(ST(0),string,length) )
+        {
+            if (items == 2)
+            {
+                if ( not DATECALC_SCALAR(ST(1),Z_int,lang) )
+                    DATECALC_SCALAR_ERROR;
+            }
+            else lang = 0;
+            EXTEND(sp,1);
+            PUSHs(sv_2mortal(newSViv((IV)DateCalc_Decode_Month(string,length,lang))));
+        }
+        else DATECALC_STRING_ERROR;
+    }
+    else croak("Usage: Date::Calc::Decode_Month(string[,lang])");
 }
-OUTPUT:
-RETVAL
 
 
-Z_int
-DateCalc_Decode_Day_of_Week(string)
-    charptr	string
-CODE:
+void
+DateCalc_Decode_Day_of_Week(...)
+PPCODE:
 {
-    RETVAL = DateCalc_Decode_Day_of_Week(string,strlen((char *)string));
+    charptr string;
+    N_int   length;
+    Z_int   lang;
+
+    if ((items == 1) or (items == 2))
+    {
+        if ( DATECALC_STRING(ST(0),string,length) )
+        {
+            if (items == 2)
+            {
+                if ( not DATECALC_SCALAR(ST(1),Z_int,lang) )
+                    DATECALC_SCALAR_ERROR;
+            }
+            else lang = 0;
+            EXTEND(sp,1);
+            PUSHs(sv_2mortal(newSViv((IV)DateCalc_Decode_Day_of_Week(string,length,lang))));
+        }
+        else DATECALC_STRING_ERROR;
+    }
+    else croak("Usage: Date::Calc::Decode_Day_of_Week(string[,lang])");
 }
-OUTPUT:
-RETVAL
 
 
 Z_int
@@ -1179,42 +1329,74 @@ RETVAL
 
 
 void
-DateCalc_Decode_Date_EU(string)
-    charptr	string
+DateCalc_Decode_Date_EU(...)
 PPCODE:
 {
-    Z_int year;
-    Z_int month;
-    Z_int day;
+    charptr string;
+    N_int   length;
+    Z_int   lang;
+    Z_int   year;
+    Z_int   month;
+    Z_int   day;
 
-    if (DateCalc_decode_date_eu(string,&year,&month,&day))
+    if ((items == 1) or (items == 2))
     {
-        EXTEND(sp,3);
-        PUSHs(sv_2mortal(newSViv((IV)year)));
-        PUSHs(sv_2mortal(newSViv((IV)month)));
-        PUSHs(sv_2mortal(newSViv((IV)day)));
+        if ( DATECALC_STRING(ST(0),string,length) )
+        {
+            if (items == 2)
+            {
+                if ( not DATECALC_SCALAR(ST(1),Z_int,lang) )
+                    DATECALC_SCALAR_ERROR;
+            }
+            else lang = 0;
+            if (DateCalc_decode_date_eu(string,&year,&month,&day,lang))
+            {
+                EXTEND(sp,3);
+                PUSHs(sv_2mortal(newSViv((IV)year)));
+                PUSHs(sv_2mortal(newSViv((IV)month)));
+                PUSHs(sv_2mortal(newSViv((IV)day)));
+            }
+            /* else return empty list */
+        }
+        else DATECALC_STRING_ERROR;
     }
-    /* else return empty list */
+    else croak("Usage: Date::Calc::Decode_Date_EU(string[,lang])");
 }
 
 
 void
-DateCalc_Decode_Date_US(string)
-    charptr	string
+DateCalc_Decode_Date_US(...)
 PPCODE:
 {
-    Z_int year;
-    Z_int month;
-    Z_int day;
+    charptr string;
+    N_int   length;
+    Z_int   lang;
+    Z_int   year;
+    Z_int   month;
+    Z_int   day;
 
-    if (DateCalc_decode_date_us(string,&year,&month,&day))
+    if ((items == 1) or (items == 2))
     {
-        EXTEND(sp,3);
-        PUSHs(sv_2mortal(newSViv((IV)year)));
-        PUSHs(sv_2mortal(newSViv((IV)month)));
-        PUSHs(sv_2mortal(newSViv((IV)day)));
+        if ( DATECALC_STRING(ST(0),string,length) )
+        {
+            if (items == 2)
+            {
+                if ( not DATECALC_SCALAR(ST(1),Z_int,lang) )
+                    DATECALC_SCALAR_ERROR;
+            }
+            else lang = 0;
+            if (DateCalc_decode_date_us(string,&year,&month,&day,lang))
+            {
+                EXTEND(sp,3);
+                PUSHs(sv_2mortal(newSViv((IV)year)));
+                PUSHs(sv_2mortal(newSViv((IV)month)));
+                PUSHs(sv_2mortal(newSViv((IV)day)));
+            }
+            /* else return empty list */
+        }
+        else DATECALC_STRING_ERROR;
     }
-    /* else return empty list */
+    else croak("Usage: Date::Calc::Decode_Date_US(string[,lang])");
 }
 
 
@@ -1264,68 +1446,117 @@ DateCalc_check_compressed(date)
 
 
 void
-DateCalc_Compressed_to_Text(date)
-    Z_int	date
+DateCalc_Compressed_to_Text(...)
 PPCODE:
 {
     charptr string;
+    Z_int   date;
+    Z_int   lang;
 
-    string = DateCalc_Compressed_to_Text(date);
-    if (string != NULL)
+    if ((items == 1) or (items == 2))
     {
-        EXTEND(sp,1);
-        PUSHs(sv_2mortal(newSVpv((char *)string,0)));
-        DateCalc_Dispose(string);
+        if ( DATECALC_SCALAR(ST(0),Z_int,date) )
+        {
+            if (items == 2)
+            {
+                if ( not DATECALC_SCALAR(ST(1),Z_int,lang) )
+                    DATECALC_SCALAR_ERROR;
+            }
+            else lang = 0;
+            string = DateCalc_Compressed_to_Text(date,lang);
+            if (string != NULL)
+            {
+                EXTEND(sp,1);
+                PUSHs(sv_2mortal(newSVpv((char *)string,0)));
+                DateCalc_Dispose(string);
+            }
+            else DATECALC_MEMORY_ERROR;
+        }
+        else DATECALC_SCALAR_ERROR;
     }
-    else DATECALC_MEMORY_ERROR;
+    else croak("Usage: Date::Calc::Compressed_to_Text(date[,lang])");
 }
 
 
 void
-DateCalc_Date_to_Text(year,month,day)
-    Z_int	year
-    Z_int	month
-    Z_int	day
+DateCalc_Date_to_Text(...)
 PPCODE:
 {
     charptr string;
+    Z_int   year;
+    Z_int   month;
+    Z_int   day;
+    Z_int   lang;
 
-    if (DateCalc_check_date(year,month,day))
+    if ((items == 3) or (items == 4))
     {
-        string = DateCalc_Date_to_Text(year,month,day);
-        if (string != NULL)
+        if ( DATECALC_SCALAR(ST(0),Z_int,year)  and
+             DATECALC_SCALAR(ST(1),Z_int,month) and
+             DATECALC_SCALAR(ST(2),Z_int,day) )
         {
-            EXTEND(sp,1);
-            PUSHs(sv_2mortal(newSVpv((char *)string,0)));
-            DateCalc_Dispose(string);
+            if (items == 4)
+            {
+                if ( not DATECALC_SCALAR(ST(3),Z_int,lang) )
+                    DATECALC_SCALAR_ERROR;
+            }
+            else lang = 0;
+            if (DateCalc_check_date(year,month,day))
+            {
+                string = DateCalc_Date_to_Text(year,month,day,lang);
+                if (string != NULL)
+                {
+                    EXTEND(sp,1);
+                    PUSHs(sv_2mortal(newSVpv((char *)string,0)));
+                    DateCalc_Dispose(string);
+                }
+                else DATECALC_MEMORY_ERROR;
+            }
+            else DATECALC_DATE_ERROR;
         }
-        else DATECALC_MEMORY_ERROR;
+        else DATECALC_SCALAR_ERROR;
     }
-    else DATECALC_DATE_ERROR;
+    else croak("Usage: Date::Calc::Date_to_Text(year,month,day[,lang])");
 }
 
 
 void
-DateCalc_Date_to_Text_Long(year,month,day)
-    Z_int	year
-    Z_int	month
-    Z_int	day
+DateCalc_Date_to_Text_Long(...)
 PPCODE:
 {
     charptr string;
+    Z_int   year;
+    Z_int   month;
+    Z_int   day;
+    Z_int   lang;
 
-    if (DateCalc_check_date(year,month,day))
+    if ((items == 3) or (items == 4))
     {
-        string = DateCalc_Date_to_Text_Long(year,month,day);
-        if (string != NULL)
+        if ( DATECALC_SCALAR(ST(0),Z_int,year)  and
+             DATECALC_SCALAR(ST(1),Z_int,month) and
+             DATECALC_SCALAR(ST(2),Z_int,day) )
         {
-            EXTEND(sp,1);
-            PUSHs(sv_2mortal(newSVpv((char *)string,0)));
-            DateCalc_Dispose(string);
+            if (items == 4)
+            {
+                if ( not DATECALC_SCALAR(ST(3),Z_int,lang) )
+                    DATECALC_SCALAR_ERROR;
+            }
+            else lang = 0;
+            if (DateCalc_check_date(year,month,day))
+            {
+                string = DateCalc_Date_to_Text_Long(year,month,day,lang);
+                if (string != NULL)
+                {
+                    EXTEND(sp,1);
+                    PUSHs(sv_2mortal(newSVpv((char *)string,0)));
+                    DateCalc_Dispose(string);
+                }
+                else DATECALC_MEMORY_ERROR;
+            }
+            else DATECALC_DATE_ERROR;
         }
-        else DATECALC_MEMORY_ERROR;
+        else DATECALC_SCALAR_ERROR;
     }
-    else DATECALC_DATE_ERROR;
+    else croak("Usage: Date::Calc::Date_to_Text_Long(year,month,day[,lang])");
 }
 
 
@@ -1346,88 +1577,149 @@ void
 DateCalc_Calendar(...)
 PPCODE:
 {
+    charptr string;
     Z_int   year;
     Z_int   month;
     boolean orthodox;
-    charptr string;
+    Z_int   lang;
 
-    if ((items >= 2) and (items <= 3))
+    if ((items >= 2) and (items <= 4))
     {
-        year  = (Z_int) SvIV( ST(0) );
-        month = (Z_int) SvIV( ST(1) );
-        if (items == 3) orthodox = (boolean) SvIV( ST(2) );
-        else            orthodox = false;
-        if (year > 0)
+        if ( DATECALC_SCALAR(ST(0),Z_int,year)  and
+             DATECALC_SCALAR(ST(1),Z_int,month) )
         {
+            if (items > 2)
+            {
+                if ( not DATECALC_SCALAR(ST(2),boolean,orthodox) )
+                    DATECALC_SCALAR_ERROR;
+                if (items > 3)
+                {
+                    if ( not DATECALC_SCALAR(ST(3),Z_int,lang) )
+                        DATECALC_SCALAR_ERROR;
+                }
+                else { lang = 0; }
+            }
+            else { orthodox = false; lang = 0; }
+            if (year > 0)
+            {
+                if ((month >= 1) and (month <= 12))
+                {
+                    string = DateCalc_Calendar(year,month,orthodox,lang);
+                    if (string != NULL)
+                    {
+                        EXTEND(sp,1);
+                        PUSHs(sv_2mortal(newSVpv((char *)string,0)));
+                        DateCalc_Dispose(string);
+                    }
+                    else DATECALC_MEMORY_ERROR;
+                }
+                else DATECALC_MONTH_ERROR;
+            }
+            else DATECALC_YEAR_ERROR;
+        }
+        else DATECALC_SCALAR_ERROR;
+    }
+    else croak("Usage: Date::Calc::Calendar(year,month[,orthodox[,lang]])");
+}
+
+
+void
+DateCalc_Month_to_Text(...)
+PPCODE:
+{
+    Z_int   month;
+    Z_int   lang = 0;
+
+    if ((items == 1) or (items == 2))
+    {
+        if ( DATECALC_SCALAR(ST(0),Z_int,month) )
+        {
+            if (items == 2)
+            {
+                if ( not DATECALC_SCALAR(ST(1),Z_int,lang) )
+                    DATECALC_SCALAR_ERROR;
+            }
+            if ((lang < 1) or (lang > DateCalc_LANGUAGES)) lang = DateCalc_Language;
             if ((month >= 1) and (month <= 12))
             {
-                string = DateCalc_Calendar(year,month,orthodox);
-                if (string != NULL)
-                {
-                    EXTEND(sp,1);
-                    PUSHs(sv_2mortal(newSVpv((char *)string,0)));
-                    DateCalc_Dispose(string);
-                }
-                else DATECALC_MEMORY_ERROR;
+                EXTEND(sp,1);
+                PUSHs(sv_2mortal(newSVpv((char *)DateCalc_Month_to_Text_[lang][month],0)));
             }
             else DATECALC_MONTH_ERROR;
         }
-        else DATECALC_YEAR_ERROR;
+        else DATECALC_SCALAR_ERROR;
     }
-    else croak("Usage: Date::Calc::Calendar(year,month[,orthodox])");
+    else croak("Usage: Date::Calc::Month_to_Text(month[,lang])");
 }
 
 
 void
-DateCalc_Month_to_Text(month)
-    Z_int	month
+DateCalc_Day_of_Week_to_Text(...)
 PPCODE:
 {
-    if ((month >= 1) and (month <= 12))
+    Z_int   dow;
+    Z_int   lang = 0;
+
+    if ((items == 1) or (items == 2))
     {
-        EXTEND(sp,1);
-        PUSHs(sv_2mortal(newSVpv((char *)DateCalc_Month_to_Text_[DateCalc_Language][month],0)));
+        if ( DATECALC_SCALAR(ST(0),Z_int,dow) )
+        {
+            if (items == 2)
+            {
+                if ( not DATECALC_SCALAR(ST(1),Z_int,lang) )
+                    DATECALC_SCALAR_ERROR;
+            }
+            if ((lang < 1) or (lang > DateCalc_LANGUAGES)) lang = DateCalc_Language;
+            if ((dow >= 1) and (dow <= 7))
+            {
+                EXTEND(sp,1);
+                PUSHs(sv_2mortal(newSVpv((char *)DateCalc_Day_of_Week_to_Text_[lang][dow],0)));
+            }
+            else DATECALC_DAYOFWEEK_ERROR;
+        }
+        else DATECALC_SCALAR_ERROR;
     }
-    else DATECALC_MONTH_ERROR;
+    else croak("Usage: Date::Calc::Day_of_Week_to_Text(dow[,lang])");
 }
 
 
 void
-DateCalc_Day_of_Week_to_Text(dow)
-    Z_int	dow
-PPCODE:
-{
-    if ((dow >= 1) and (dow <= 7))
-    {
-        EXTEND(sp,1);
-        PUSHs(sv_2mortal(newSVpv((char *)DateCalc_Day_of_Week_to_Text_[DateCalc_Language][dow],0)));
-    }
-    else DATECALC_DAYOFWEEK_ERROR;
-}
-
-
-void
-DateCalc_Day_of_Week_Abbreviation(dow)
-    Z_int	dow
+DateCalc_Day_of_Week_Abbreviation(...)
 PPCODE:
 {
     blockdef(buffer,4);
+    Z_int   dow;
+    Z_int   lang = 0;
 
-    if ((dow >= 1) and (dow <= 7))
+    if ((items == 1) or (items == 2))
     {
-        EXTEND(sp,1);
-        if (DateCalc_Day_of_Week_Abbreviation_[DateCalc_Language][0][0] != '\0')
+        if ( DATECALC_SCALAR(ST(0),Z_int,dow) )
         {
-            PUSHs(sv_2mortal(newSVpv((char *)DateCalc_Day_of_Week_Abbreviation_[DateCalc_Language][dow],0)));
+            if (items == 2)
+            {
+                if ( not DATECALC_SCALAR(ST(1),Z_int,lang) )
+                    DATECALC_SCALAR_ERROR;
+            }
+            if ((lang < 1) or (lang > DateCalc_LANGUAGES)) lang = DateCalc_Language;
+            if ((dow >= 1) and (dow <= 7))
+            {
+                EXTEND(sp,1);
+                if (DateCalc_Day_of_Week_Abbreviation_[lang][0][0] != '\0')
+                {
+                    PUSHs(sv_2mortal(newSVpv((char *)DateCalc_Day_of_Week_Abbreviation_[lang][dow],0)));
+                }
+                else
+                {
+                    strncpy((char *)buffer,(char *)DateCalc_Day_of_Week_to_Text_[lang][dow],3);
+                    buffer[3] = '\0';
+                    PUSHs(sv_2mortal(newSVpv((char *)buffer,0)));
+                }
+            }
+            else DATECALC_DAYOFWEEK_ERROR;
         }
-        else
-        {
-            strncpy((char *)buffer,(char *)DateCalc_Day_of_Week_to_Text_[DateCalc_Language][dow],3);
-            buffer[3] = '\0';
-            PUSHs(sv_2mortal(newSVpv((char *)buffer,0)));
-        }
+        else DATECALC_SCALAR_ERROR;
     }
-    else DATECALC_DAYOFWEEK_ERROR;
+    else croak("Usage: Date::Calc::Day_of_Week_Abbreviation(dow[,lang])");
 }
 
 
@@ -1456,7 +1748,8 @@ CODE:
         RETVAL = DateCalc_Language;
         if (items == 1)
         {
-            lang = (Z_int) SvIV( ST(0) );
+            if ( not DATECALC_SCALAR(ST(0),Z_int,lang) )
+                DATECALC_SCALAR_ERROR;
             if ((lang >= 1) and (lang <= DateCalc_LANGUAGES))
             {
                 DateCalc_Language = lang;

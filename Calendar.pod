@@ -576,7 +576,7 @@ this.
 
 =head1 VERSION
 
-This man page documents "Date::Calendar" version 5.8.
+This man page documents "Date::Calendar" version 6.0.
 
 =head1 AUTHOR
 

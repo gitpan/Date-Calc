@@ -88,6 +88,8 @@ t/m008.t
 t/m009.t
 t/m010.t
 t/m011.t
+t/m012.t
+t/m013.t
 tools/compile.bat
 tools/compile.pl
 tools/compile.sh

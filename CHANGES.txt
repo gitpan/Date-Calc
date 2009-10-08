@@ -1,5 +1,5 @@
                      ====================================
-                       Package "Date::Calc" Version 5.8
+                       Package "Date::Calc" Version 6.0
                      ====================================
 
 
@@ -9,6 +9,33 @@
 
 Version history:
 ----------------
+
+Version 6.0   07.10.2009
+
+ +  Added new functions "N_Delta_YMDHMS()", "Add_N_Delta_YMD()"
+    and "Add_N_Delta_YMDHMS()" to "Date::Calc"
+ +  Added more tests to "t/f037.t" for these new functions
+ +  Added a new "normalized" mode to "Date::Calc::Object" which
+    uses the new functions "N_Delta_YMD()", "N_Delta_YMDHMS()",
+    "Add_N_Delta_YMD()" and "Add_N_Delta_YMDHMS()"
+ +  Added test scripts "t/m012.t" and "t/m013.t" for this new mode
+ +  The language can now be set individually for each function
+    in "Date::Calc" that requires it (through a new optional
+    parameter; the default continues to be a global setting
+    for backward compatibility); the affected functions are:
+    "Decode_Month()", "Decode_Day_of_Week()", "Compressed_to_Text()",
+    "Date_to_Text()", "Date_to_Text_Long()", "Calendar()",
+    "Month_to_Text()", "Day_of_Week_to_Text()", "Day_of_Week_Abbreviation()",
+    "Decode_Date_EU()", "Decode_Date_US()", "Decode_Date_EU2()",
+    "Decode_Date_US2()", "Parse_Date()".
+ +  BEWARE that the interface of "DateCalc.c" has changed!
+ +  Module "Date::Calc::Object" has been changed similarly
+ +  Module "Date::Calendar::Year" has also been adapted accordingly
+ +  Many test scripts have been changed to reflect the modifications
+    in "Date::Calc", "Date::Calc::Object" and "Date::Calendar::Year"
+    and more test cases have been added
+ +  Updated the documentation to reflect all changes
+ +  Updated version numbers of dependencies in "t/f000.t"
 
 Version 5.8   12.09.2009
 

@@ -1,5 +1,5 @@
                      ====================================
-                       Package "Date::Calc" Version 5.8
+                       Package "Date::Calc" Version 6.0
                      ====================================
 
 
@@ -35,16 +35,83 @@ interface) with overloaded operators, and a set of modules for calculations
 which take local holidays into account (both additions in Perl only, however).
 
 
-What's new in version 5.8:
+What's new in version 6.0:
 --------------------------
 
- +  Added a new function "N_Delta_YMD()"
- +  Added a new test script "t/f037.t"
- +  Updated the "Calc.pod" manual page accordingly
- +  Renamed "calendar.cgi" in the "examples"
-    subdirectory to "calendar.pl"
- +  Added a new CGI script named "datecalc.pl"
-    to the "examples" subdirectory
+ +  Added new functions "N_Delta_YMDHMS()", "Add_N_Delta_YMD()"
+    and "Add_N_Delta_YMDHMS()" to "Date::Calc"
+ +  Added more tests to "t/f037.t" for these new functions
+ +  Added a new "normalized" mode to "Date::Calc::Object" which
+    uses the new functions "N_Delta_YMD()", "N_Delta_YMDHMS()",
+    "Add_N_Delta_YMD()" and "Add_N_Delta_YMDHMS()"
+ +  Added test scripts "t/m012.t" and "t/m013.t" for this new mode
+ +  The language can now be set individually for each function
+    in "Date::Calc" that requires it (through a new optional
+    parameter; the default continues to be a global setting
+    for backward compatibility); the affected functions are:
+    "Decode_Month()", "Decode_Day_of_Week()", "Compressed_to_Text()",
+    "Date_to_Text()", "Date_to_Text_Long()", "Calendar()",
+    "Month_to_Text()", "Day_of_Week_to_Text()", "Day_of_Week_Abbreviation()",
+    "Decode_Date_EU()", "Decode_Date_US()", "Decode_Date_EU2()",
+    "Decode_Date_US2()", "Parse_Date()".
+ +  BEWARE that the interface of "DateCalc.c" has changed!
+ +  Module "Date::Calc::Object" has been changed similarly
+ +  Module "Date::Calendar::Year" has also been adapted accordingly
+ +  Many test scripts have been changed to reflect the modifications
+    in "Date::Calc", "Date::Calc::Object" and "Date::Calendar::Year"
+    and more test cases have been added
+ +  Updated the documentation to reflect all changes
+ +  Updated version numbers of dependencies in "t/f000.t"
+
+
+Backward compatibility:
+-----------------------
+
+Module "Date::Calc" should be 100% backward compatible, meaning
+that no changes to existing code using reasonably recent versions
+of "Date::Calc" should be necessary (consult the changes history
+in file "CHANGES.txt" for possible incompatible changes between
+versions).
+
+Note that when you pass an invalid language number to any of the
+affected functions, you will get the previous behaviour, in which
+a global variable (set by the function "Language()") determines
+the language to be used.
+
+Note again that this new language parameter in the affected functions
+is optional; omitting it gives you the previous behaviour with the
+global variable as well (this is where the compatibility with existing
+code stems from).
+
+When using the C library "DateCalc.c", where omitting a parameter
+is not an option, passing a zero for the language is therefore the
+recommended way to guarantee backward compatibility and to keep
+changes to existing code to a minimum.
+
+Modules "Date::Calc::Object" and "Date::Calendar::Year" should be
+backward compatible as well (modules "Date::Calendar" and
+"Date::Calendar::Profiles" have not been changed).
+
+However, because the global variable (the one set by the function
+"Language()") is not set temporarily anymore by language-dependent
+methods and overridden operators (and restituted at the end, very
+similar to the "local" operator in Perl), you might perceive
+differences if your existing code relied on these implementation
+details (some test cases in the test suite of this package tested
+this and had therefore to be changed).
+
+The advantage to be gained by all this is that now, all modules
+in this package should be thread-safe and safe to be used by
+several concurrently executed modules, as long as you do not
+set the language using the global function "Language()" or the
+CLASS method "language()" (and as long as you do not use any
+other global setting, for that matter), but EXCLUSIVELY by
+passing the language parameter to all functions individually
+and by using the OBJECT method "language()".
+
+By exclusively using local settings, you are also making your
+code invulnerable against other, concurrent modules which still
+use global settings.
 
 
 New features in version 5.0:
@@ -178,11 +245,12 @@ http://catcode.com/date/pcalc.html.
 Note to CPAN Testers:
 ---------------------
 
-After completion, version 5.8 of this module has already
+After completion, version 6.0 of this module has already
 been tested successfully with the following configurations:
 
   Perl 5.005_03  -  Windows XP SP3 & MS VC++ 6.0 (native Perl build)
   Perl 5.8.0     -  Windows XP SP3 & MS VC++ 6.0 (native Perl build)
+  Perl 5.10.1    -  Windows XP SP3 & MS VC++ 6.0 (native Perl build)
   Perl 5.10.1    -  FreeBSD 7.2-STABLE
 
 

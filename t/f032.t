@@ -7,7 +7,7 @@ no strict "vars";
 use Date::Calc qw( Calendar );
 
 # ======================================================================
-#   $string = Calendar($year,$month);
+#   $string = Calendar($year,$month[$orthodox[,$lang]]);
 # ======================================================================
 
 print "1..24\n";

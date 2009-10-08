@@ -249,14 +249,15 @@ which is called internally by the constructor method,
 and which is described immediately below, after this
 method.
 
-In case you call the "init()" method yourself, explicitly,
-after creating the object, you can pass an empty profile
-(e.g., just an empty anonymous hash) to the "new()" method
-in order to improve performance.
+In case you want to call the "init()" method yourself,
+explicitly, after creating the object, you can pass an
+empty profile (e.g., just an empty anonymous hash) to
+the "new()" method, in order to create an empty object,
+and also to improve performance.
 
 The third argument is optional, and must consist of
 the valid name or number of a language as provided by
-the Date::Calc(3) module if given.
+the Date::Calc(3) module, if given.
 
 This argument determines which language shall be used
 when reading the profile, since the profile may contain
@@ -264,7 +265,8 @@ names of months and weekdays in its formulas in that
 language.
 
 The default is English if no value or no valid value
-is specified.
+is specified (and if the global default has not been
+changed with "Language()").
 
 After the third argument, a list of day numbers which
 will constitute the "weekend" can optionally be specified,
@@ -502,10 +504,12 @@ third argument, which must consist of the valid name or number
 of a language as provided by the Date::Calc(3) module.
 
 For the time of scanning the given holiday scheme, the "init()"
-method will temporarily set the language to the value specified,
-and it will restore the original value before returning.
+method will use the language that has been specified, or the
+global setting from "Language()" if no or an invalid language
+parameter is given.
 
-The default is English if none is specified.
+The default is English if none is specified and if the
+global setting has not been modified.
 
 This means that you can provide the names of months and days of
 week in your holiday profile in any of the languages supported
@@ -851,7 +855,7 @@ this.
 
 =head1 VERSION
 
-This man page documents "Date::Calendar::Year" version 5.8.
+This man page documents "Date::Calendar::Year" version 6.0.
 
 =head1 AUTHOR
 

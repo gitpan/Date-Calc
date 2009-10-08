@@ -108,10 +108,9 @@ sub print_page()
 {
     my($date) = Date_to_Text_Long( @data[0..2] );
     my $delta = Delta_Days(@diff);
-    my $diff0 = join(', ', Enumerate(                     $delta,qw(           day)) );
-    my $diff1 = join(', ', Enumerate(           Delta_YMD(@diff),qw(year month day)) );
-    my $diff2 = join(', ', Enumerate(         N_Delta_YMD(@diff),qw(year month day)) );
-#   my $diff2 = join(', ', Enumerate(Normalized_Delta_YMD(@diff),qw(year month day)) );
+    my $diff0 = join(', ', Enumerate(            $delta,qw(           day)) );
+    my $diff1 = join(', ', Enumerate(  Delta_YMD(@diff),qw(year month day)) );
+    my $diff2 = join(', ', Enumerate(N_Delta_YMD(@diff),qw(year month day)) );
 
     print <<"VERBATIM";
 Content-type: text/html; charset="iso-8859-1"
@@ -278,7 +277,7 @@ VERBATIM
 <HR NOSHADE SIZE="2">
 <P>
 
-<A HREF="http://www.engelschall.com/u/sb/download/pkg/Date-Calc-5.8.tar.gz">Download</A>
+<A HREF="http://www.engelschall.com/u/sb/download/pkg/Date-Calc-6.0.tar.gz">Download</A>
 the Perl software that does all <A HREF="datecalc.pl">this</A>!
 
 <P>
@@ -289,33 +288,6 @@ the Perl software that does all <A HREF="datecalc.pl">this</A>!
 </BODY>
 </HTML>
 VERBATIM
-}
-
-sub Normalized_Delta_YMD
-{
-    die "Usage: Date::Calc::Normalized_Delta_YMD(year1, month1, day1, year2, month2, day2)" if (scalar(@_) != 6);
-    die "not a valid date" unless (check_date(@_[0..2]));
-    die "not a valid date" unless (check_date(@_[3..5]));
-    my(@delta) = (0,0,Delta_Days(@_));
-    if (abs($delta[2]) > 30)
-    {
-        $delta[0] = $_[3] - $_[0];
-        $delta[1] = $_[4] - $_[1];
-        $delta[2] = Delta_Days(Add_Delta_YM(@_[0..2],@delta[0,1]),@_[3..5]);
-        if (!(($delta[0] >= 0 and $delta[1] >= 0 and $delta[2] >= 0) or
-              ($delta[0] <= 0 and $delta[1] <= 0 and $delta[2] <= 0)))
-        {
-            if    ($delta[0] < 0 and $delta[1] > 0) { $delta[0]++; $delta[1] -= 12; }
-            elsif ($delta[0] > 0 and $delta[1] < 0) { $delta[0]--; $delta[1] += 12; }
-            if    ($delta[1] < 0 and $delta[2] > 0) { $delta[1]++; $delta[2] = Delta_Days(Add_Delta_YM(@_[0..2],@delta[0,1]),@_[3..5]); }
-            elsif ($delta[1] > 0 and $delta[2] < 0) { $delta[1]--; $delta[2] = Delta_Days(Add_Delta_YM(@_[0..2],@delta[0,1]),@_[3..5]); }
-            if    ($delta[0] < 0 and $delta[2] > 0) { $delta[0]++; $delta[1] -= 12; }
-            elsif ($delta[0] > 0 and $delta[2] < 0) { $delta[0]--; $delta[1] += 12; }
-            if    ($delta[1] < 0 and $delta[2] > 0) { $delta[1]++; $delta[2] = Delta_Days(Add_Delta_YM(@_[0..2],@delta[0,1]),@_[3..5]); }
-            elsif ($delta[1] > 0 and $delta[2] < 0) { $delta[1]--; $delta[2] = Delta_Days(Add_Delta_YM(@_[0..2],@delta[0,1]),@_[3..5]); }
-        }
-    }
-    return(@delta);
 }
 
 sub Enumerate

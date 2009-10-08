@@ -41,7 +41,7 @@ unless ($@)
 {print "ok $n\n";} else {print "not ok $n\n";}
 $n++;
 
-if ($Carp::Clan::VERSION >= 5.0)
+if ($Carp::Clan::VERSION >= 5.3)
 {print "ok $n\n";} else {print "not ok $n\n";}
 $n++;
 
@@ -54,11 +54,11 @@ unless ($@)
 {print "ok $n\n";} else {print "not ok $n\n";}
 $n++;
 
-if ($Date::Calc::VERSION eq '5.8')
+if ($Date::Calc::VERSION eq '6.0')
 {print "ok $n\n";} else {print "not ok $n\n";}
 $n++;
 
-if (&Date::Calc::Version() eq '5.8')
+if (&Date::Calc::Version() eq '6.0')
 {print "ok $n\n";} else {print "not ok $n\n";}
 $n++;
 
@@ -71,7 +71,7 @@ unless ($@)
 {print "ok $n\n";} else {print "not ok $n\n";}
 $n++;
 
-if ($Date::Calc::Object::VERSION eq '5.8')
+if ($Date::Calc::Object::VERSION eq '6.0')
 {print "ok $n\n";} else {print "not ok $n\n";}
 $n++;
 
@@ -84,17 +84,17 @@ unless ($@)
 {print "ok $n\n";} else {print "not ok $n\n";}
 $n++;
 
-if ($Date::Calendar::Profiles::VERSION eq '5.8')
+if ($Date::Calendar::Profiles::VERSION eq '6.0')
 {print "ok $n\n";} else {print "not ok $n\n";}
 $n++;
 
 exit 0 if $n > $tests;
 
-if ($Bit::Vector::VERSION >= '6.3')
+if ($Bit::Vector::VERSION >= '7.0')
 {print "ok $n\n";} else {print "not ok $n\n";}
 $n++;
 
-if (&Bit::Vector::Version() >= '6.3')
+if (&Bit::Vector::Version() >= '7.0')
 {print "ok $n\n";} else {print "not ok $n\n";}
 $n++;
 
@@ -107,7 +107,7 @@ unless ($@)
 {print "ok $n\n";} else {print "not ok $n\n";}
 $n++;
 
-if ($Date::Calendar::Year::VERSION eq '5.8')
+if ($Date::Calendar::Year::VERSION eq '6.0')
 {print "ok $n\n";} else {print "not ok $n\n";}
 $n++;
 
@@ -120,7 +120,7 @@ unless ($@)
 {print "ok $n\n";} else {print "not ok $n\n";}
 $n++;
 
-if ($Date::Calendar::VERSION eq '5.8')
+if ($Date::Calendar::VERSION eq '6.0')
 {print "ok $n\n";} else {print "not ok $n\n";}
 $n++;
 

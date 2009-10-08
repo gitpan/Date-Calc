@@ -149,6 +149,26 @@ DateCalc_delta_ymd                     (Z_int  *year1,      /*  I/O  */
                                         Z_int   day2);      /*   I   */
 
 boolean
+DateCalc_delta_ymdhms                  (Z_int  *D_y,        /*   O   */
+                                        Z_int  *D_m,        /*   O   */
+                                        Z_int  *D_d,        /*   O   */
+                                        Z_int  *Dh,         /*   O   */
+                                        Z_int  *Dm,         /*   O   */
+                                        Z_int  *Ds,         /*   O   */
+                                        Z_int   year1,      /*   I   */
+                                        Z_int   month1,     /*   I   */
+                                        Z_int   day1,       /*   I   */
+                                        Z_int   hour1,      /*   I   */
+                                        Z_int   min1,       /*   I   */
+                                        Z_int   sec1,       /*   I   */
+                                        Z_int   year2,      /*   I   */
+                                        Z_int   month2,     /*   I   */
+                                        Z_int   day2,       /*   I   */
+                                        Z_int   hour2,      /*   I   */
+                                        Z_int   min2,       /*   I   */
+                                        Z_int   sec2);      /*   I   */
+
+boolean
 DateCalc_norm_delta_ymd                (Z_int  *year1,      /*  I/O  */
                                         Z_int  *month1,     /*  I/O  */
                                         Z_int  *day1,       /*  I/O  */
@@ -157,12 +177,12 @@ DateCalc_norm_delta_ymd                (Z_int  *year1,      /*  I/O  */
                                         Z_int   day2);      /*   I   */
 
 boolean
-DateCalc_delta_ymdhms                  (Z_int  *D_y,        /*   O   */
+DateCalc_norm_delta_ymdhms             (Z_int  *D_y,        /*   O   */
                                         Z_int  *D_m,        /*   O   */
                                         Z_int  *D_d,        /*   O   */
-                                        Z_int  *Dh,         /*   O   */
-                                        Z_int  *Dm,         /*   O   */
-                                        Z_int  *Ds,         /*   O   */
+                                        Z_int  *Dhh,        /*   O   */
+                                        Z_int  *Dmm,        /*   O   */
+                                        Z_int  *Dss,        /*   O   */
                                         Z_int   year1,      /*   I   */
                                         Z_int   month1,     /*   I   */
                                         Z_int   day1,       /*   I   */
@@ -223,6 +243,28 @@ DateCalc_add_delta_ymd                 (Z_int  *year,       /*  I/O  */
 
 boolean
 DateCalc_add_delta_ymdhms              (Z_int  *year,       /*  I/O  */
+                                        Z_int  *month,      /*  I/O  */
+                                        Z_int  *day,        /*  I/O  */
+                                        Z_int  *hour,       /*  I/O  */
+                                        Z_int  *min,        /*  I/O  */
+                                        Z_int  *sec,        /*  I/O  */
+                                        Z_long  D_y,        /*   I   */
+                                        Z_long  D_m,        /*   I   */
+                                        Z_long  D_d,        /*   I   */
+                                        Z_long  Dh,         /*   I   */
+                                        Z_long  Dm,         /*   I   */
+                                        Z_long  Ds);        /*   I   */
+
+boolean
+DateCalc_add_norm_delta_ymd            (Z_int  *year,       /*  I/O  */
+                                        Z_int  *month,      /*  I/O  */
+                                        Z_int  *day,        /*  I/O  */
+                                        Z_long  Dy,         /*   I   */
+                                        Z_long  Dm,         /*   I   */
+                                        Z_long  Dd);        /*   I   */
+
+boolean
+DateCalc_add_norm_delta_ymdhms         (Z_int  *year,       /*  I/O  */
                                         Z_int  *month,      /*  I/O  */
                                         Z_int  *day,        /*  I/O  */
                                         Z_int  *hour,       /*  I/O  */
@@ -318,11 +360,13 @@ DateCalc_easter_sunday                 (Z_int  *year,       /*  I/O  */
 
 Z_int
 DateCalc_Decode_Month                  (charptr buffer,
-                                        Z_int   length);
+                                        Z_int   length,
+                                        Z_int   lang);
 
 Z_int
 DateCalc_Decode_Day_of_Week            (charptr buffer,
-                                        Z_int   length);
+                                        Z_int   length,
+                                        Z_int   lang);
 
 Z_int
 DateCalc_Decode_Language               (charptr buffer,
@@ -332,13 +376,15 @@ boolean
 DateCalc_decode_date_eu                (charptr buffer,     /*   I   */
                                         Z_int  *year,       /*   O   */
                                         Z_int  *month,      /*   O   */
-                                        Z_int  *day);       /*   O   */
+                                        Z_int  *day,        /*   O   */
+                                        Z_int   lang);      /*   I   */
 
 boolean
 DateCalc_decode_date_us                (charptr buffer,     /*   I   */
                                         Z_int  *year,       /*   O   */
                                         Z_int  *month,      /*   O   */
-                                        Z_int  *day);       /*   O   */
+                                        Z_int  *day,        /*   O   */
+                                        Z_int   lang);      /*   I   */
 
 Z_int
 DateCalc_Fixed_Window                  (Z_int   year);
@@ -362,17 +408,20 @@ boolean
 DateCalc_check_compressed              (Z_int   date);
 
 charptr
-DateCalc_Compressed_to_Text            (Z_int   date);
+DateCalc_Compressed_to_Text            (Z_int   date,
+                                        Z_int   lang);
 
 charptr
 DateCalc_Date_to_Text                  (Z_int   year,
                                         Z_int   month,
-                                        Z_int   day);
+                                        Z_int   day,
+                                        Z_int   lang);
 
 charptr
 DateCalc_Date_to_Text_Long             (Z_int   year,
                                         Z_int   month,
-                                        Z_int   day);
+                                        Z_int   day,
+                                        Z_int   lang);
 
 charptr                                                     /*   O   */
 DateCalc_English_Ordinal               (charptr result,     /*   O   */
@@ -381,7 +430,8 @@ DateCalc_English_Ordinal               (charptr result,     /*   O   */
 charptr
 DateCalc_Calendar                      (Z_int   year,
                                         Z_int   month,
-                                        boolean orthodox);
+                                        boolean orthodox,
+                                        Z_int   lang);
 
 void
 DateCalc_Dispose                       (charptr string);
@@ -656,11 +706,12 @@ extern const N_char DateCalc_Language_to_Text_[DateCalc_LANGUAGES+1][32];
 /*****************************************************************************/
 
 /*****************************************************************************/
-/*  VERSION:  5.8                                                            */
+/*  VERSION:  6.0                                                            */
 /*****************************************************************************/
 /*  VERSION HISTORY:                                                         */
 /*****************************************************************************/
 /*                                                                           */
+/*    Version 6.0  07.10.09  +: norm_delta_ymdhms, add_norm_delta_ymd[hms].  */
 /*    Version 5.8  12.09.09  Added "norm_delta_ymd()".                       */
 /*    Version 5.7  23.08.09  Fixed Dutch "oktober", Portuguese DOW abbrevs.  */
 /*    Version 5.6  28.07.09  Made the module MacOS X compatible.             */

@@ -42,14 +42,17 @@ require DynaLoader;
     Delta_Days
     Delta_DHMS
     Delta_YMD
-    N_Delta_YMD
     Delta_YMDHMS
+    N_Delta_YMD
+    N_Delta_YMDHMS
     Normalize_DHMS
     Add_Delta_Days
     Add_Delta_DHMS
     Add_Delta_YM
     Add_Delta_YMD
     Add_Delta_YMDHMS
+    Add_N_Delta_YMD
+    Add_N_Delta_YMDHMS
     System_Clock
     Today
     Now
@@ -100,22 +103,24 @@ require DynaLoader;
 ##                                              ##
 ##################################################
 
-$VERSION = '5.8';
+$VERSION = '6.0';
 
 bootstrap Date::Calc $VERSION;
 
 sub Decode_Date_EU2
 {
-    die "Usage: (\$year,\$month,\$day) = Decode_Date_EU2(\$date);\n"
-      if (@_ != 1);
+    die "Usage: (\$year,\$month,\$day) = Decode_Date_EU2(\$date[,\$lang]);\n"
+      unless ((@_ == 1) or (@_ == 2));
 
-    my($buffer) = @_;
+    my($buffer) = shift;
+    my($lang)   = shift || 0;
     my($year,$month,$day,$length);
 
+    $lang = Language() unless (($lang >= 1) and ($lang <= Languages()));
     if ($buffer =~ /^\D*  (\d+)  [^A-Za-z0-9\xC0-\xD6\xD8-\xF6\xF8-\xFF]*  ([A-Za-z\xC0-\xD6\xD8-\xF6\xF8-\xFF]+)  [^A-Za-z0-9\xC0-\xD6\xD8-\xF6\xF8-\xFF]*  (\d+)  \D*$/x)
     {
         ($day,$month,$year) = ($1,$2,$3);
-        $month = Decode_Month($month);
+        $month = Decode_Month($month,$lang);
         unless ($month > 0)
         {
             return(); # can't decode month!
@@ -178,16 +183,18 @@ sub Decode_Date_EU2
 
 sub Decode_Date_US2
 {
-    die "Usage: (\$year,\$month,\$day) = Decode_Date_US2(\$date);\n"
-      if (@_ != 1);
+    die "Usage: (\$year,\$month,\$day) = Decode_Date_US2(\$date[,\$lang]);\n"
+      unless ((@_ == 1) or (@_ == 2));
 
-    my($buffer) = @_;
+    my($buffer) = shift;
+    my($lang)   = shift || 0;
     my($year,$month,$day,$length);
 
+    $lang = Language() unless (($lang >= 1) and ($lang <= Languages()));
     if ($buffer =~ /^[^A-Za-z0-9\xC0-\xD6\xD8-\xF6\xF8-\xFF]*  ([A-Za-z\xC0-\xD6\xD8-\xF6\xF8-\xFF]+)  [^A-Za-z0-9\xC0-\xD6\xD8-\xF6\xF8-\xFF]*  0*(\d+)  \D*$/x)
     {
         ($month,$buffer) = ($1,$2);
-        $month = Decode_Month($month);
+        $month = Decode_Month($month,$lang);
         unless ($month > 0)
         {
             return(); # can't decode month!
@@ -223,7 +230,7 @@ sub Decode_Date_US2
     elsif ($buffer =~ /^[^A-Za-z0-9\xC0-\xD6\xD8-\xF6\xF8-\xFF]*  ([A-Za-z\xC0-\xD6\xD8-\xF6\xF8-\xFF]+)  [^A-Za-z0-9\xC0-\xD6\xD8-\xF6\xF8-\xFF]*  (\d+)  \D+  (\d+)  \D*$/x)
     {
         ($month,$day,$year) = ($1,$2,$3);
-        $month = Decode_Month($month);
+        $month = Decode_Month($month,$lang);
         unless ($month > 0)
         {
             return(); # can't decode month!
@@ -286,12 +293,15 @@ sub Decode_Date_US2
 
 sub Parse_Date
 {
-    die "Usage: (\$year,\$month,\$day) = Parse_Date(\$date);\n"
-      if (@_ != 1);
+    die "Usage: (\$year,\$month,\$day) = Parse_Date(\$date[,\$lang]);\n"
+      unless ((@_ == 1) or (@_ == 2));
 
-    my($date) = @_;
+    my($date) = shift;
+    my($lang) = shift || 0;
     my($year,$month,$day);
-    unless ($date =~ /\b([JFMASOND][aepuco][nbrynlgptvc])\s+([0123]??\d)\b/)
+
+    $lang = Language() unless (($lang >= 1) and ($lang <= Languages()));
+    unless ($date =~ /\b([\x41-\x5A\x61-\x7A\xC0-\xD6\xD8-\xF6\xF8-\xFF]{3})\s+([0123]??\d)\b/)
     {
         return();
     }
@@ -302,7 +312,7 @@ sub Parse_Date
         return();
     }
     $year  = $1;
-    $month = Decode_Month($month);
+    $month = Decode_Month($month,$lang);
     unless ($month > 0)
     {
         return();

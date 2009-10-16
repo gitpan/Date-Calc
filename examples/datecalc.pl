@@ -277,7 +277,7 @@ VERBATIM
 <HR NOSHADE SIZE="2">
 <P>
 
-<A HREF="http://www.engelschall.com/u/sb/download/pkg/Date-Calc-6.0.tar.gz">Download</A>
+<A HREF="http://www.engelschall.com/u/sb/download/pkg/Date-Calc-6.1.tar.gz">Download</A>
 the Perl software that does all <A HREF="datecalc.pl">this</A>!
 
 <P>

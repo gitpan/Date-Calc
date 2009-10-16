@@ -530,8 +530,8 @@ extern const N_char DateCalc_Month_to_Text_[DateCalc_LANGUAGES+1][13][32];
         "Július", "Augusztus", "Szeptember", "Október", "November", "December"
     },
     {
-        "???", "stycznia", "lutego", "marca", "kwietnia", "maja", "czerwca",
-        "lipca", "sierpnia", "wrzesnia", "pazdziernika", "listopada", "grudnia"
+        "???", "Styczen", "Luty", "Marzec", "Kwiecien", "Maj", "Czerwiec",
+        "Lipiec", "Sierpien", "Wrzesien", "Pazdziernik", "Listopad", "Grudzien"
     },
     {
         "???", "Ianuarie", "Februarie", "Martie", "Aprilie", "Mai", "Iunie",
@@ -596,8 +596,8 @@ extern const N_char DateCalc_Day_of_Week_to_Text_[DateCalc_LANGUAGES+1][8][32];
         "csütörtök", "péntek", "szombat", "vasárnap"
     },
     {
-        "???", "poniedzialek", "wtorek", "srodek",
-        "czwartek", "piatek", "sobota", "niedziele"
+        "???", "poniedzialek", "wtorek", "sroda",
+        "czwartek", "piatek", "sobota", "niedziela"
     },
     {
         "???", "Luni", "Marti", "Miercuri",
@@ -629,7 +629,6 @@ extern const N_char DateCalc_Day_of_Week_Abbreviation_[DateCalc_LANGUAGES+1][8][
     },
     {
         "", "", "", "", "", "", "", ""
-        "???", "2ª", "3ª", "4ª", "5ª", "6ª", "Sáb", "Dom"
     },
     {
         "", "", "", "", "", "", "", ""
@@ -706,11 +705,12 @@ extern const N_char DateCalc_Language_to_Text_[DateCalc_LANGUAGES+1][32];
 /*****************************************************************************/
 
 /*****************************************************************************/
-/*  VERSION:  6.0                                                            */
+/*  VERSION:  6.1                                                            */
 /*****************************************************************************/
 /*  VERSION HISTORY:                                                         */
 /*****************************************************************************/
 /*                                                                           */
+/*    Version 6.1  15.10.09  Fixed Polish language entries.                  */
 /*    Version 6.0  07.10.09  +: norm_delta_ymdhms, add_norm_delta_ymd[hms].  */
 /*    Version 5.8  12.09.09  Added "norm_delta_ymd()".                       */
 /*    Version 5.7  23.08.09  Fixed Dutch "oktober", Portuguese DOW abbrevs.  */

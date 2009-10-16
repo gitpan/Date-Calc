@@ -2232,10 +2232,10 @@ given or currently selected language (see further below for details
 about the multi-language support of this package).
 
 (In the original distribution of this package, this was only true for
-Portuguese. In the meantime, the abbreviations in Portuguese have been
-disabled, so that now none of the languages in this package has any
-special abbreviations. But it remains possible to define some and
-then recompile the package.)
+Portuguese. Starting with version 5.1, abbreviations for Polish have
+also been introduced. Starting with version 5.7, the abbreviations for
+Portuguese have been disabled. So Polish is currently the only language
+to define such special abbreviations.)
 
 If not, the first three letters of the name of the day of week in the
 given or currently selected language are returned instead.
@@ -3268,7 +3268,7 @@ which are language-dependent.
 
 =head1 VERSION
 
-This man page documents "Date::Calc" version 6.0.
+This man page documents "Date::Calc" version 6.1.
 
 =head1 AUTHOR
 

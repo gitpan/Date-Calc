@@ -23,7 +23,7 @@ require Exporter;
 
 @EXPORT_OK = qw();
 
-$VERSION = '6.0';
+$VERSION = '6.1';
 
 use Carp::Clan qw(^Date::);
 use Date::Calc::Object qw(:ALL);

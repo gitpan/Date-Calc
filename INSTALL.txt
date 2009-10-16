@@ -1,5 +1,5 @@
                      ====================================
-                       Package "Date::Calc" Version 6.0
+                       Package "Date::Calc" Version 6.1
                      ====================================
 
 
@@ -24,15 +24,15 @@ Perl version 5.000 or higher, and an ANSI C compiler. (!)
                                      ^^^^^^
 Module "Carp::Clan" version 5.3 or higher.
 
-Optionally, module "Bit::Vector" version 7.0 or newer.
+Optionally, module "Bit::Vector" version 7.1 or newer.
 
 If you plan to use the modules "Date::Calendar" or
 "Date::Calendar::Year" from this package, you will
-also need the module "Bit::Vector" version 7.0 or
+also need the module "Bit::Vector" version 7.1 or
 newer (which also needs an ANSI C compiler!).
 
 Otherwise you may safely ignore the warning message
-"Warning: prerequisite Bit::Vector 7.0 not found at ..."
+"Warning: prerequisite Bit::Vector 7.1 not found at ..."
 when running "perl Makefile.PL".
 
 Anyway, you can always install "Bit::Vector" later
@@ -98,7 +98,7 @@ Edit the file "Makefile.PL" and change the line
 
     'VERSION_FROM'      => 'Calc.pm',
 to
-    'VERSION'           => '6.0',
+    'VERSION'           => '6.1',
 
 Then edit the file "Calc.pm" and change the line
 
@@ -108,7 +108,7 @@ to
 
 Also edit the file "t/f000.t" and change all lines of the kind
 
-    use Date::Calc 6.0;
+    use Date::Calc 6.1;
 
 into just
 
@@ -269,7 +269,7 @@ and do the following:
 
       You don't need to bother sending me the changes in the documentation
       or other files, and just sending me the list of items usually causes
-      me less work than sending in a patch, so I'd prefer the latter.
+      me less work than sending in a patch, so I'd prefer the former.
 
    b) Please use only the ISO-Latin-1 character set if possible,
       since my module doesn't support any other character sets yet,
@@ -300,7 +300,7 @@ Detailed installation guide:
 ----------------------------
 
  1) Change directory to the directory that has been created by unpacking this
-    package ("cd Date-Calc-6.0").
+    package ("cd Date-Calc-6.1").
 
  2) Type "perl Makefile.PL" (or whatever the name and path of your Perl 5
     binary is).

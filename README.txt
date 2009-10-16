@@ -1,5 +1,5 @@
                      ====================================
-                       Package "Date::Calc" Version 6.0
+                       Package "Date::Calc" Version 6.1
                      ====================================
 
 
@@ -35,33 +35,11 @@ interface) with overloaded operators, and a set of modules for calculations
 which take local holidays into account (both additions in Perl only, however).
 
 
-What's new in version 6.0:
+What's new in version 6.1:
 --------------------------
 
- +  Added new functions "N_Delta_YMDHMS()", "Add_N_Delta_YMD()"
-    and "Add_N_Delta_YMDHMS()" to "Date::Calc"
- +  Added more tests to "t/f037.t" for these new functions
- +  Added a new "normalized" mode to "Date::Calc::Object" which
-    uses the new functions "N_Delta_YMD()", "N_Delta_YMDHMS()",
-    "Add_N_Delta_YMD()" and "Add_N_Delta_YMDHMS()"
- +  Added test scripts "t/m012.t" and "t/m013.t" for this new mode
- +  The language can now be set individually for each function
-    in "Date::Calc" that requires it (through a new optional
-    parameter; the default continues to be a global setting
-    for backward compatibility); the affected functions are:
-    "Decode_Month()", "Decode_Day_of_Week()", "Compressed_to_Text()",
-    "Date_to_Text()", "Date_to_Text_Long()", "Calendar()",
-    "Month_to_Text()", "Day_of_Week_to_Text()", "Day_of_Week_Abbreviation()",
-    "Decode_Date_EU()", "Decode_Date_US()", "Decode_Date_EU2()",
-    "Decode_Date_US2()", "Parse_Date()".
- +  BEWARE that the interface of "DateCalc.c" has changed!
- +  Module "Date::Calc::Object" has been changed similarly
- +  Module "Date::Calendar::Year" has also been adapted accordingly
- +  Many test scripts have been changed to reflect the modifications
-    in "Date::Calc", "Date::Calc::Object" and "Date::Calendar::Year"
-    and more test cases have been added
- +  Updated the documentation to reflect all changes
- +  Updated version numbers of dependencies in "t/f000.t"
+ +  United "Date::Calc" and "Date::Pcalc" into a single distribution
+ +  Fixed Polish names of months and days of week (RT ticket #14159)
 
 
 Backward compatibility:
@@ -175,15 +153,15 @@ Perl version 5.000 or higher, and an ANSI C compiler. (!)
                                      ^^^^^^
 Module "Carp::Clan" version 5.3 or higher.
 
-Optionally, module "Bit::Vector" version 7.0 or newer.
+Optionally, module "Bit::Vector" version 7.1 or newer.
 
 If you plan to use the modules "Date::Calendar" or
 "Date::Calendar::Year" from this package, you will
-also need the module "Bit::Vector" version 7.0 or
+also need the module "Bit::Vector" version 7.1 or
 newer (which also needs an ANSI C compiler!).
 
 Otherwise you may safely ignore the warning message
-"Warning: prerequisite Bit::Vector 7.0 not found at ..."
+"Warning: prerequisite Bit::Vector 7.1 not found at ..."
 when running "perl Makefile.PL".
 
 Anyway, you can always install "Bit::Vector" later
@@ -245,7 +223,7 @@ http://catcode.com/date/pcalc.html.
 Note to CPAN Testers:
 ---------------------
 
-After completion, version 6.0 of this module has already
+After completion, version 6.1 of this module has already
 been tested successfully with the following configurations:
 
   Perl 5.005_03  -  Windows XP SP3 & MS VC++ 6.0 (native Perl build)

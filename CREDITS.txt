@@ -1,5 +1,5 @@
                      ====================================
-                       Package "Date::Calc" Version 6.0
+                       Package "Date::Calc" Version 6.1
                      ====================================
 
 
@@ -446,5 +446,13 @@ configurable.
 
 Many thanks to H. Merijn Brand <h.m.brand@xs4all.nl> for triggering
 the development of a new normalized date difference function.
+
+Many thanks to Marek Snowarski <Marek.Snowarski@grzyby.pl> for
+raising my attention to the fact that the Polish names for the
+months and days of week were written wrongly.
+
+Many thanks to Piotr Wierzejewski <nlexposure@gmail.com> for
+providing me with the correct spelling of the Polish names
+for the months and days of week in Unicode.
 
 

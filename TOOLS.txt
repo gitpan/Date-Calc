@@ -1,5 +1,5 @@
                      ====================================
-                       Package "Date::Calc" Version 6.0
+                       Package "Date::Calc" Version 6.1
                      ====================================
 
 

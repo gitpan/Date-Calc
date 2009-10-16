@@ -521,12 +521,8 @@ const N_char DateCalc_Month_to_Text_[DateCalc_LANGUAGES+1][13][32] =
         "Július", "Augusztus", "Szeptember", "Október", "November", "December"
     },
     {
-        "???", "stycznia", "lutego", "marca", "kwietnia", "maja", "czerwca",
-        "lipca", "sierpnia", "wrzesnia", "pazdziernika", "listopada", "grudnia"
-     /* "???", "Styczen", "Luty", "Marzec", "Kwiecien", "Maj", "Czerwiec", */ /* non-flected? */
-     /* "Lipiec", "Sierpien", "Wrzesien", "Pazdziernik", "Listopad", "Grudzien" */
-     /* "???", "Styczeñ", "Luty", "Marzec", "Kwiecieñ", "Maj", "Czerwiec", */ /* ISO-Latin-2 */
-     /* "Lipiec", "Sierpieñ", "Wrzesieñ", "Pa¼dziernik", "Listopad", "Grudzieñ" */
+        "???", "Styczen", "Luty", "Marzec", "Kwiecien", "Maj", "Czerwiec",    /* ISO-Latin-1 approximation */
+        "Lipiec", "Sierpien", "Wrzesien", "Pazdziernik", "Listopad", "Grudzien"
     },
     {
         "???", "Ianuarie", "Februarie", "Martie", "Aprilie", "Mai", "Iunie",
@@ -589,12 +585,8 @@ const N_char DateCalc_Day_of_Week_to_Text_[DateCalc_LANGUAGES+1][8][32] =
         "csütörtök", "péntek", "szombat", "vasárnap"
     },
     {
-        "???", "poniedzialek", "wtorek", "srodek",
-        "czwartek", "piatek", "sobota", "niedziele"
-     /* "???", "Poniedzialek", "Wtorek", "Sroda", */ /* non-flected? */
-     /* "Czwartek", "Piatek", "Sobota", "Niedziela" */
-     /* "???", "Poniedzia³ek", "Wtorek", "¦roda", */ /* ISO-Latin-2 */
-     /* "Czwartek", "Pi±tek", "Sobota", "Niedziela" */
+        "???", "poniedzialek", "wtorek", "sroda",    /* ISO-Latin-1 approximation */
+        "czwartek", "piatek", "sobota", "niedziela"
     },
     {
         "???", "Luni", "Marti", "Miercuri",
@@ -648,8 +640,7 @@ const N_char DateCalc_Day_of_Week_Abbreviation_[DateCalc_LANGUAGES+1][8][4] =
         "", "", "", "", "", "", "", ""    /* 12 */
     },
     {
-        "???", "Pn", "Wt", "Sr", "Cz", "Pt", "So", "Ni"    /* 13 */
-     /* "???", "Pn", "Wt", "¦r", "Cz", "Pt", "So", "Ni" */ /* 13 */ /* ISO-Latin-2 */
+        "???", "Pn", "Wt", "Sr", "Cz", "Pt", "So", "Ni"    /* 13 */ /* ISO-Latin-1 approximation */
     },
     {
         "", "", "", "", "", "", "", ""    /* 14 */
@@ -2432,15 +2423,16 @@ void DateCalc_Dispose(charptr string)
 
 charptr DateCalc_Version(void)
 {
-    return( (charptr) "6.0" );
+    return( (charptr) "6.1" );
 }
 
 /*****************************************************************************/
-/*  VERSION:  6.0                                                            */
+/*  VERSION:  6.1                                                            */
 /*****************************************************************************/
 /*  VERSION HISTORY:                                                         */
 /*****************************************************************************/
 /*                                                                           */
+/*    Version 6.1  15.10.09  Fixed Polish language entries.                  */
 /*    Version 6.0  07.10.09  +: norm_delta_ymdhms, add_norm_delta_ymd[hms].  */
 /*    Version 5.8  12.09.09  Added "norm_delta_ymd()".                       */
 /*    Version 5.7  23.08.09  Fixed Dutch "oktober", Portuguese DOW abbrevs.  */

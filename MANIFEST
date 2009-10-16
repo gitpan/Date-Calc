@@ -1,13 +1,9 @@
 Artistic.txt
 CHANGES.txt
 CREDITS.txt
-Calc.pm
 Calc.pod
-Calc.xs
 Calendar.pm
 Calendar.pod
-DateCalc.c
-DateCalc.h
 EXAMPLES.txt
 GNU_GPL.txt
 GNU_LGPL.txt
@@ -17,10 +13,9 @@ Makefile.PL
 README.htm
 README.txt
 TOOLS.txt
-ToolBox.h
-examples/anniversaries.pl
 examples/age_in_days_eu.pl
 examples/age_in_days_us.pl
+examples/anniversaries.pl
 examples/bug.pl
 examples/cal.c
 examples/calendar.pl
@@ -39,6 +34,13 @@ lib/Date/Calendar/Profiles.pm
 lib/Date/Calendar/Profiles.pod
 lib/Date/Calendar/Year.pm
 lib/Date/Calendar/Year.pod
+src/C_XS/Calc.pm
+src/C_XS/Calc.xs
+src/C_XS/DateCalc.c
+src/C_XS/DateCalc.h
+src/C_XS/ToolBox.h
+src/C_XS/typemap
+src/Perl/Calc.pm
 t/f000.t
 t/f001.t
 t/f002.t
@@ -95,5 +97,4 @@ tools/compile.pl
 tools/compile.sh
 tools/iso2pc.c
 tools/pc2iso.c
-typemap
 META.yml                                 Module meta-data (added by MakeMaker)

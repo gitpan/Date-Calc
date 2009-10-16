@@ -40,8 +40,6 @@ if (Day_of_Week_to_Text(7) eq "Sunday")
 {print "ok $n\n";} else {print "not ok $n\n";}
 $n++;
 
-print "Language = " . Language_to_Text(Language()) . "\n";
-
 if (($t = Day_of_Week_to_Text(1,0)) eq "Monday")
 {print "ok $n\n";} else {print "not ok $n ($t)\n";}
 $n++;

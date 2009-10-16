@@ -3268,7 +3268,7 @@ which are language-dependent.
 
 =head1 VERSION
 
-This man page documents "Date::Calc" version 6.1.
+This man page documents "Date::Calc" version 6.2.
 
 =head1 AUTHOR
 
@@ -3282,16 +3282,18 @@ Copyright (c) 1995 - 2009 by Steffen Beyer. All rights reserved.
 
 =head1 LICENSE
 
-This package is free software; you can redistribute it and/or
-modify it under the same terms as Perl itself, i.e., under the
-terms of the "Artistic License" or the "GNU General Public License".
+This package is free software; you can use, modify and redistribute
+it under the same terms as Perl itself, i.e., at your option, under
+the terms either of the "Artistic License" or the "GNU General Public
+License".
 
-The C library at the core of this Perl module can additionally
-be redistributed and/or modified under the terms of the
-"GNU Library General Public License".
+The C library at the core of the module "Date::Calc::XS" can, at your
+discretion, also be used, modified and redistributed under the terms
+of the "GNU Library General Public License".
 
 Please refer to the files "Artistic.txt", "GNU_GPL.txt" and
-"GNU_LGPL.txt" in this distribution for details!
+"GNU_LGPL.txt" in the "license" subdirectory of this distribution
+for any details!
 
 =head1 DISCLAIMER
 

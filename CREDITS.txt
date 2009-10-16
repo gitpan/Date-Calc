@@ -1,5 +1,5 @@
                      ====================================
-                       Package "Date::Calc" Version 6.1
+                       Package "Date::Calc" Version 6.2
                      ====================================
 
 
@@ -454,5 +454,10 @@ months and days of week were written wrongly.
 Many thanks to Piotr Wierzejewski <nlexposure@gmail.com> for
 providing me with the correct spelling of the Polish names
 for the months and days of week in Unicode.
+
+Many thanks to H.Merijn Brand <h.m.brand@xs4all.nl> for
+discussing the various issues and advantages/disadvantages
+of integrating versus splitting the C/XS-part and the pure-Perl
+part of this distribution with me!
 
 

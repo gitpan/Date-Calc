@@ -9,7 +9,7 @@
 ##                                                                           ##
 ###############################################################################
 
-package Date::Calc;
+package Date::Calc::PP;
 
 BEGIN { eval { require bytes; }; }
 use strict;
@@ -18,9 +18,8 @@ use vars qw(@ISA @EXPORT @EXPORT_OK %EXPORT_TAGS $VERSION);
 use Carp::Clan qw(^Date::);
 
 require Exporter;
-require DynaLoader;
 
-@ISA = qw(Exporter DynaLoader);
+@ISA = qw(Exporter);
 
 @EXPORT = qw();
 
@@ -101,11 +100,11 @@ require DynaLoader;
 ##                                              ##
 ##  "Version()" is available but not exported   ##
 ##  in order to avoid possible name clashes.    ##
-##  Call with "Date::Calc::Version()" instead!  ##
+##  Call "Date::Calc::PP::Version()" instead!   ##
 ##                                              ##
 ##################################################
 
-$VERSION = '6.1';
+$VERSION = '6.2';
 
 sub Version
 {
@@ -2845,8 +2844,7 @@ sub DateCalc_Calendar
 
 sub Decode_Date_EU2
 {
-    die "Usage: (\$year,\$month,\$day) = Decode_Date_EU2(\$date[,\$lang]);\n"
-      unless ((@_ == 1) or (@_ == 2));
+    croak "Usage: (\$year,\$month,\$day) = Decode_Date_EU2(\$date[,\$lang]);\n" unless ((@_ == 1) or (@_ == 2));
 
     my($buffer) = shift;
     my($lang)   = shift || 0;
@@ -2919,8 +2917,7 @@ sub Decode_Date_EU2
 
 sub Decode_Date_US2
 {
-    die "Usage: (\$year,\$month,\$day) = Decode_Date_US2(\$date[,\$lang]);\n"
-      unless ((@_ == 1) or (@_ == 2));
+    croak "Usage: (\$year,\$month,\$day) = Decode_Date_US2(\$date[,\$lang]);\n" unless ((@_ == 1) or (@_ == 2));
 
     my($buffer) = shift;
     my($lang)   = shift || 0;
@@ -3029,8 +3026,7 @@ sub Decode_Date_US2
 
 sub Parse_Date
 {
-    die "Usage: (\$year,\$month,\$day) = Parse_Date(\$date[,\$lang]);\n"
-      unless ((@_ == 1) or (@_ == 2));
+    croak "Usage: (\$year,\$month,\$day) = Parse_Date(\$date[,\$lang]);\n" unless ((@_ == 1) or (@_ == 2));
 
     my($date) = shift;
     my($lang) = shift || 0;

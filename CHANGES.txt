@@ -1,5 +1,5 @@
                      ====================================
-                       Package "Date::Calc" Version 6.1
+                       Package "Date::Calc" Version 6.2
                      ====================================
 
 
@@ -9,6 +9,10 @@
 
 Version history:
 ----------------
+
+Version 6.2   16.10.2009
+
+ +  Split the "Date::Calc" distribution into a pure-Perl and a C/XS part
 
 Version 6.1   15.10.2009
 

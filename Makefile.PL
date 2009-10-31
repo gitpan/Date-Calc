@@ -34,13 +34,12 @@ WriteMakefile(
     'LICENSE'           => 'perl',
     'AUTHOR'            => 'Steffen Beyer <STBEY@cpan.org>',
     'PREREQ_PM'         => {
-                               'Carp::Clan'  => 5.3,
+                               'Carp::Clan'  => 6.04,
                                'Bit::Vector' => 7.1
                            },
     'META_MERGE'        => {
                                'recommends'  =>
                                {
-                                   'Carp::Clan'     => 6.01,
                                    'Date::Calc::XS' => 6.2
                                }
                            },

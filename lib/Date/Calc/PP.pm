@@ -17,6 +17,8 @@ use vars qw(@ISA @EXPORT @EXPORT_OK %EXPORT_TAGS $VERSION);
 
 use Carp::Clan qw(^Date::);
 
+use POSIX ();
+
 require Exporter;
 
 @ISA = qw(Exporter);
@@ -104,7 +106,7 @@ require Exporter;
 ##                                              ##
 ##################################################
 
-$VERSION = '6.2';
+$VERSION = '6.3';
 
 sub Version
 {
@@ -2030,8 +2032,6 @@ sub DateCalc_localtime
 sub DateCalc_mktime
 {
     my($_seconds,$year,$month,$day,$hour,$min,$sec,$doy,$dow,$dst) = @_;
-    my(@DT) =   ($year,$month,$day,$hour,$min,$sec); # needed for faking "mktime()"
-    local($_);                                       # needed for faking "mktime()"
     $$_seconds = 0;
     if ($^O eq 'MacOS')
     {
@@ -2084,8 +2084,7 @@ sub DateCalc_mktime
         if ($dst < 0) { $dst = -1; }
         else          { $dst =  1; }
     }
-#   $$_seconds = mktime($year,$month,$day,$hour,$min,$sec,$doy,$dow,$dst);                         # "mktime()" is not implemented in Perl!
-    $$_seconds = Date_to_Time(Add_Delta_YMDHMS(@DT,map(-$_,(Timezone(Date_to_Time(@DT)))[0..5]))); # Therefore we have to fake it ...
+    $$_seconds = POSIX::mktime($sec,$min,$hour,$day,$month,$year,$doy,$dow,$dst) || 0;
     return 1 if ($$_seconds >= 0);
     return 0;
 }

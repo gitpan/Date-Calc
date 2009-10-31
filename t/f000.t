@@ -4,6 +4,8 @@ BEGIN { eval { require bytes; }; }
 use strict;
 no strict "vars";
 
+BEGIN { $Date::Calc::XS_DISABLE = $Date::Calc::XS_DISABLE = 1; }
+
 # ======================================================================
 #   $version = $Carp::Clan::VERSION;
 #   $version = $Date::Calc::VERSION;
@@ -25,7 +27,7 @@ $Date::Calendar::Year::VERSION     = $Date::Calendar::Year::VERSION     = 0;
 $Date::Calendar::VERSION           = $Date::Calendar::VERSION           = 0;
 $Bit::Vector::VERSION              = $Bit::Vector::VERSION              = 0;
 
-$tests = 11;
+$tests = 12;
 
 eval { require Bit::Vector; };
 
@@ -57,29 +59,33 @@ unless ($@)
 {print "ok $n\n";} else {print "not ok $n\n";}
 $n++;
 
-if ($Date::Calc::VERSION eq '6.2')
+if ($Date::Calc::VERSION eq '6.3')
 {print "ok $n\n";} else {print "not ok $n\n";}
 $n++;
 
-if (&Date::Calc::Version() eq '6.2')
+if (&Date::Calc::Version() eq '6.3')
+{print "ok $n\n";} else {print "not ok $n\n";}
+$n++;
+
+unless ($Date::Calc::XS_OK || 0)
 {print "ok $n\n";} else {print "not ok $n\n";}
 $n++;
 
 if ($Date::Calc::XS_OK || 0)
 {
-    if ($Date::Calc::XS::VERSION eq '6.2')
+    if ($Date::Calc::XS::VERSION >= '6.2')
     {print "ok $n\n";} else {print "not ok $n\n";}
     $n++;
-    if (&Date::Calc::XS::Version() eq '6.2')
+    if (&Date::Calc::XS::Version() >= '6.2')
     {print "ok $n\n";} else {print "not ok $n\n";}
     $n++;
 }
 else
 {
-    if ($Date::Calc::PP::VERSION eq '6.2')
+    if ($Date::Calc::PP::VERSION eq '6.3')
     {print "ok $n\n";} else {print "not ok $n\n";}
     $n++;
-    if (&Date::Calc::PP::Version() eq '6.2')
+    if (&Date::Calc::PP::Version() eq '6.3')
     {print "ok $n\n";} else {print "not ok $n\n";}
     $n++;
 }
@@ -93,7 +99,7 @@ unless ($@)
 {print "ok $n\n";} else {print "not ok $n\n";}
 $n++;
 
-if ($Date::Calc::Object::VERSION eq '6.2')
+if ($Date::Calc::Object::VERSION eq '6.3')
 {print "ok $n\n";} else {print "not ok $n\n";}
 $n++;
 
@@ -106,7 +112,7 @@ unless ($@)
 {print "ok $n\n";} else {print "not ok $n\n";}
 $n++;
 
-if ($Date::Calendar::Profiles::VERSION eq '6.2')
+if ($Date::Calendar::Profiles::VERSION eq '6.3')
 {print "ok $n\n";} else {print "not ok $n\n";}
 $n++;
 
@@ -129,7 +135,7 @@ unless ($@)
 {print "ok $n\n";} else {print "not ok $n\n";}
 $n++;
 
-if ($Date::Calendar::Year::VERSION eq '6.2')
+if ($Date::Calendar::Year::VERSION eq '6.3')
 {print "ok $n\n";} else {print "not ok $n\n";}
 $n++;
 
@@ -142,7 +148,7 @@ unless ($@)
 {print "ok $n\n";} else {print "not ok $n\n";}
 $n++;
 
-if ($Date::Calendar::VERSION eq '6.2')
+if ($Date::Calendar::VERSION eq '6.3')
 {print "ok $n\n";} else {print "not ok $n\n";}
 $n++;
 

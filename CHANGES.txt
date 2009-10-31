@@ -1,5 +1,5 @@
                      ====================================
-                       Package "Date::Calc" Version 6.2
+                       Package "Date::Calc" Version 6.3
                      ====================================
 
 
@@ -9,6 +9,12 @@
 
 Version history:
 ----------------
+
+Version 6.3   31.10.2009
+
+ +  Changed "Mktime()" to use "POSIX::mktime()"
+ +  Fixed the bug that "Date::Calc::PP" was never tested
+    when "Date::Calc::XS" is installed
 
 Version 6.2   16.10.2009
 

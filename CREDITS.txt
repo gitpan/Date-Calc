@@ -1,5 +1,5 @@
                      ====================================
-                       Package "Date::Calc" Version 6.2
+                       Package "Date::Calc" Version 6.3
                      ====================================
 
 
@@ -459,5 +459,10 @@ Many thanks to H.Merijn Brand <h.m.brand@xs4all.nl> for
 discussing the various issues and advantages/disadvantages
 of integrating versus splitting the C/XS-part and the pure-Perl
 part of this distribution with me!
+
+Many thanks to Anthony Mirante <tony@technicon.com> for reporting that
+there can be a difference in the output of "Date::Calc::PP::Mktime()",
+"Date::Calc::XS::Mktime()" and "POSIX::mktime()", and for running a
+test script for me!
 
 

@@ -12,29 +12,33 @@
 package Date::Calc;
 
 use strict;
-use vars qw($XS_OK @ISA @EXPORT @EXPORT_OK %EXPORT_TAGS $VERSION);
+use vars qw($XS_OK $XS_DISABLE @ISA @EXPORT @EXPORT_OK %EXPORT_TAGS $VERSION);
 
 BEGIN # Re-export imports from Date::Calc::XS or Date::Calc::PP:
 {
     require Exporter;
     @ISA = qw(Exporter);
-    eval { require Date::Calc::XS; };
-    if ($@)
+    $XS_OK = 0;
+    unless ($XS_DISABLE and $XS_DISABLE) # prevent warning "used only once"
     {
-        $XS_OK = 0;
+        eval
+        {
+            require Date::Calc::XS;
+            @EXPORT      = (@Date::Calc::XS::EXPORT);
+            @EXPORT_OK   = (@Date::Calc::XS::EXPORT_OK);
+            %EXPORT_TAGS = (all => [@EXPORT_OK]);
+            Date::Calc::XS->import(@EXPORT,@EXPORT_OK);
+        };
+        if ($@) { die $@ unless ($@ =~ /^Can't locate .*? at /); }
+        else    { $XS_OK = 1; }
+    }
+    unless ($XS_OK)
+    {
         require Date::Calc::PP;
         @EXPORT      = (@Date::Calc::PP::EXPORT);
         @EXPORT_OK   = (@Date::Calc::PP::EXPORT_OK);
         %EXPORT_TAGS = (all => [@EXPORT_OK]);
         Date::Calc::PP->import(@EXPORT,@EXPORT_OK);
-    }
-    else
-    {
-        $XS_OK = 1;
-        @EXPORT      = (@Date::Calc::XS::EXPORT);
-        @EXPORT_OK   = (@Date::Calc::XS::EXPORT_OK);
-        %EXPORT_TAGS = (all => [@EXPORT_OK]);
-        Date::Calc::XS->import(@EXPORT,@EXPORT_OK);
     }
 }
 
@@ -46,7 +50,7 @@ BEGIN # Re-export imports from Date::Calc::XS or Date::Calc::PP:
 ##                                              ##
 ##################################################
 
-$VERSION     = '6.2';
+$VERSION     = '6.3';
 
 sub Version { return $VERSION; }
 

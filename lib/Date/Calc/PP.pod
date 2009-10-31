@@ -19,7 +19,7 @@ L<Date::Calc(3)>, L<Date::Calc::XS(3)>.
 
 =head1 VERSION
 
-This man page documents "Date::Calc::PP" version 6.2.
+This man page documents "Date::Calc::PP" version 6.3.
 
 =head1 AUTHOR
 

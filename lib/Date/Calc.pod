@@ -3268,7 +3268,7 @@ which are language-dependent.
 
 =head1 VERSION
 
-This man page documents "Date::Calc" version 6.2.
+This man page documents "Date::Calc" version 6.3.
 
 =head1 AUTHOR
 

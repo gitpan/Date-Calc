@@ -1,5 +1,5 @@
                      ====================================
-                       Package "Date::Calc" Version 6.2
+                       Package "Date::Calc" Version 6.3
                      ====================================
 
 
@@ -19,10 +19,12 @@ profiles of legal holidays and observances for calculations which need to
 take those into account.
 
 
-What's new in version 6.2:
+What's new in version 6.3:
 --------------------------
 
- +  Split the "Date::Calc" distribution into a pure-Perl and a C/XS part
+ +  Changed "Mktime()" to use "POSIX::mktime()"
+ +  Fixed the bug that "Date::Calc::PP" was never tested
+    when "Date::Calc::XS" is installed
 
 
 Copyright & License:
